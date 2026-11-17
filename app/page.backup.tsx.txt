@@ -1,0 +1,84 @@
+﻿import ResumePopup from "./ResumePopup";
+'use client';
+
+import { useState } from 'react';
+import { ArrowDown, ArrowUpRight, Award, Download, BriefcaseBusiness, BrainCircuit, CheckCircle2, ChevronRight, Cloud, Code2, ExternalLink, Github, Linkedin, Mail, Menu, ShieldCheck, Terminal, X } from 'lucide-react';
+
+const specializations = [
+  { number:'01', icon:ShieldCheck, title:'Security Engineering', description:'Assessing application security, identifying vulnerabilities, and understanding how systems can be better defended.', tags:['Application Security','Vulnerability Assessment','Network Analysis'] },
+  { number:'02', icon:Cloud, title:'Cloud & Infrastructure', description:'Working with cloud-native workloads, containerized services, Linux environments, and infrastructure fundamentals.', tags:['AWS EKS','Kubernetes','Docker'] },
+  { number:'03', icon:BrainCircuit, title:'Data & Machine Learning', description:'Exploring analytical and machine learning techniques to uncover patterns and support security-focused decision-making.', tags:['Python','Scikit-learn','Data Analysis'] },
+  { number:'04', icon:Code2, title:'Development & Automation', description:'Building practical services and scripts with an emphasis on clarity, reliability, and secure engineering practices.', tags:['Python','Java','REST APIs'] },
+];
+const projects = [
+  {number:'01',tag:'KUBERNETES SECURITY / DEVSECOPS',title:'KubeShield Enterprise',desc:'Hardened a three-replica Kubernetes application with RBAC, NetworkPolicies and least-privilege containers. Built a Next.js security dashboard with five scanners, remediation reporting, authentication and automated security checks.',stack:['Kubernetes','Next.js','Trivy','GitHub Actions','Terraform'],live:'https://kube-shield-enterprise.vercel.app',repo:'https://github.com/S18-01/KubeShield-Enterprise'},
+  {number:'02',tag:'PENETRATION TESTING',title:'RedForge X',desc:'Built a Dockerized security lab for controlled OWASP Top 10 testing and an automated vulnerability assessment platform with CVSS prioritization, proof-of-concept validation, remediation verification and PDF reports.',stack:['Python','Burp Suite','Nmap','Next.js','Docker'],live:null,repo:null},
+  {number:'03',tag:'MACHINE LEARNING / SECURITY',title:'Cyber Incident Classification',desc:'Developed a machine learning classification model to analyze cybersecurity incidents, identify threat patterns and support prioritization using preprocessing, feature engineering and exploratory data analysis.',stack:['Python','Machine Learning','Data Mining','EDA'],live:null,repo:null},
+];
+const experience = [
+  {role:'Graduate Assistant',organization:'University of Maryland, College Park',date:'Jan 2026 â€“ May 2026',detail:'Supported hands-on security labs with Nmap, Wireshark and Linux, guiding network analysis, vulnerability assessment and troubleshooting.'},
+  {role:'Security Analyst',organization:'Cognizant',date:'Jun 2023 â€“ Dec 2024',detail:'Investigated SIEM alerts using Splunk and ELK, performed Nmap and Nessus assessments, analyzed indicators of compromise and supported detection tuning and remediation prioritization.'},
+  {role:'Cybersecurity Club Lead',organization:'Guru Nanak Institutions Technical Campus',date:'Dec 2021 â€“ Apr 2023',detail:'Led security workshops and CTF activities covering penetration testing, web application security and vulnerability remediation.'},
+];
+const achievements = [
+  {title:'3rd Place Â· Cybersecurity CTF',detail:'Applied penetration testing and vulnerability exploitation skills.',date:'April 2023'},
+  {title:'1st Place Â· Best Academic Project',detail:'Recognized for technical innovation and project implementation.',date:'December 2023'},
+  {title:'Best Team Lead Â· Cognizant',detail:'Recognized for coordinating security operations and team performance.',date:'Recognition'},
+];
+const certifications = [
+  {title:'Certified Professional Penetration Tester (eCPPT)',status:'Listed on resume'},
+  {title:'Google Cybersecurity Professional Certificate',status:'Coursera'},
+  {title:'CompTIA Security+',status:'In Progress'},
+];
+const skills = [
+  {name:'Security Operations',items:'Splunk Â· Elastic Stack Â· SIEM Â· Incident Response Â· MITRE ATT&CK Â· Threat Intelligence'},
+  {name:'Security Testing',items:'Burp Suite Â· Nmap Â· Nessus Â· Wireshark Â· Metasploit Â· OWASP Top 10'},
+  {name:'Cloud & DevSecOps',items:'AWS Â· EKS Â· Kubernetes Â· Docker Â· Terraform Â· GitHub Actions Â· Trivy Â· Bandit'},
+  {name:'Programming & Automation',items:'Python Â· Bash Â· PowerShell Â· Java Â· C Â· Security Automation'},
+];
+const navigation = ['About','Specializations','Projects','Experience','Achievements','Skills','Certifications','Education','Contact'];
+const githubUrl = 'https://github.com/S18-01';
+const email = 'siddharthroy1435@gmail.com';
+
+export default function Home() {
+ const [menuOpen,setMenuOpen]=useState(false);
+ return <main id="home" className="site-shell"><ResumePopup />
+   <header className="site-header"><nav className="container nav-inner" aria-label="Main navigation">
+     <a className="brand" href="#home" aria-label="Siddharth Muragundla home">SM<span>.</span></a>
+     <div className="desktop-links">{navigation.map(n=><a key={n} href={'#'+n.toLowerCase()}>{n}</a>)}<a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub <Github size={14}/></a></div>
+     <a className="nav-contact" href="#contact">Get in touch <ArrowUpRight size={15}/></a>
+     <button className="menu-toggle" aria-label={menuOpen?'Close menu':'Open menu'} aria-expanded={menuOpen} onClick={()=>setMenuOpen(!menuOpen)}>{menuOpen?<X size={22}/>:<Menu size={22}/>}</button>
+   </nav>{menuOpen&&<div className="mobile-links">{navigation.map(n=><a onClick={()=>setMenuOpen(false)} key={n} href={'#'+n.toLowerCase()}>{n}</a>)}<a href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub</a></div>}</header>
+
+   <section className="hero" aria-labelledby="hero-title"><div className="hero-grid" aria-hidden="true"/><div className="hero-glow" aria-hidden="true"/><div className="container hero-content"><div className="hero-copy">
+     <div className="eyebrow"><span className="status-dot"/> SECURITY ENGINEERING <span className="eyebrow-divider">/</span> CLOUD <span className="eyebrow-divider">/</span> INTELLIGENT SYSTEMS</div>
+     <p className="hero-intro">SIDDHARTH MURAGUNDLA <span className="intro-line"/> SECURITY Â· CLOUD Â· AUTOMATION</p>
+     <h1 id="hero-title">Securing systems.<br/><span>Engineering whatâ€™s next.</span></h1>
+     <p className="hero-description">I work across security operations, vulnerability assessment and cloud security to understand where systems break and how to defend them. My work spans application security, cloud infrastructure, and software engineering, with a growing focus on data-driven detection and intelligent automation.</p>
+     <div className="hero-actions"><a className="btn btn-primary" href="#projects">Explore my work <ArrowUpRight size={18}/></a><a className="btn btn-outline" href="/SiddharthMuragundla_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume <Download size={18}/></a><a className="btn btn-outline" href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub <Github size={18}/></a><a className="btn btn-outline" href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer">LinkedIn <Linkedin size={18}/></a></div>
+     <div className="hero-bottom"><span>APPLICATION SECURITY / CLOUD INFRASTRUCTURE / SOFTWARE</span><a href="#about" aria-label="Scroll to about section">SCROLL TO EXPLORE <ArrowDown size={16}/></a></div>
+   </div><div className="hero-portrait-wrap"><div className="portrait-orbit" aria-hidden="true"/><img className="hero-portrait" loading="eager" src="/images/siddharth-portrait.png" alt="Portrait of Siddharth Muragundla" /></div></div></section>
+
+   <section className="section about-section" id="about"><div className="container about-layout"><div><div className="section-kicker">01 / THE APPROACH</div><h2 className="section-title">Think beyond<br/><em>the surface.</em></h2></div><div className="about-copy"><p>Secure systems begin with a deeper understanding of how technology works,and how it can fail.</p><p>My work brings together hands-on application security testing, cloud-native infrastructure, Linux administration, and programming. I approach technical problems by examining the full system, questioning assumptions, and validating solutions through practical implementation.</p><p>I'm also interested in applying data science, machine learning, and automation to make security analysis more effective.</p></div></div></section>
+
+   <section className="section specializations-section" id="specializations"><div className="container"><div className="section-kicker">02 / CORE FOCUS</div><div className="section-heading-row"><h2 className="section-title">Areas of <em>focus.</em></h2><p>Four connected disciplines. One security-first approach.</p></div><div className="specialization-grid">{specializations.map(s=>{const Icon=s.icon;return <article className="specialization-card" key={s.title}><div className="card-top"><div className="icon-box"><Icon size={24} strokeWidth={1.7}/></div><span className="card-number">{s.number}</span></div><h3>{s.title}</h3><p>{s.description}</p><div className="tag-row">{s.tags.map(t=><span className="tag" key={t}>{t}</span>)}</div></article>})}</div></div></section>
+
+   <section className="section projects-section" id="projects"><div className="container"><div className="section-kicker">03 / SELECTED WORK</div><div className="section-heading-row"><h2 className="section-title">Built. Tested. <em>Verified.</em></h2><p>A selection of hands-on security and engineering projects.</p></div><div className="projects-grid">{projects.map(p=><article className="project-card" key={p.title}><div className="project-top"><span>{p.tag}</span><span>{p.number}</span></div><div className="project-art" aria-hidden="true"><Terminal size={44} strokeWidth={1}/><span>ENGINEERING / {p.number}</span></div><h3>{p.title}</h3><p>{p.desc}</p><div className="tag-row">{p.stack.map(s=><span className="tag" key={s}>{s}</span>)}</div><div className="project-links">{p.live&&<a href={p.live} target="_blank" rel="noopener noreferrer">Live project <ExternalLink size={15}/></a>}{p.repo&&<a href={p.repo} target="_blank" rel="noopener noreferrer">Repository <Github size={15}/></a>}</div></article>)}</div></div></section>
+
+   <section className="section experience-section" id="experience"><div className="container"><div className="section-kicker">04 / PROFESSIONAL EXPERIENCE</div><h2 className="section-title">Experience in <em>practice.</em></h2><div className="detail-grid">{experience.map(e=><article className="detail-card" key={e.role}><BriefcaseBusiness size={23}/><span className="detail-date">{e.date}</span><h3>{e.role}</h3><strong>{e.organization}</strong><p>{e.detail}</p></article>)}</div></div></section>
+
+   <section className="section achievements-section" id="achievements"><div className="container"><div className="section-kicker">05 / RECOGNITION</div><h2 className="section-title">Milestones & <em>achievements.</em></h2><div className="detail-grid">{achievements.map(a=><article className="detail-card" key={a.title}><Award size={25}/><span className="detail-date">{a.date}</span><h3>{a.title}</h3><p>{a.detail}</p></article>)}</div></div></section>
+
+   <section className="section skills-section" id="skills"><div className="container"><div className="section-kicker">06 / TECHNICAL TOOLKIT</div><h2 className="section-title">Tools for <em>the work.</em></h2><div className="skills-grid">{skills.map((s,i)=><div className="skill-row" key={s.name}><span className="skill-index">0{i+1}</span><div><h3>{s.name}</h3><p>{s.items}</p></div></div>)}</div></div></section>
+
+   <section className="section certifications-section" id="certifications"><div className="container"><div className="section-kicker">07 / CERTIFICATIONS</div><h2 className="section-title">Continuous <em>learning.</em></h2><div className="detail-grid">{certifications.map(c=><article className="detail-card" key={c.title}><ShieldCheck size={24}/><h3>{c.title}</h3><p>{c.status}</p></article>)}</div></div></section>
+
+   <section className="section education-section" id="education"><div className="container"><div className="section-kicker">08 / EDUCATION</div><h2 className="section-title">Foundation & <em>growth.</em></h2><div className="education-card"><div><h3>University of Maryland, College Park</h3><p>Master of Engineering Â· Cybersecurity</p><span>Coursework and projects in penetration testing, Linux administration, cloud infrastructure, and digital forensics.</span></div><div className="education-date">Expected December 2026</div></div></div></section>
+
+   <section className="section contact-section" id="contact"><div className="container contact-layout"><div><div className="section-kicker">09 / LET'S CONNECT</div><h2 className="section-title">Let's build something <em>secure.</em></h2><p>Interested in connecting about security engineering, cloud security, application security, and technical opportunities.</p><div className="contact-actions"><a className="btn btn-primary" href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer">Connect on LinkedIn <ArrowUpRight size={17}/></a><a className="btn btn-outline" href={githubUrl} target="_blank" rel="noopener noreferrer">Explore GitHub <Github size={17}/></a><a className="btn btn-outline" href={`mailto:${email}`}>Email me <Mail size={17}/></a></div></div><div className="contact-panel"><ShieldCheck size={30}/><span>SECURITY IS NOT A FEATURE.</span><strong>It's a mindset.</strong><p>Understand the system. Question the assumptions. Validate the outcome.</p></div><a className="contact-email" href={`mailto:${email}`}>{email}</a></div></section>
+
+   <footer className="footer"><div className="container footer-inner"><a className="brand" href="#home">SM<span>.</span></a><span>Â© {new Date().getFullYear()} Siddharth Muragundla</span><div className="footer-social"><a href={`mailto:${email}`} aria-label="Email"><Mail size={20}/></a><a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={20}/></a><a href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20}/></a></div></div></footer>
+ </main>;
+}
+
+
