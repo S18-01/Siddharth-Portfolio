@@ -11,9 +11,33 @@ const specializations = [
   { number:'04', icon:Code2, title:'Development & Automation', description:'Building practical services and scripts with an emphasis on clarity, reliability, and secure engineering practices.', tags:['Python','Java','REST APIs'] },
 ];
 const projects = [
-  {number:'01',tag:'KUBERNETES SECURITY / DEVSECOPS',title:'KubeShield Enterprise',desc:'Hardened a three-replica Kubernetes application with RBAC, NetworkPolicies and least-privilege containers. Built a Next.js security dashboard with five scanners, remediation reporting, authentication and automated security checks.',stack:['Kubernetes','Next.js','Trivy','GitHub Actions','Terraform'],live:'https://kube-shield-enterprise.vercel.app',repo:'https://github.com/S18-01/KubeShield-Enterprise'},
-  {number:'02',tag:'PENETRATION TESTING',title:'RedForge X',desc:'Built a Dockerized security lab for controlled OWASP Top 10 testing and an automated vulnerability assessment platform with CVSS prioritization, proof-of-concept validation, remediation verification and PDF reports.',stack:['Python','Burp Suite','Nmap','Next.js','Docker'],live:null,repo:null},
-  {number:'03',tag:'MACHINE LEARNING / SECURITY',title:'Cyber Incident Classification',desc:'Developed a machine learning classification model to analyze cybersecurity incidents, identify threat patterns and support prioritization using preprocessing, feature engineering and exploratory data analysis.',stack:['Python','Machine Learning','Data Mining','EDA'],live:null,repo:null},
+  {
+    number:'01',
+    tag:'KUBERNETES SECURITY / DEVSECOPS',
+    title:'KubeShield Enterprise',
+    desc:'Engineered a Kubernetes security platform featuring hardened workloads, RBAC, NetworkPolicies, non-root containers, and automated security scanning across Kubernetes, Docker, Terraform, AWS IAM, and dependencies. Integrated security scoring, remediation reporting, observability, and CI/CD security automation.',
+    stack:['Kubernetes','Docker','AWS','Terraform','Next.js','Trivy','GitHub Actions'],
+    live:'https://kube-shield-enterprise.vercel.app',
+    repo:'https://github.com/S18-01/KubeShield-Enterprise'
+  },
+  {
+    number:'02',
+    tag:'PENETRATION TESTING / VULNERABILITY MANAGEMENT',
+    title:'RedForge X',
+    desc:'Developed a penetration testing and vulnerability assessment platform combining controlled OWASP Top 10 security testing, automated vulnerability analysis, CVSS-based prioritization, proof-of-concept validation, remediation verification, and security reporting.',
+    stack:['Python','Next.js','TypeScript','Nmap','Burp Suite','Docker','CVSS'],
+    live:null,
+    repo:null
+  },
+  {
+    number:'03',
+    tag:'MACHINE LEARNING / CYBERSECURITY',
+    title:'Cyber Incident Classification',
+    desc:'Developed a machine learning solution for classifying cybersecurity incidents and identifying threat patterns through data preprocessing, feature engineering, exploratory data analysis, and predictive modeling to support incident prioritization.',
+    stack:['Python','Scikit-learn','Pandas','Machine Learning','EDA'],
+    live:null,
+    repo:null
+  },
 ];
 const experience = [
   {role:'Graduate Assistant',organization:'University of Maryland, College Park',date:'Jan 2026 - May 2026',detail:'Guided hands-on security labs with Nmap, Wireshark and Linux, helping students analyze traffic, assess vulnerabilities and troubleshoot security tools.'},
