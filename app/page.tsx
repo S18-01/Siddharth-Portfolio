@@ -1,7 +1,7 @@
-﻿"use client";
+'use client';
 
-import ResumePopup from "./ResumePopup";
 import { useState } from 'react';
+import ResumePopup from './ResumePopup';
 import { ArrowDown, ArrowUpRight, Award, Download, BriefcaseBusiness, BrainCircuit, CheckCircle2, ChevronRight, Cloud, Code2, ExternalLink, Github, Linkedin, Mail, Menu, ShieldCheck, Terminal, X } from 'lucide-react';
 
 const specializations = [
@@ -16,25 +16,27 @@ const projects = [
   {number:'03',tag:'MACHINE LEARNING / SECURITY',title:'Cyber Incident Classification',desc:'Developed a machine learning classification model to analyze cybersecurity incidents, identify threat patterns and support prioritization using preprocessing, feature engineering and exploratory data analysis.',stack:['Python','Machine Learning','Data Mining','EDA'],live:null,repo:null},
 ];
 const experience = [
-  {role:'Graduate Assistant',organization:'University of Maryland, College Park',date:'Jan 2026 â€“ May 2026',detail:'Supported hands-on security labs with Nmap, Wireshark and Linux, guiding network analysis, vulnerability assessment and troubleshooting.'},
-  {role:'Security Analyst',organization:'Cognizant',date:'Jun 2023 â€“ Dec 2024',detail:'Investigated SIEM alerts using Splunk and ELK, performed Nmap and Nessus assessments, analyzed indicators of compromise and supported detection tuning and remediation prioritization.'},
-  {role:'Cybersecurity Club Lead',organization:'Guru Nanak Institutions Technical Campus',date:'Dec 2021 â€“ Apr 2023',detail:'Led security workshops and CTF activities covering penetration testing, web application security and vulnerability remediation.'},
+  {role:'Graduate Assistant',organization:'University of Maryland, College Park',date:'Jan 2026 - May 2026',detail:'Guided hands-on security labs with Nmap, Wireshark and Linux, helping students analyze traffic, assess vulnerabilities and troubleshoot security tools.'},
+  {role:'Security Engineer',organization:'Cognizant',date:'Jun 2023 - Dec 2024',detail:'Reviewed enterprise security controls and access permissions; performed Nmap and Nessus vulnerability assessments; investigated Splunk and ELK alerts, IOCs and network traffic; prioritized remediation using CVSS and MITRE ATT&CK.'},
+  {role:'Cybersecurity Engineer Intern',organization:'Nestack Technologies',date:'Dec 2022 - May 2023',detail:'Reviewed AWS IAM, security groups and network controls; assessed exposed services with Nmap; analyzed TCP/IP, DNS and HTTP traffic in Wireshark; supported Linux hardening.'},
+  {role:'Cybersecurity Club Lead',organization:'Guru Nanak Institutions Technical Campus',date:'Dec 2020 - Oct 2022',detail:'Led penetration testing and network security workshops, organized CTFs, and mentored students on OWASP Top 10, ethical hacking and vulnerability remediation.'},
 ];
 const achievements = [
-  {title:'3rd Place Â· Cybersecurity CTF',detail:'Applied penetration testing and vulnerability exploitation skills.',date:'April 2023'},
-  {title:'1st Place Â· Best Academic Project',detail:'Recognized for technical innovation and project implementation.',date:'December 2023'},
-  {title:'Best Team Lead Â· Cognizant',detail:'Recognized for coordinating security operations and team performance.',date:'Recognition'},
+  {title:'3rd Place · Cybersecurity CTF',detail:'Applied penetration testing and vulnerability exploitation skills.',date:'April 2023'},
+  {title:'1st Place · Best Academic Project',detail:'Recognized for technical innovation and project implementation.',date:'December 2023'},
+  {title:'Best Team Lead · Cognizant',detail:'Recognized for coordinating security operations and team performance.',date:'Recognition'},
 ];
 const certifications = [
-  {title:'Certified Professional Penetration Tester (eCPPT)',status:'Listed on resume'},
+  {title:'Certified Professional Penetration Tester (eCPPT)',status:'Certification'},
   {title:'Google Cybersecurity Professional Certificate',status:'Coursera'},
   {title:'CompTIA Security+',status:'In Progress'},
 ];
 const skills = [
-  {name:'Security Operations',items:'Splunk Â· Elastic Stack Â· SIEM Â· Incident Response Â· MITRE ATT&CK Â· Threat Intelligence'},
-  {name:'Security Testing',items:'Burp Suite Â· Nmap Â· Nessus Â· Wireshark Â· Metasploit Â· OWASP Top 10'},
-  {name:'Cloud & DevSecOps',items:'AWS Â· EKS Â· Kubernetes Â· Docker Â· Terraform Â· GitHub Actions Â· Trivy Â· Bandit'},
-  {name:'Programming & Automation',items:'Python Â· Bash Â· PowerShell Â· Java Â· C Â· Security Automation'},
+  {name:'Security Operations',items:'Splunk · Elastic Stack (ELK) · SIEM · Incident Response · Alert Triage · IOC Analysis · MITRE ATT&CK · Detection Tuning'},
+  {name:'Security Testing',items:'Burp Suite · Metasploit · Nmap · Nessus · Wireshark · OWASP Top 10 · Vulnerability Assessment · Penetration Testing'},
+  {name:'Cloud & Infrastructure',items:'AWS · AWS EKS · Kubernetes · Docker · Linux · IAM · RBAC · TCP/IP · DNS · HTTP/HTTPS'},
+  {name:'DevSecOps & Automation',items:'GitHub Actions · CI/CD Security · Trivy · Bandit · Terraform · Container Security · Security Automation'},
+  {name:'Programming & Scripting',items:'Python · Bash · PowerShell · Java · C'},
 ];
 const navigation = ['About','Specializations','Projects','Experience','Achievements','Skills','Certifications','Education','Contact'];
 const githubUrl = 'https://github.com/S18-01';
@@ -52,14 +54,14 @@ export default function Home() {
 
    <section className="hero" aria-labelledby="hero-title"><div className="hero-grid" aria-hidden="true"/><div className="hero-glow" aria-hidden="true"/><div className="container hero-content"><div className="hero-copy">
      <div className="eyebrow"><span className="status-dot"/> SECURITY ENGINEERING <span className="eyebrow-divider">/</span> CLOUD <span className="eyebrow-divider">/</span> INTELLIGENT SYSTEMS</div>
-     <p className="hero-intro">SIDDHARTH MURAGUNDLA <span className="intro-line"/> SECURITY Â· CLOUD Â· AUTOMATION</p>
-     <h1 id="hero-title">Securing systems.<br/><span>Engineering whatâ€™s next.</span></h1>
-     <p className="hero-description">I work across security operations, vulnerability assessment and cloud security to understand where systems break and how to defend them. My work spans application security, cloud infrastructure, and software engineering, with a growing focus on data-driven detection and intelligent automation.</p>
+     <p className="hero-intro">SIDDHARTH MURAGUNDLA <span className="intro-line"/> SECURITY · CLOUD · AUTOMATION</p>
+     <h1 id="hero-title">Securing systems.<br/><span>Engineering what’s next.</span></h1>
+     <p className="hero-description">Cybersecurity professional with 4+ years of combined experience in security engineering, security operations, threat detection, incident response and vulnerability management. I work with SIEM platforms, vulnerability assessment tools, cloud infrastructure and security automation to identify risks and strengthen defenses.</p>
      <div className="hero-actions"><a className="btn btn-primary" href="#projects">Explore my work <ArrowUpRight size={18}/></a><a className="btn btn-outline" href="/SiddharthMuragundla_Resume.pdf">Resume <Download size={18}/></a><a className="btn btn-outline" href={githubUrl} target="_blank" rel="noopener noreferrer">GitHub <Github size={18}/></a><a className="btn btn-outline" href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer">LinkedIn <Linkedin size={18}/></a></div>
      <div className="hero-bottom"><span>APPLICATION SECURITY / CLOUD INFRASTRUCTURE / SOFTWARE</span><a href="#about" aria-label="Scroll to about section">SCROLL TO EXPLORE <ArrowDown size={16}/></a></div>
    </div><div className="hero-portrait-wrap"><div className="portrait-orbit" aria-hidden="true"/><img className="hero-portrait" loading="eager" src="/images/siddharth-portrait.png" alt="Portrait of Siddharth Muragundla" /></div></div></section>
 
-   <section className="section about-section" id="about"><div className="container about-layout"><div><div className="section-kicker">01 / THE APPROACH</div><h2 className="section-title">Think beyond<br/><em>the surface.</em></h2></div><div className="about-copy"><p>Secure systems begin with a deeper understanding of how technology works,and how it can fail.</p><p>My work brings together hands-on application security testing, cloud-native infrastructure, Linux administration, and programming. I approach technical problems by examining the full system, questioning assumptions, and validating solutions through practical implementation.</p><p>I'm also interested in applying data science, machine learning, and automation to make security analysis more effective.</p></div></div></section>
+   <section className="section about-section" id="about"><div className="container about-layout"><div><div className="section-kicker">01 / THE APPROACH</div><h2 className="section-title">Think beyond<br/><em>the surface.</em></h2></div><div className="about-copy"><p>Secure systems begin with a deeper understanding of how technology works,and how it can fail.</p><p>My work brings together SIEM monitoring, alert triage, incident response, vulnerability assessments, cloud-native infrastructure, Linux administration, and programming. I approach technical problems by examining the full system, questioning assumptions, and validating solutions through practical implementation.</p><p>I'm also interested in applying data science, machine learning, and automation to make security analysis more effective.</p></div></div></section>
 
    <section className="section specializations-section" id="specializations"><div className="container"><div className="section-kicker">02 / CORE FOCUS</div><div className="section-heading-row"><h2 className="section-title">Areas of <em>focus.</em></h2><p>Four connected disciplines. One security-first approach.</p></div><div className="specialization-grid">{specializations.map(s=>{const Icon=s.icon;return <article className="specialization-card" key={s.title}><div className="card-top"><div className="icon-box"><Icon size={24} strokeWidth={1.7}/></div><span className="card-number">{s.number}</span></div><h3>{s.title}</h3><p>{s.description}</p><div className="tag-row">{s.tags.map(t=><span className="tag" key={t}>{t}</span>)}</div></article>})}</div></div></section>
 
@@ -73,14 +75,10 @@ export default function Home() {
 
    <section className="section certifications-section" id="certifications"><div className="container"><div className="section-kicker">07 / CERTIFICATIONS</div><h2 className="section-title">Continuous <em>learning.</em></h2><div className="detail-grid">{certifications.map(c=><article className="detail-card" key={c.title}><ShieldCheck size={24}/><h3>{c.title}</h3><p>{c.status}</p></article>)}</div></div></section>
 
-   <section className="section education-section" id="education"><div className="container"><div className="section-kicker">08 / EDUCATION</div><h2 className="section-title">Foundation & <em>growth.</em></h2><div className="education-card"><div><h3>University of Maryland, College Park</h3><p>Master of Engineering Â· Cybersecurity</p><span>Coursework and projects in penetration testing, Linux administration, cloud infrastructure, and digital forensics.</span></div><div className="education-date">Expected December 2026</div></div></div></section>
+   <section className="section education-section" id="education"><div className="container"><div className="section-kicker">08 / EDUCATION</div><h2 className="section-title">Foundation & <em>growth.</em></h2><div className="education-card"><div><h3>University of Maryland, College Park</h3><p>Master of Engineering · Cybersecurity</p><span>Coursework and projects in penetration testing, Linux administration, cloud infrastructure, and digital forensics.</span></div><div className="education-date">Expected December 2026</div></div></div></section>
 
    <section className="section contact-section" id="contact"><div className="container contact-layout"><div><div className="section-kicker">09 / LET'S CONNECT</div><h2 className="section-title">Let's build something <em>secure.</em></h2><p>Interested in connecting about security engineering, cloud security, application security, and technical opportunities.</p><div className="contact-actions"><a className="btn btn-primary" href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer">Connect on LinkedIn <ArrowUpRight size={17}/></a><a className="btn btn-outline" href={githubUrl} target="_blank" rel="noopener noreferrer">Explore GitHub <Github size={17}/></a><a className="btn btn-outline" href={`mailto:${email}`}>Email me <Mail size={17}/></a></div></div><div className="contact-panel"><ShieldCheck size={30}/><span>SECURITY IS NOT A FEATURE.</span><strong>It's a mindset.</strong><p>Understand the system. Question the assumptions. Validate the outcome.</p></div><a className="contact-email" href={`mailto:${email}`}>{email}</a></div></section>
 
-   <footer className="footer"><div className="container footer-inner"><a className="brand" href="#home">SM<span>.</span></a><span>Â© {new Date().getFullYear()} Siddharth Muragundla</span><div className="footer-social"><a href={`mailto:${email}`} aria-label="Email"><Mail size={20}/></a><a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={20}/></a><a href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20}/></a></div></div></footer>
+   <footer className="footer"><div className="container footer-inner"><a className="brand" href="#home">SM<span>.</span></a><span>© {new Date().getFullYear()} Siddharth Muragundla</span><div className="footer-social"><a href={`mailto:${email}`} aria-label="Email"><Mail size={20}/></a><a href={githubUrl} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Github size={20}/></a><a href="https://www.linkedin.com/in/siddhum" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Linkedin size={20}/></a></div></div></footer>
  </main>;
 }
-
-
-
-
