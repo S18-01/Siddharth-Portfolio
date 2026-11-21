@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const isProd = process.env.NODE_ENV === 'production';
 
-// Content Security Policy: only what the site actually uses (Google Fonts and the Spotify player; no third-party scripts)
+// Content Security Policy: only what the site actually uses (Google Fonts, Spotify player, Web3Forms notifications; no third-party scripts)
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
@@ -12,7 +12,7 @@ const csp = [
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data: blob:",
   "media-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' https://api.web3forms.com",
   "frame-src https://open.spotify.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",

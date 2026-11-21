@@ -24,6 +24,9 @@ const homeTimeZone = 'America/New_York';
 // Optional: paste your free Calendly or Cal.com link here (e.g. 'https://cal.com/siddharth/30min').
 // When set, "Book a call" opens it. When empty, recruiters pick a slot and it emails you the request.
 const calendlyUrl = '';
+// Web3Forms access key: bookings, chat questions and ratings are emailed to you automatically.
+// It can only send emails to your own inbox, so it is safe to keep in the code.
+const notifyKey = '74cae2f4-e697-444f-b579-c57ace5ba1ac';
 // Optional: drop a short video of you turning around at public/hero/turnaround.mp4
 const turnaroundVideo = '/hero/turnaround.mp4';
 
@@ -159,6 +162,21 @@ const termLines: [string, string][] = [
 ];
 
 /* ================= helpers ================= */
+async function notify(subject: string, fields: Record<string, string>, replyTo?: string) {
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ access_key: notifyKey, subject, from_name: 'Portfolio · siddharth-muragundla.vercel.app', ...(replyTo ? { email: replyTo } : {}), ...fields, 'Sent at': new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }) + ' ET' }),
+    });
+    const j = await res.json().catch(() => ({}));
+    return res.ok && j.success !== false;
+  } catch { return false; }
+}
+function bookingFields(b: Booking) {
+  const l = bookingLinks(b);
+  return { 'Meeting': `${l.t.label} (${l.t.len} min) · ${b.format === 'phone' ? 'Phone' : 'Video'}`, 'When': l.whenET, 'Name': b.name, 'Email': b.email, 'Company': b.company || '-', 'Role': b.role || '-', 'Phone': b.phone || '-', 'Notes': b.notes || '-', 'Add to my calendar': l.gcal.replace(`&add=${encodeURIComponent(email)}`, `&add=${encodeURIComponent(b.email)}`) };
+}
 const mailto = (subject: string, body: string) => `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
 function useNow() {
@@ -347,6 +365,7 @@ function Schedule({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [form, setForm] = useState({ name: '', email: '', company: '', role: '', phone: '', notes: '' });
   const [done, setDone] = useState<string | null>(null);
   const [err, setErr] = useState('');
+  const [notified, setNotified] = useState<'idle' | 'sending' | 'ok' | 'fail'>('idle');
   const vtz = useMemo(getVisitorTz, []);
   const sameTz = vtz === homeTimeZone;
   const tz = local && !sameTz ? vtz : homeTimeZone;
@@ -364,7 +383,13 @@ function Schedule({ open, onClose }: { open: boolean; onClose: () => void }) {
   const next = () => {
     if (step === 1 && slot === null) return setErr('Pick a time that works for you.');
     if (step === 2 && (!form.name.trim() || !validEmail(form.email))) return setErr('Add your name and a valid work email.');
-    setErr(''); setStep(s => Math.min(3, s + 1));
+    setErr('');
+    if (step === 2 && booking) {
+      const b = booking;
+      setNotified('sending');
+      notify(`📅 New call booking: ${b.name}${b.company ? ` (${b.company})` : ''}`, bookingFields(b), b.email).then(ok => setNotified(ok ? 'ok' : 'fail'));
+    }
+    setStep(s => Math.min(3, s + 1));
   };
   const act = (kind: string) => {
     if (!links) return;
@@ -445,6 +470,7 @@ function Schedule({ open, onClose }: { open: boolean; onClose: () => void }) {
                   <div className="rc-row"><User /><div><small>Booked by</small><b>{form.name}{form.company && ` · ${form.company}`}</b><span>{form.email}</span></div></div>
                   <div className="rc-row"><Send /><div><small>Invite goes to</small><b>{fullName}</b><span>{email}</span></div></div>
                 </div>
+                {notified === 'ok' && <div className="notified"><Check size={15} />Siddharth has been notified of your request. Adding it to your calendar sends the invite.</div>}
                 <div className="lbl">Send the invite (pick one)</div>
                 <div className="acts">
                   <a className="act pri" href={links.gcal} target="_blank" rel="noopener noreferrer" onClick={() => act('gcal')}><CalendarDays /><div><b>Add to Google Calendar</b><span>Invites me automatically · recommended</span></div></a>
@@ -578,7 +604,8 @@ function Chat({ open, setOpen, onSchedule }: { open: boolean; setOpen: (o: boole
   const finishBooking = (company: string) => {
     const b = { ...draft, company, role: '', phone: '', notes: '' } as Booking;
     setDraft(b); setMode('idle');
-    bot([{ text: 'Here\'s your call. Add it to your calendar and I\'m automatically invited:', card: 'booking', booking: b, chips: [{ label: 'Change time', action: 'book' }, { label: 'Ask something else', action: 'more' }] }]);
+    notify(`📅 New call booking (chat): ${b.name}${b.company ? ` (${b.company})` : ''}`, bookingFields(b), b.email);
+    bot([{ text: 'Here\'s your call. I\'ve been notified, and adding it to your calendar sends me the invite:', card: 'booking', booking: b, chips: [{ label: 'Change time', action: 'book' }, { label: 'Ask something else', action: 'more' }] }]);
   };
   const send = () => {
     const t = text.trim();
@@ -594,7 +621,9 @@ function Chat({ open, setOpen, onSchedule }: { open: boolean; setOpen: (o: boole
     const hit = intents.find(([re]) => re.test(t));
     if (hit) return run(hit[1]);
     setPending(t);
-    bot([{ text: 'Good question! I\'d rather answer that personally. Want to send it straight to my inbox?', chips: [{ label: 'Send to Siddharth', action: 'send-pending' }, { label: 'Book a call', action: 'book' }, { label: 'Ask something else', action: 'more' }] }]);
+    const who = draft.email ? `${draft.name || ''} <${draft.email}>` : 'Anonymous visitor';
+    notify('💬 New question from your portfolio chat', { 'Question': t, 'From': who, 'Conversation': msgs.slice(-8).map(m => `${m.from === 'me' ? 'Visitor' : 'Bot'}: ${m.text || '[' + m.card + ']'}`).join('\n') }, draft.email);
+    bot([{ text: 'Good question! I\'ve passed it to Siddharth. If you\'d like a reply, send it from your email too, or book a quick call:', chips: [{ label: 'Send to Siddharth', action: 'send-pending' }, { label: 'Book a call', action: 'book' }, { label: 'Ask something else', action: 'more' }] }]);
   };
   const sendTranscript = () => {
     const tr = msgs.map(m => `${m.from === 'me' ? 'Visitor' : 'Siddharth (auto)'} · ${new Date(m.t).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}: ${m.text || '[' + m.card + ']'}`).join('\n');
@@ -679,6 +708,7 @@ function Rating() {
   const submit = () => {
     if (!score) return;
     try { localStorage.setItem('sm-rating', String(score)); } catch { /* storage unavailable */ }
+    notify(`⭐ Portfolio rated ${score}/5`, { 'Rating': `${score}/5 (${rateLabels[score]})`, 'Comment': note || '-' });
     setSent(true);
   };
   const shown = hover || score;
