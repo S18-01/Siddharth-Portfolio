@@ -1701,30 +1701,22 @@ export default function Home() {
         <div className="wrap">
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
-              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
+              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="140">
                 <stop offset="0" stopColor="#dfe8ff" stopOpacity=".92" />
-                <stop offset=".38" style={{ stopColor: 'var(--accent)', stopOpacity: 0.78 }} />
-                <stop offset=".72" stopColor="#13285c" stopOpacity=".55" />
+                <stop offset=".3" style={{ stopColor: 'var(--accent)', stopOpacity: 0.82 }} />
+                <stop offset=".55" style={{ stopColor: 'var(--accent)', stopOpacity: 0.5 }} />
+                <stop offset=".8" stopColor="#13285c" stopOpacity=".18" />
                 <stop offset="1" stopColor="#050a18" stopOpacity="0" />
               </linearGradient>
-              <linearGradient id="gnLowG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
-                <stop offset=".58" stopColor="#000" /><stop offset=".78" stopColor="#fff" /><stop offset=".84" stopColor="#fff" /><stop offset=".86" stopColor="#000" />
-              </linearGradient>
-              <mask id="gnLow" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnLowG)" /></mask>
-              <filter id="gnGlow" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="2.2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.8 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 1 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
+              <filter id="gnGlow" x="-10%" y="-400%" width="120%" height="900%"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
             </defs>
-            <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <g mask="url(#gnLow)" filter="url(#gnGlow)" aria-hidden="true">
-                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" strokeWidth="1.4" style={{ stroke: 'var(--accent)' }}>SIDDHARTH</text>
-              </g>
-            </g>
-            <rect x="160" y="158" width="680" height="1" fill="url(#gnL)" />
+            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>SIDDHARTH</text>
+            <rect x="80" y="146" width="840" height="1.4" fill="url(#gnL)" filter="url(#gnGlow)" />
           </svg>
           <div className="foot">
             <span>© {new Date().getFullYear()} {fullName} · {baseLocation}</span>
