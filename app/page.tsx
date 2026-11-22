@@ -1400,7 +1400,7 @@ export default function Home() {
     <main>
 
 
-      {!booted && <Boot onDone={() => { setBooted(true); try { localStorage.setItem('sm-booted', '1'); } catch { /* */ } document.documentElement.dataset.seen = '1'; }} />}
+      {!booted && <Boot onDone={() => { setBooted(true); try { sessionStorage.setItem('sm-booted', '1'); } catch { /* */ } document.documentElement.dataset.seen = '1'; }} />}
       <a className="skip-link" href="#about">Skip to content</a>
       <Palette open={palOpen} onClose={() => setPalOpen(false)} cmds={cmds} />
       <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} />
@@ -1703,34 +1703,28 @@ export default function Home() {
         <div className="wrap">
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
-              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
-                <stop offset="0" stopColor="#ffffff" stopOpacity=".96" />
-                <stop offset=".3" stopColor="#dbe6ff" stopOpacity=".9" />
-                <stop offset=".55" style={{ stopColor: 'var(--accent)', stopOpacity: 0.9 }} />
-                <stop offset=".8" stopColor="#0b1a3d" stopOpacity=".85" />
-                <stop offset="1" stopColor="#000000" stopOpacity="0" />
+              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
+                <stop offset="0" stopColor="#dfe8ff" stopOpacity=".92" />
+                <stop offset=".38" style={{ stopColor: 'var(--accent)', stopOpacity: 0.78 }} />
+                <stop offset=".72" stopColor="#13285c" stopOpacity=".55" />
+                <stop offset="1" stopColor="#050a18" stopOpacity="0" />
               </linearGradient>
-              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
-                <stop offset=".35" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".7" style={{ stopColor: 'var(--accent)', stopOpacity: 0.45 }} />
+              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
+                <stop offset="0" stopColor="#ffffff" stopOpacity=".55" />
+                <stop offset=".45" style={{ stopColor: 'var(--accent)', stopOpacity: 0.35 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
-              <radialGradient id="gnH" gradientUnits="userSpaceOnUse" cx="500" cy="40" r="430">
-                <stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" />
-              </radialGradient>
-              <mask id="gnHM" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnH)" /></mask>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.8 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
             </defs>
             <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".18" style={{ fill: '#ffffff' }} aria-hidden="true">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.1" aria-hidden="true">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.2" aria-hidden="true">SIDDHARTH</text>
             </g>
-            <rect x="120" y="156" width="760" height="1" fill="url(#gnL)" />
+            <rect x="160" y="158" width="680" height="1" fill="url(#gnL)" />
           </svg>
           <div className="foot">
             <span>© {new Date().getFullYear()} {fullName} · {baseLocation}</span>
