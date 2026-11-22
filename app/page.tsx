@@ -2,6 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
+import { Globe3D, NetMap, SkillOrbit } from './three';
+import { FirewallMessage, KubeHarden, SiteAudit, TriageChallenge } from './labs';
+import { AttackChain, BreachSim, BrowserKnows, HoloBadge, ParticlePortrait, PasswordVault } from './labs2';
+import { ArCard, HackSandbox } from './labs3';
+import { PhishAnalyzer, SigmaLab } from './labs4';
+import { TimeMachine } from './labs5';
+import { LiveHoneypot } from './honeypot';
 import {
   Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
   ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
@@ -33,7 +40,7 @@ const notifyKey = '74cae2f4-e697-444f-b579-c57ace5ba1ac';
 // Optional: drop a short video of you turning around at public/hero/turnaround.mp4
 const turnaroundVideo = '/hero/turnaround.mp4';
 
-const navigation = ['About', 'Edge', 'Focus', 'Skills', 'Projects', 'Experience', 'Recognition', 'Contact'];
+const navigation = ['About', 'Edge', 'Focus', 'Skills', 'Projects', 'Lab', 'Experience', 'Recognition', 'Contact'];
 const marquee = ['Splunk', 'Elastic Stack', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'Wireshark', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Scikit-learn', 'Kali Linux', 'ServiceNow'];
 
 const roles = [
@@ -1163,6 +1170,12 @@ export default function Home() {
   const [booted, setBooted] = useState(false);
   const [caseIdx, setCaseIdx] = useState<number | null>(null);
   const [skillTab, setSkillTab] = useState('All');
+  const [labTab, setLabTab] = useState(0);
+  const [aboutMode, setAboutMode] = useState<'photo' | 'badge' | 'particles'>('photo');
+  const orbitTools = useMemo(() => {
+    const pick = ['Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Splunk', 'Elastic Stack (ELK)', 'MITRE ATT&CK', 'Incident Response', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Bash', 'Scikit-learn', 'Pandas', 'Grafana', 'Jira'];
+    return pick.map(n => ({ name: n, dom: skills.find(g => g.items.includes(n))?.dom ?? 'Tools' }));
+  }, []);
   const [toastMsg, setToastMsg] = useState('');
   const [musicOpen, setMusicOpen] = useState(false);
   const toastT = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1404,7 +1417,7 @@ export default function Home() {
       <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} />
       <CursorGlow />
       <nav className="dots" aria-label="Section progress">
-        {[['home', 'Intro'], ['about', 'About'], ['edge', 'My edge'], ['focus', 'Focus'], ['skills', 'Skills'], ['projects', 'Projects'], ['experience', 'Experience'], ['recognition', 'Recognition'], ['contact', 'Contact']].map(([id, label]) => (
+        {[['home', 'Intro'], ['about', 'About'], ['edge', 'My edge'], ['focus', 'Focus'], ['skills', 'Skills'], ['projects', 'Projects'], ['lab', 'Proof lab'], ['honeypot', 'Threat feed'], ['experience', 'Experience'], ['recognition', 'Recognition'], ['contact', 'Contact']].map(([id, label]) => (
           <a key={id} href={'#' + id} className={active === id ? 'on' : ''} aria-label={label}><span>{label}</span></a>
         ))}
       </nav>
@@ -1522,7 +1535,12 @@ export default function Home() {
 
       <section className="band alt" id="about">
         <div className="wrap about">
-          <ProfileVisual />
+          <div className="pv-modes-wrap">
+            {aboutMode === 'photo' && <ProfileVisual />}
+            {aboutMode === 'badge' && <HoloBadge img={portraitFront} name={fullName} li={linkedinUrl} />}
+            {aboutMode === 'particles' && <div className="pv-part"><ParticlePortrait img={portraitFront} /><span className="g3d-hint">Move your mouse over me</span></div>}
+            <div className="pv-modes" role="tablist" aria-label="Portrait style">{(['photo', 'badge', 'particles'] as const).map(m => <button key={m} role="tab" aria-selected={aboutMode === m} className={aboutMode === m ? 'on' : ''} onClick={() => setAboutMode(m)}>{m === 'photo' ? 'Photo' : m === 'badge' ? 'ID badge' : 'Particles'}</button>)}</div>
+          </div>
           <div className="reveal">
             <div className="sh-tag"><span className="sh-n">01</span>About me</div>
             <h2>Hello, I&apos;m<br /><em>{fullName}</em></h2>
@@ -1549,7 +1567,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="band why" id="edge">
+      <section className="band why has-net" id="edge">
+        <NetMap />
         <div className="wrap">
           <SectionHead n="02" label="My edge" sub="Four reasons I add value to a security team from the first week.">What sets me <em>apart</em></SectionHead>
           <div className="edge-strip reveal">
@@ -1591,6 +1610,7 @@ export default function Home() {
         <div className="wrap">
           <SectionHead n="04" label="Technical stack">Technologies I <em>work with</em></SectionHead>
           <div className="stabs reveal" role="tablist" aria-label="Filter skills">{skillTabs.map(t => <button key={t} role="tab" aria-selected={skillTab === t} className={skillTab === t ? 'on' : ''} onClick={() => setSkillTab(t)}>{t}<span>{t === 'All' ? skills.reduce((n, g) => n + g.items.length, 0) : skills.filter(g => g.dom === t).reduce((n, g) => n + g.items.length, 0)}</span></button>)}</div>
+          <div className="orbit-wrap reveal"><SkillOrbit tools={orbitTools} active={skillTab} /><span className="g3d-hint">Drag to spin · pick a tab to light up those tools</span></div>
           <div className="sk" key={skillTab}>
             {skills.filter(g => skillTab === 'All' || g.dom === skillTab).map((g, i) => (
               <div className="skg in-anim" key={g.name} style={{ animationDelay: `${i * 60}ms` }}><h3><span>0{i + 1}</span>{g.name}</h3><div className="pills">{g.items.map(s => <span className="pill" key={s}>{s}</span>)}</div></div>
@@ -1620,15 +1640,46 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="band" id="lab">
+        <div className="wrap">
+          <SectionHead n="06" label="Proof lab" sub="Don't take my word for it. Run a real scan, triage live-style alerts, or harden a cluster yourself.">Try my work <em>yourself</em></SectionHead>
+          <div className="lab-tabs reveal" role="tablist" aria-label="Interactive demos">
+            {['Scan this site', 'SOC triage challenge', 'KubeShield hardening', 'RedForge attack chain', 'Breach simulation', 'Password vault', 'What sites know', 'Try the hack', 'Phishing analyzer', 'Sigma rules'].map((t, k) => (
+              <button key={t} role="tab" aria-selected={labTab === k} className={labTab === k ? 'on' : ''} onClick={() => setLabTab(k)}><span>{String(k + 1).padStart(2, '0')}</span>{t}</button>
+            ))}
+          </div>
+          <div className="lab-panel" key={labTab}>
+            {labTab === 0 && <SiteAudit />}
+            {labTab === 1 && <TriageChallenge />}
+            {labTab === 2 && <KubeHarden />}
+            {labTab === 3 && <AttackChain />}
+            {labTab === 4 && <BreachSim onBook={openSchedule} />}
+            {labTab === 5 && <PasswordVault />}
+            {labTab === 6 && <BrowserKnows />}
+            {labTab === 7 && <HackSandbox />}
+            {labTab === 8 && <PhishAnalyzer />}
+            {labTab === 9 && <SigmaLab />}
+          </div>
+        </div>
+      </section>
+
+      <section className="band alt" id="honeypot">
+        <div className="wrap">
+          <SectionHead n="07" label="Live threat feed" sub="A decoy server I run to study real attackers. Every arc is a login attempt; every command is what they tried next.">This is happening <em>right now.</em></SectionHead>
+          <div className="reveal"><LiveHoneypot /></div>
+        </div>
+      </section>
+
       <section className="band" id="experience">
         <div className="wrap">
-          <SectionHead n="06" label="Professional experience" sub="Enterprise security engineering, SOC investigations and hands-on offensive work.">Experience in <em>practice</em></SectionHead>
+          <SectionHead n="08" label="Professional experience" sub="Enterprise security engineering, SOC investigations and hands-on offensive work.">Experience in <em>practice</em></SectionHead>
           <div className="xsum reveal">
             <div><b><CountUp to={4} suffix="+ yrs" /></b><span>In cybersecurity</span></div>
             <div><b><CountUp to={1.5} decimals={1} suffix=" yrs" /></b><span>Enterprise security at Cognizant</span></div>
             <div><b>Red + Blue</b><span>Pentest &amp; SOC experience</span></div>
             <div><b>CTF</b><span>3rd place finish</span></div>
           </div>
+          <div className="reveal" style={{ marginBottom: 26 }}><TimeMachine jobs={experience} wins={achievements} projects={projects} projectYear={2025} /></div>
           <div className="xp">
             {experience.map(e => (
               <article className={'job reveal' + (e.featured ? ' feat' : '')} key={e.role}>
@@ -1655,7 +1706,7 @@ export default function Home() {
 
       <section className="band alt" id="recognition">
         <div className="wrap">
-          <SectionHead n="07" label="Recognition">Milestones &amp; <em>credentials</em></SectionHead>
+          <SectionHead n="09" label="Recognition">Milestones &amp; <em>credentials</em></SectionHead>
           <div className="cols">
             <div className="reveal"><h3 className="rech"><span className="rech-i"><Award strokeWidth={1.8} /></span>Achievements<span className="rech-n">{String(achievements.length).padStart(2, '0')}</span><span className="rech-line" /></h3><div className="stackv">
               {achievements.map(a => <div className="mini" key={a.title}><div className="ico"><Award strokeWidth={1.7} /></div><div><span className="d">{a.date}</span><h3>{a.title}</h3><p>{a.detail}</p></div></div>)}
@@ -1673,7 +1724,7 @@ export default function Home() {
 
       <section className="band" id="contact">
         <div className="wrap">
-          <SectionHead n="08" label="Let's connect" sub="Open to Security Engineer, Penetration Tester, SOC Analyst, Cloud Security, DevSecOps and AppSec roles, and open to relocation.">Let&apos;s build something <em>secure</em></SectionHead>
+          <SectionHead n="10" label="Let's connect" sub="Open to Security Engineer, Penetration Tester, SOC Analyst, Cloud Security, DevSecOps and AppSec roles, and open to relocation.">Let&apos;s build something <em>secure</em></SectionHead>
           <div className="contact">
             <div className="term reveal"><div className="tb"><i /><i /><i /><span>siddharth@sec:~</span></div><Terminal /></div>
             <div className="reach reveal">
@@ -1690,6 +1741,21 @@ export default function Home() {
               <Social />
             </div>
           </div>
+          <div className="fw-card reveal">
+            <div className="fw-head"><small className="pc-k">Secure message</small><h3>Send me a message. <em>Watch it pass my defenses.</em></h3><p>It goes straight to my inbox. The layers are a visual, but the validation and spam trap are real.</p></div>
+            <FirewallMessage send={(name, mail, msg) => notify(`Portfolio message from ${name}`, { Name: name, Email: mail, Message: msg }, mail)} />
+          </div>
+          <div className="reach3d reveal">
+            <div className="globe-wrap"><Globe3D /></div>
+            <div className="globe-info">
+              <small className="pc-k">Where I can work</small>
+              <h3>Based in Maryland. <em>Ready to relocate.</em></h3>
+              <p>Open to on-site, hybrid or remote security roles anywhere in the US, including the Bay Area, Seattle, New York, Austin, Boston, Chicago, Atlanta and the DC area.</p>
+              <div className="globe-leg"><span><i className="home" />Home base · Maryland</span><span><i />Relocation-ready hubs</span></div>
+              <span className="g3d-hint">Drag the globe to spin it</span>
+            </div>
+          </div>
+          <div className="reveal" style={{ marginTop: 22 }}><ArCard img={portraitFront} name={fullName} /></div>
         </div>
       </section>
 
