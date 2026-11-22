@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import {
   Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
-  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, Rotate3d, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
+  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
 } from 'lucide-react';
 
 /* ================= your details ================= */
@@ -1052,99 +1052,34 @@ function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimals?: num
   return <span ref={ref}>{v.toFixed(decimals)}{suffix}</span>;
 }
 
-/* ---------- About: 3D portrait card (drag / swipe to spin with momentum, optional auto-rotate) ---------- */
+/* ---------- About: ID-badge portrait (static; gentle tilt + light follow on mouse) ---------- */
 function ProfileVisual() {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const boxRef = useRef<HTMLDivElement>(null);
-  const [auto, setAuto] = useState(true);
-  const autoRef = useRef(true);
-  const st = useRef({ ry: 0, rx: 0, trx: 0, v: 0, drag: false, lx: 0, lt: 0, hover: false, seen: false });
-  useEffect(() => { autoRef.current = auto; }, [auto]);
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) { autoRef.current = false; setAuto(false); }
-    const box = boxRef.current; if (!box) return;
-    const io = new IntersectionObserver(es => { st.current.seen = es[0].isIntersecting; }, { threshold: 0.15 });
-    io.observe(box);
-    let raf = 0, last = performance.now();
-    const SPEED = 0.024; // deg per ms: one full turn every 15 s
-    const loop = (t: number) => {
-      const dt = Math.min(48, t - last); last = t;
-      const s = st.current, el = cardRef.current;
-      if (el && s.seen) {
-        if (!s.drag) {
-          if (autoRef.current) {
-            const target = s.hover ? SPEED * 0.35 : SPEED;
-            s.v += (target - s.v) * Math.min(1, dt / 420);
-          } else {
-            s.v *= Math.pow(0.9935, dt);
-            if (Math.abs(s.v) < 0.02) { // settle on the nearest face
-              const goal = Math.round(s.ry / 180) * 180;
-              s.ry += (goal - s.ry) * Math.min(1, dt / 160);
-              s.v = 0;
-            }
-          }
-          s.ry += s.v * dt;
-        }
-        s.rx += (s.trx - s.rx) * Math.min(1, dt / 120);
-        const rad = (s.ry * Math.PI) / 180;
-        el.style.transform = `rotateX(${s.rx.toFixed(2)}deg) rotateY(${s.ry.toFixed(2)}deg)`;
-        el.style.setProperty('--sheen', (50 - Math.sin(rad) * 70).toFixed(1) + '%');
-        el.style.setProperty('--lit', (0.55 + 0.45 * Math.abs(Math.cos(rad))).toFixed(3));
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => { cancelAnimationFrame(raf); io.disconnect(); };
-  }, []);
-  const down = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const s = st.current; s.drag = true; s.lx = e.clientX; s.lt = performance.now(); s.v = 0;
-    e.currentTarget.setPointerCapture?.(e.pointerId);
+  const ref = useRef<HTMLDivElement>(null);
+  const move = (e: ReactPointerEvent) => {
+    const el = ref.current; if (!el || e.pointerType !== 'mouse') return;
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    el.style.setProperty('--tx', ((x - 0.5) * 8).toFixed(2) + 'deg');
+    el.style.setProperty('--ty', ((y - 0.5) * -8).toFixed(2) + 'deg');
+    el.style.setProperty('--sheen', (x * 100).toFixed(1) + '%');
   };
-  const move = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const s = st.current, r = e.currentTarget.getBoundingClientRect();
-    if (s.drag) {
-      const now = performance.now(), dx = e.clientX - s.lx, dt = Math.max(1, now - s.lt);
-      s.ry += dx * 0.55; s.v = s.v * 0.4 + ((dx * 0.55) / dt) * 0.6; s.lx = e.clientX; s.lt = now;
-      s.trx = Math.max(-10, Math.min(10, ((e.clientY - r.top) / r.height - 0.5) * -14));
-    } else if (e.pointerType === 'mouse') {
-      s.hover = true; s.trx = ((e.clientY - r.top) / r.height - 0.5) * -10;
-    }
-  };
-  const up = () => {
-    const s = st.current; if (!s.drag) return; s.drag = false; s.trx = 0;
-    s.v = Math.max(-1.2, Math.min(1.2, s.v));
-  };
-  const leave = () => { const s = st.current; s.hover = false; if (!s.drag) s.trx = 0; };
-  const face = (img: string, tl: string, tr: string, bl: string, back?: boolean) => (
-    <div className={'pv-face' + (back ? ' pv-back' : '')}>
-      <div className="pv-spot" />
-      <div className="pv-grid" />
-      <div className="pv-floor" />
-      <img className="pv-img" src={img} alt={back ? '' : fullName} draggable={false} />
-      <div className="pv-fade" />
-      <div className="pv-sheen" />
-      <i className="pv-c tl" /><i className="pv-c tr" /><i className="pv-c bl" /><i className="pv-c br" />
-      <span className="pv-lab l">{tl}</span><span className="pv-lab r">{tr}</span>
-      <span className="pv-id">{bl}</span>
-    </div>
-  );
+  const leave = () => { const el = ref.current; if (!el) return; el.style.setProperty('--tx', '0deg'); el.style.setProperty('--ty', '0deg'); el.style.setProperty('--sheen', '-40%'); };
   return (
     <div className="pv reveal">
-      <div className="pv-3d" ref={boxRef} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onPointerLeave={leave} aria-label="Drag to rotate the portrait">
-        <div className="pv-card" ref={cardRef}>
-          {face(portraitFront, 'SEC-ENG', 'MD · USA', 'SIDDHARTH MURAGUNDLA')}
-          {face(portraitBack, 'OFFENSIVE · DEFENSIVE', 'CLOUD', 'OPEN TO RELOCATION', true)}
+      <div className="pv-3d" ref={ref} onPointerMove={move} onPointerLeave={leave}>
+        <div className="pv-face">
+          <div className="pv-spot" />
+          <div className="pv-grid" />
+          <div className="pv-floor" />
+          <img className="pv-img" src={portraitFront} alt={fullName} draggable={false} />
+          <div className="pv-fade" />
+          <div className="pv-sheen" />
+          <i className="pv-c tl" /><i className="pv-c tr" /><i className="pv-c bl" /><i className="pv-c br" />
+          <span className="pv-lab l">SEC-ENG</span><span className="pv-lab r">MD · USA</span>
+          <span className="pv-id">SIDDHARTH MURAGUNDLA</span>
         </div>
         <div className="pv-shadow" />
       </div>
-      <div className="pv-bar">
-        <div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div>
-        <button className={'pv-auto' + (auto ? ' on' : '')} onClick={() => setAuto(a => !a)} aria-pressed={auto} title={auto ? 'Pause rotation' : 'Auto-rotate 360°'}>
-          {auto ? <Pause size={14} /> : <Rotate3d size={15} />}<span>{auto ? 'Pause' : 'Auto 360°'}</span>
-        </button>
-      </div>
-      <p className="pv-hint">Drag or swipe the photo to spin it</p>
+      <div className="pv-bar"><div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div></div>
     </div>
   );
 }
@@ -1236,6 +1171,9 @@ export default function Home() {
   const [fading, setFading] = useState(false);
   const [videoOk, setVideoOk] = useState(false);
   const [deg, setDeg] = useState(0);
+  const [spinAuto, setSpinAuto] = useState(true);
+  const spinAutoRef = useRef(true);
+  useEffect(() => { spinAutoRef.current = spinAuto; }, [spinAuto]);
   const [theme, setThemeState] = useState<Theme>('dark');
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -1325,7 +1263,9 @@ export default function Home() {
   // Hero: scroll turns the portrait and pops roles in one by one
   useEffect(() => {
     // smoothed: the turn eases toward the scroll position so touch/trackpad flicks glide instead of jumping
-    let cur = -1, target = 0, raf = 0;
+    let cur = -1, target = 0, raf = 0, off = 0, autoRaf = 0, last = performance.now();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { spinAutoRef.current = false; setSpinAuto(false); }
     const apply = (p: number) => {
       const stage = stageRef.current;
       if (!stage) return;
@@ -1333,14 +1273,15 @@ export default function Home() {
       const seg = turnP * 2, k = Math.min(1, Math.floor(seg)), f = Math.min(1, seg - k);
       const ease = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
       const angle = 180 * (k + ease);
-      const c = Math.abs(Math.cos((angle * Math.PI) / 180));
-      stage.style.setProperty('--ry', angle.toFixed(2) + 'deg');
+      const total = angle + off;
+      const c = Math.abs(Math.cos((total * Math.PI) / 180));
+      stage.style.setProperty('--ry', total.toFixed(2) + 'deg');
       stage.style.setProperty('--bl', (Math.pow(1 - c, 2) * 18).toFixed(2) + 'px');
       stage.style.setProperty('--op', (0.12 + 0.88 * Math.pow(c, 0.7)).toFixed(3));
       stage.style.setProperty('--bb', (1 + (1 - c) * 0.7).toFixed(3));
       stage.style.setProperty('--bu', Math.pow(1 - c, 2.2).toFixed(3));
       stage.style.setProperty('--sc', (0.94 + 0.06 * c).toFixed(3));
-      stage.style.setProperty('--sx', (50 + Math.sin((angle * Math.PI) / 180) * 16).toFixed(1) + '%');
+      stage.style.setProperty('--sx', (50 + Math.sin((total * Math.PI) / 180) * 16).toFixed(1) + '%');
       stage.style.setProperty('--sa', (0.24 + Math.sin(turnP * Math.PI) * 0.18).toFixed(3));
       barRef.current?.style.setProperty('--p', (p * 100).toFixed(1) + '%');
       setDeg(Math.round(angle));
@@ -1362,9 +1303,27 @@ export default function Home() {
       if (cur < 0) { cur = target; apply(cur); return; }
       if (!raf) raf = requestAnimationFrame(tick);
     };
+    // slow continuous 360° turn on top of the scroll turn (one revolution every 20 s)
+    const auto = (t: number) => {
+      const dt = Math.min(48, t - last); last = t;
+      const hero = heroRef.current;
+      const inView = hero ? window.scrollY < hero.offsetHeight : false;
+      if (spinAutoRef.current && inView && !document.hidden) {
+        off = (off + dt * 0.018) % 360;
+        if (!raf) apply(cur < 0 ? target : cur);
+      } else if (!spinAutoRef.current && off !== 0) {
+        // ease back to the nearest face when auto-turn is switched off
+        const goal = Math.round(off / 180) * 180;
+        off += (goal - off) * Math.min(1, dt / 220);
+        if (Math.abs(goal - off) < 0.05) off = goal % 360;
+        if (!raf) apply(cur < 0 ? target : cur);
+      }
+      autoRaf = requestAnimationFrame(auto);
+    };
+    autoRaf = requestAnimationFrame(auto);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); cancelAnimationFrame(autoRaf); };
   }, []);
 
   useEffect(() => {
@@ -1538,7 +1497,7 @@ export default function Home() {
           </div>
 
           <div className="cta"><HireButton onClick={openHire} big /><button className="btn call" onClick={openSchedule}><CalendarDays />Book a call</button></div>
-          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span><button className="skipb" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Skip to profile">Skip ↓</button></div>
+          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span><button className={'skipb autob' + (spinAuto ? ' on' : '')} onClick={() => setSpinAuto(a => !a)} aria-pressed={spinAuto} title={spinAuto ? 'Pause auto-turn' : 'Auto-turn 360°'}>{spinAuto ? <Pause size={12} /> : <RotateCcw size={12} />}{spinAuto ? 'Pause' : 'Auto 360°'}</button><button className="skipb" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Skip to profile">Skip ↓</button></div>
         </div>
       </section>
 
@@ -1695,10 +1654,10 @@ export default function Home() {
         <div className="wrap">
           <SectionHead n="07" label="Recognition">Milestones &amp; <em>credentials</em></SectionHead>
           <div className="cols">
-            <div className="reveal"><h3 className="ch">Achievements</h3><div className="stackv">
+            <div className="reveal"><h3 className="rech"><span className="rech-i"><Award strokeWidth={1.8} /></span>Achievements<span className="rech-n">{String(achievements.length).padStart(2, '0')}</span><span className="rech-line" /></h3><div className="stackv">
               {achievements.map(a => <div className="mini" key={a.title}><div className="ico"><Award strokeWidth={1.7} /></div><div><span className="d">{a.date}</span><h3>{a.title}</h3><p>{a.detail}</p></div></div>)}
             </div></div>
-            <div className="reveal"><h3 className="ch">Certifications</h3><div className="stackv">
+            <div className="reveal"><h3 className="rech"><span className="rech-i"><ShieldCheck strokeWidth={1.8} /></span>Certifications<span className="rech-n">{String(certifications.length).padStart(2, '0')}</span><span className="rech-line" /></h3><div className="stackv">
               {certifications.map(c => <div className="mini" key={c.title}><div className="ico"><ShieldCheck strokeWidth={1.7} /></div><div><h3>{c.title}</h3><p>{c.status}</p></div></div>)}
             </div></div>
           </div>
@@ -1737,9 +1696,30 @@ export default function Home() {
 
       <footer>
         <div className="wrap">
-          <svg className="giant" viewBox="0 0 1000 160" role="img" aria-label="Siddharth">
-            <defs><linearGradient id="gn" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="142"><stop offset="0" stopOpacity=".95" /><stop className="mid" offset=".6" stopOpacity=".55" /><stop offset="1" stopOpacity="0" /></linearGradient></defs>
-            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gn)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>SIDDHARTH</text>
+          <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
+            <defs>
+              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="18" y2="142">
+                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 1 }} />
+                <stop offset=".45" style={{ stopColor: 'var(--h1)', stopOpacity: 0.78 }} />
+                <stop offset=".78" style={{ stopColor: 'var(--accent)', stopOpacity: 0.16 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+              </linearGradient>
+              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="18" y2="142">
+                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+                <stop offset=".45" style={{ stopColor: 'var(--accent)', stopOpacity: 0.15 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
+              </linearGradient>
+              <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.85 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+              </linearGradient>
+              <radialGradient id="gnG" cx=".5" cy="1" r=".6"><stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.22 }} /><stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} /></radialGradient>
+            </defs>
+            <rect x="0" y="40" width="1000" height="132" fill="url(#gnG)" />
+            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>SIDDHARTH</text>
+            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.3" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties} aria-hidden="true">SIDDHARTH</text>
+            <rect x="80" y="152" width="840" height="1.2" fill="url(#gnL)" />
           </svg>
           <div className="foot">
             <span>© {new Date().getFullYear()} {fullName} · {baseLocation}</span>
