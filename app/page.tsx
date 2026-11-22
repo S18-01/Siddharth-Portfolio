@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import {
   Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
-  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
+  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, Rotate3d, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
 } from 'lucide-react';
 
 /* ================= your details ================= */
@@ -1052,26 +1052,99 @@ function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimals?: num
   return <span ref={ref}>{v.toFixed(decimals)}{suffix}</span>;
 }
 
-/* ---------- About: profile visual (cut-out portrait on a lit stage with floating credentials) ---------- */
+/* ---------- About: 3D portrait card (drag / swipe to spin with momentum, optional auto-rotate) ---------- */
 function ProfileVisual() {
-  const ref = useRef<HTMLDivElement>(null);
-  const move = (e: ReactPointerEvent) => {
-    const el = ref.current; if (!el || e.pointerType !== 'mouse') return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty('--tx', (((e.clientX - r.left) / r.width - 0.5) * 10).toFixed(2) + 'deg');
-    el.style.setProperty('--ty', (((e.clientY - r.top) / r.height - 0.5) * -10).toFixed(2) + 'deg');
+  const cardRef = useRef<HTMLDivElement>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const [auto, setAuto] = useState(true);
+  const autoRef = useRef(true);
+  const st = useRef({ ry: 0, rx: 0, trx: 0, v: 0, drag: false, lx: 0, lt: 0, hover: false, seen: false });
+  useEffect(() => { autoRef.current = auto; }, [auto]);
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { autoRef.current = false; setAuto(false); }
+    const box = boxRef.current; if (!box) return;
+    const io = new IntersectionObserver(es => { st.current.seen = es[0].isIntersecting; }, { threshold: 0.15 });
+    io.observe(box);
+    let raf = 0, last = performance.now();
+    const SPEED = 0.024; // deg per ms: one full turn every 15 s
+    const loop = (t: number) => {
+      const dt = Math.min(48, t - last); last = t;
+      const s = st.current, el = cardRef.current;
+      if (el && s.seen) {
+        if (!s.drag) {
+          if (autoRef.current) {
+            const target = s.hover ? SPEED * 0.35 : SPEED;
+            s.v += (target - s.v) * Math.min(1, dt / 420);
+          } else {
+            s.v *= Math.pow(0.9935, dt);
+            if (Math.abs(s.v) < 0.02) { // settle on the nearest face
+              const goal = Math.round(s.ry / 180) * 180;
+              s.ry += (goal - s.ry) * Math.min(1, dt / 160);
+              s.v = 0;
+            }
+          }
+          s.ry += s.v * dt;
+        }
+        s.rx += (s.trx - s.rx) * Math.min(1, dt / 120);
+        const rad = (s.ry * Math.PI) / 180;
+        el.style.transform = `rotateX(${s.rx.toFixed(2)}deg) rotateY(${s.ry.toFixed(2)}deg)`;
+        el.style.setProperty('--sheen', (50 - Math.sin(rad) * 70).toFixed(1) + '%');
+        el.style.setProperty('--lit', (0.55 + 0.45 * Math.abs(Math.cos(rad))).toFixed(3));
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
+  }, []);
+  const down = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const s = st.current; s.drag = true; s.lx = e.clientX; s.lt = performance.now(); s.v = 0;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
   };
-  const leave = () => { ref.current?.style.setProperty('--tx', '0deg'); ref.current?.style.setProperty('--ty', '0deg'); };
+  const move = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const s = st.current, r = e.currentTarget.getBoundingClientRect();
+    if (s.drag) {
+      const now = performance.now(), dx = e.clientX - s.lx, dt = Math.max(1, now - s.lt);
+      s.ry += dx * 0.55; s.v = s.v * 0.4 + ((dx * 0.55) / dt) * 0.6; s.lx = e.clientX; s.lt = now;
+      s.trx = Math.max(-10, Math.min(10, ((e.clientY - r.top) / r.height - 0.5) * -14));
+    } else if (e.pointerType === 'mouse') {
+      s.hover = true; s.trx = ((e.clientY - r.top) / r.height - 0.5) * -10;
+    }
+  };
+  const up = () => {
+    const s = st.current; if (!s.drag) return; s.drag = false; s.trx = 0;
+    s.v = Math.max(-1.2, Math.min(1.2, s.v));
+  };
+  const leave = () => { const s = st.current; s.hover = false; if (!s.drag) s.trx = 0; };
+  const face = (img: string, tl: string, tr: string, bl: string, back?: boolean) => (
+    <div className={'pv-face' + (back ? ' pv-back' : '')}>
+      <div className="pv-spot" />
+      <div className="pv-grid" />
+      <div className="pv-floor" />
+      <img className="pv-img" src={img} alt={back ? '' : fullName} draggable={false} />
+      <div className="pv-fade" />
+      <div className="pv-sheen" />
+      <i className="pv-c tl" /><i className="pv-c tr" /><i className="pv-c bl" /><i className="pv-c br" />
+      <span className="pv-lab l">{tl}</span><span className="pv-lab r">{tr}</span>
+      <span className="pv-id">{bl}</span>
+    </div>
+  );
   return (
-    <div className="pv reveal" ref={ref} onPointerMove={move} onPointerLeave={leave}>
-      <div className="pv-stage">
-        <div className="pv-grid" />
-        <div className="pv-disc" />
-        <div className="pv-ring r1" /><div className="pv-ring r2" />
-        <img className="pv-img" src={portraitFront} alt={fullName} />
-        <div className="pv-fade" />
+    <div className="pv reveal">
+      <div className="pv-3d" ref={boxRef} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onPointerLeave={leave} aria-label="Drag to rotate the portrait">
+        <div className="pv-card" ref={cardRef}>
+          {face(portraitFront, 'SEC-ENG', 'MD · USA', 'SIDDHARTH MURAGUNDLA')}
+          {face(portraitBack, 'OFFENSIVE · DEFENSIVE', 'CLOUD', 'OPEN TO RELOCATION', true)}
+        </div>
+        <div className="pv-shadow" />
       </div>
-      <div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div>
+      <div className="pv-bar">
+        <div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div>
+        <button className={'pv-auto' + (auto ? ' on' : '')} onClick={() => setAuto(a => !a)} aria-pressed={auto} title={auto ? 'Pause rotation' : 'Auto-rotate 360°'}>
+          {auto ? <Pause size={14} /> : <Rotate3d size={15} />}<span>{auto ? 'Pause' : 'Auto 360°'}</span>
+        </button>
+      </div>
+      <p className="pv-hint">Drag or swipe the photo to spin it</p>
     </div>
   );
 }
@@ -1251,11 +1324,11 @@ export default function Home() {
 
   // Hero: scroll turns the portrait and pops roles in one by one
   useEffect(() => {
-    const onScroll = () => {
-      const hero = heroRef.current, stage = stageRef.current;
-      if (!hero || !stage) return;
-      const max = hero.offsetHeight - window.innerHeight;
-      const p = Math.min(1, Math.max(0, window.scrollY / max));
+    // smoothed: the turn eases toward the scroll position so touch/trackpad flicks glide instead of jumping
+    let cur = -1, target = 0, raf = 0;
+    const apply = (p: number) => {
+      const stage = stageRef.current;
+      if (!stage) return;
       const turnP = Math.min(1, Math.max(0, (p - 0.04) / 0.9));
       const seg = turnP * 2, k = Math.min(1, Math.floor(seg)), f = Math.min(1, seg - k);
       const ease = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
@@ -1266,6 +1339,7 @@ export default function Home() {
       stage.style.setProperty('--op', (0.12 + 0.88 * Math.pow(c, 0.7)).toFixed(3));
       stage.style.setProperty('--bb', (1 + (1 - c) * 0.7).toFixed(3));
       stage.style.setProperty('--bu', Math.pow(1 - c, 2.2).toFixed(3));
+      stage.style.setProperty('--sc', (0.94 + 0.06 * c).toFixed(3));
       stage.style.setProperty('--sx', (50 + Math.sin((angle * Math.PI) / 180) * 16).toFixed(1) + '%');
       stage.style.setProperty('--sa', (0.24 + Math.sin(turnP * Math.PI) * 0.18).toFixed(3));
       barRef.current?.style.setProperty('--p', (p * 100).toFixed(1) + '%');
@@ -1274,9 +1348,23 @@ export default function Home() {
       const v = videoRef.current;
       if (v && v.duration) v.currentTime = turnP * (v.duration - 0.05);
     };
+    const tick = () => {
+      const d = target - cur;
+      cur = Math.abs(d) < 0.0004 ? target : cur + d * 0.14;
+      apply(cur);
+      raf = cur === target ? 0 : requestAnimationFrame(tick);
+    };
+    const onScroll = () => {
+      const hero = heroRef.current;
+      if (!hero) return;
+      const max = hero.offsetHeight - window.innerHeight;
+      target = Math.min(1, Math.max(0, window.scrollY / max));
+      if (cur < 0) { cur = target; apply(cur); return; }
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
   }, []);
 
   useEffect(() => {
@@ -1650,7 +1738,7 @@ export default function Home() {
       <footer>
         <div className="wrap">
           <svg className="giant" viewBox="0 0 1000 160" role="img" aria-label="Siddharth">
-            <defs><linearGradient id="gn" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopOpacity=".95" /><stop offset="1" stopOpacity="0" /></linearGradient></defs>
+            <defs><linearGradient id="gn" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="142"><stop offset="0" stopOpacity=".95" /><stop className="mid" offset=".6" stopOpacity=".55" /><stop offset="1" stopOpacity="0" /></linearGradient></defs>
             <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gn)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>SIDDHARTH</text>
           </svg>
           <div className="foot">
