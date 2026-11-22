@@ -791,7 +791,10 @@ html[data-seen] .boot{display:none}
 .boot.boot-exit .skip{opacity:0}
 
 .nm-m{display:none;font:800 15px Archivo,sans-serif;letter-spacing:-.01em;color:var(--ink2)}
-@media(max-width:760px){.logo .mk{display:none}.nm-m{display:block}}
+.nm-m small{display:flex;align-items:center;gap:6px;margin-top:2px;font:600 10.5px Inter,sans-serif;letter-spacing:.02em;color:var(--dim)}
+.nm-m small i{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
+@media(max-width:760px){.logo{gap:9px;min-width:0}.logo .mk{width:32px;height:32px;font-size:12.5px;border-radius:9px}.nm-m{display:block;min-width:0;white-space:nowrap}}
+@media(max-width:400px){.logo .mk{display:none}}
 
 /* section progress dots (desktop) */
 .dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:45;display:grid;gap:10px}

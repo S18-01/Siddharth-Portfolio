@@ -1414,7 +1414,7 @@ export default function Home() {
 
       <header className="nav" ref={navRef}>
         <div className="nav-in">
-          <a href="#home" className="logo" aria-label={`${fullName} home`}><span className="mk">SM</span><span className="nm">{fullName}<small>Security Engineer · {baseLocation}</small></span><span className="nm-m">Siddharth Muragundla</span></a>
+          <a href="#home" className="logo" aria-label={`${fullName} home`}><span className="mk">SM</span><span className="nm">{fullName}<small>Security Engineer · {baseLocation}</small></span><span className="nm-m">Siddharth Muragundla<small><i />Security Engineer</small></span></a>
           <nav className="links" ref={linksRef} aria-label="Main navigation">
             <span className="ind" aria-hidden="true" style={{ transform: `translateX(${ind.x}px)`, width: ind.w, opacity: ind.on ? 1 : 0 }} />
             {navLinks()}
@@ -1702,26 +1702,27 @@ export default function Home() {
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
               <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
-                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.42 }} />
-                <stop offset=".55" style={{ stopColor: 'var(--accent)', stopOpacity: 0.1 }} />
-                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+                <stop offset="0" stopColor="#dfe8ff" stopOpacity=".92" />
+                <stop offset=".38" style={{ stopColor: 'var(--accent)', stopOpacity: 0.78 }} />
+                <stop offset=".72" stopColor="#13285c" stopOpacity=".55" />
+                <stop offset="1" stopColor="#050a18" stopOpacity="0" />
               </linearGradient>
-              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
-                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 0.9 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
-                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+              <linearGradient id="gnLowG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
+                <stop offset=".58" stopColor="#000" /><stop offset=".78" stopColor="#fff" /><stop offset=".84" stopColor="#fff" /><stop offset=".86" stopColor="#000" />
               </linearGradient>
-              <radialGradient id="gnH" gradientUnits="userSpaceOnUse" cx="500" cy="20" r="760"><stop offset="0" stopColor="#fff" /><stop offset=".7" stopColor="#bbb" /><stop offset="1" stopColor="#333" /></radialGradient>
-              <mask id="gnHM" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnH)" /></mask>
+              <mask id="gnLow" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnLowG)" /></mask>
+              <filter id="gnGlow" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="2.2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.8 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
             </defs>
-            <g mask="url(#gnHM)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
+            <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.6" aria-hidden="true">SIDDHARTH</text>
+              <g mask="url(#gnLow)" filter="url(#gnGlow)" aria-hidden="true">
+                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" strokeWidth="1.4" style={{ stroke: 'var(--accent)' }}>SIDDHARTH</text>
+              </g>
             </g>
             <rect x="160" y="158" width="680" height="1" fill="url(#gnL)" />
           </svg>
