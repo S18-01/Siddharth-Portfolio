@@ -441,8 +441,8 @@ footer{padding:70px 0 30px;border-top:1px solid var(--line);overflow:hidden;back
  .g3{grid-template-columns:minmax(0,1fr)}
  .about{grid-template-columns:minmax(0,1fr)}.card{max-width:320px;margin:0 auto;transform:none}
  .cols{grid-template-columns:minmax(0,1fr)}
- .spin{height:58%;bottom:20%}
- .ring{top:54%}
+ .spin{height:50%;bottom:21%}
+ .ring{top:60%}
  .hi{top:auto;bottom:25%}.hi p{display:none}
  .loc{margin-bottom:10px}.loc span{font-size:11.5px;padding:5px 9px}
  .logo .nm{display:none}
@@ -450,7 +450,7 @@ footer{padding:70px 0 30px;border-top:1px solid var(--line);overflow:hidden;back
  .roles{top:92px;right:auto;left:max(5vw,18px);flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:6px;max-width:calc(100% - 36px)}
  .roles h4{width:100%}
  .role{padding:6px 10px 6px 7px;font-size:12px;gap:7px;border-radius:10px}.role i{width:18px;height:18px;font-size:10px}
- .cta{bottom:12%;left:max(5vw,18px);right:auto;justify-content:flex-start}
+ .cta{bottom:13%;left:max(5vw,18px);right:auto;justify-content:flex-start}
  .cta .btn.call{min-height:44px}
  .hire.big .in{min-height:46px;padding:0 20px}
  .scrub{bottom:5%}
