@@ -1439,3 +1439,25 @@ html[data-profile=manager] :is(.world,#network,#ctf,.skyline-wrap,.arc,.lock-car
 @media(max-width:900px){.tm-grid{grid-template-columns:minmax(0,1fr)}.tm{padding:16px}.tm-ticks{font-size:9.5px}}
 @media(max-width:1500px){.recb span{display:none}.recb{padding:0 11px!important}}
 @media(max-width:600px){.wr{padding:0}.wr-card{position:fixed;inset:0;width:auto;height:auto;border-radius:0}}
+
+/* recruiter quick view button (hero, above Positions) */
+.rec-quick{display:flex;align-items:center;gap:10px;width:100%;margin-bottom:14px;padding:10px 14px;border-radius:14px;border:1px solid rgba(var(--acc-rgb),.55);background:linear-gradient(110deg,rgba(var(--acc-rgb),.22),rgba(var(--acc-rgb),.06));color:var(--ink);cursor:pointer;text-align:left;box-shadow:0 0 30px -12px rgba(var(--acc-rgb),.9);transition:transform .2s,border-color .2s;pointer-events:auto}
+.rec-quick:hover{transform:translateY(-2px);border-color:var(--ink)}
+.rec-quick>svg:first-child{flex:none;color:var(--accent)}
+.rec-quick span{flex:1;min-width:0}.rec-quick b{display:block;font:700 13.5px Inter,sans-serif;white-space:nowrap}.rec-quick small{display:block;font-size:11.5px;color:var(--dim);white-space:nowrap}
+.rec-quick>svg:last-child{flex:none;color:var(--accent)}
+@media(max-width:760px){.rec-quick{width:auto;margin-bottom:8px;padding:8px 12px}.rec-quick small{display:none}}
+
+.links a{white-space:nowrap;flex:none}
+@media(max-width:1340px){.links a{padding:8px 8px;font-size:13px}}
+@media(max-width:1240px){.links a{padding:7px 6px;font-size:12.5px}}
+/* resume and booking open on top of recruiter mode, which stays open underneath */
+html.rec-open .scrim{z-index:121}html.rec-open .modal,html.rec-open .hp{z-index:122}html.rec-open .rv{z-index:125}
+/* menu fit levels set by script */
+@media(min-width:1061px){
+ html.nav-compact .logo .nm{display:none}
+ html.nav-tight .links{display:none}
+ html.nav-tight .menu{display:grid}
+ html.nav-tight .mob.on{display:flex;flex-direction:column;padding:6px 18px 16px;border-top:1px solid var(--line)}
+ html.nav-tight .mob a{min-height:46px;display:flex;align-items:center;border-bottom:1px solid var(--line);color:var(--ink)}
+}

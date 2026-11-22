@@ -5,9 +5,8 @@ import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from
 import { Globe3D, NetMap, SkillOrbit } from './three';
 import { FirewallMessage, KubeHarden, SiteAudit, TriageChallenge } from './labs';
 import { AttackChain, BreachSim, BrowserKnows, HoloBadge, ParticlePortrait, PasswordVault } from './labs2';
-import { ArCard, HackSandbox } from './labs3';
+import { HackSandbox, RecruiterMode } from './labs3';
 import { PhishAnalyzer, SigmaLab } from './labs4';
-import { TimeMachine } from './labs5';
 import { LiveHoneypot } from './honeypot';
 import {
   Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
@@ -703,6 +702,18 @@ function Chat({ open, setOpen, onSchedule }: { open: boolean; setOpen: (o: boole
   };
   const placeholder = mode === 'b-name' ? 'Your name…' : mode === 'b-email' ? 'you@company.com' : mode === 'b-company' ? 'Company name…' : 'Ask about skills, experience, availability…';
   const last = msgs[msgs.length - 1];
+  // Click or tap anywhere outside the chat box to close it (but not inside popups the chat opened)
+  const boxRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (!t || boxRef.current?.contains(t) || t.closest('.chat-fab, .modal, .rv, .hp, .pal, .toast, .scrim')) return;
+      setOpen(false);
+    };
+    document.addEventListener('pointerdown', away);
+    return () => document.removeEventListener('pointerdown', away);
+  }, [open, setOpen]);
   return (
     <>
       <button className={'chat-fab' + (open ? ' hide' : '')} onClick={() => setOpen(true)} aria-label="Open chat">
@@ -710,7 +721,7 @@ function Chat({ open, setOpen, onSchedule }: { open: boolean; setOpen: (o: boole
         <span className="t">Message me<small>{now ? `${homeTime(now)} ET · usually quick` : 'Usually replies quickly'}</small></span>
         <MessageCircle size={18} style={{ marginLeft: 2 }} />
       </button>
-      <div className={'chat' + (open ? ' on' : '')} role="dialog" aria-label="Chat with Siddharth" aria-hidden={!open}>
+      <div ref={boxRef} className={'chat' + (open ? ' on' : '')} role="dialog" aria-label="Chat with Siddharth" aria-hidden={!open}>
         <div className="ch">
           <span className="cav"><img src={portrait} alt="" /></span>
           <div className="ch-id"><b>{fullName}</b><span className="st">{now ? `${replyStatus(now).split(' · ')[0]} · ${homeTime(now)} ET` : 'Online'}</span></div>
@@ -1073,7 +1084,7 @@ function ProfileVisual() {
   };
   const leave = () => { ref.current?.style.setProperty('--mx', '0'); ref.current?.style.setProperty('--my', '0'); };
   return (
-    <div className="pv reveal">
+    <div className="pv">
       <div className="pv-stage2" ref={ref} onPointerMove={move} onPointerLeave={leave}>
         <div className="pv-arch">
           <div className="pv-spot" />
@@ -1116,7 +1127,7 @@ function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSc
     <div className="fit reveal">
       <div className="fit-h">
         <div><span className="fit-k"><i />Role match</span><b>Hiring for Security, Pentest, SOC, Cloud or DevSecOps?</b><span>Pick the role and see exactly how my experience matches, then book a time to talk.</span></div>
-        <div className="fit-acts"><button className="btn light" onClick={onSchedule}><CalendarDays />Book a call</button><a className="btn ghost" href={resume}><FileText />View resume</a></div>
+        <div className="fit-acts"><a className="btn ghost" href={resume}><FileText />View resume</a></div>
       </div>
       <div className="fit-tabs" role="tablist" aria-label="Role">{roleFit.map((x, k) => <button key={x.role} role="tab" aria-selected={k === i} className={k === i ? 'on' : ''} onClick={() => setI(k)}>{x.role}</button>)}</div>
       <div className="fit-body" key={r.role}>
@@ -1171,6 +1182,8 @@ export default function Home() {
   const [caseIdx, setCaseIdx] = useState<number | null>(null);
   const [skillTab, setSkillTab] = useState('All');
   const [labTab, setLabTab] = useState(0);
+  const [recOpen, setRecOpen] = useState(false);
+  useEffect(() => { document.documentElement.classList.toggle('rec-open', recOpen); }, [recOpen]);
   const [aboutMode, setAboutMode] = useState<'photo' | 'badge' | 'particles'>('photo');
   const orbitTools = useMemo(() => {
     const pick = ['Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Splunk', 'Elastic Stack (ELK)', 'MITRE ATT&CK', 'Incident Response', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Bash', 'Scikit-learn', 'Pandas', 'Grafana', 'Jira'];
@@ -1271,9 +1284,41 @@ export default function Home() {
       setInd(a ? { x: a.offsetLeft, w: a.offsetWidth, on: true } : i => ({ ...i, on: false }));
     };
     place();
+    // re-measure when fonts finish loading or the menu changes size, so the highlight always fits the text
+    const ro = new ResizeObserver(place);
+    if (linksRef.current) { ro.observe(linksRef.current); linksRef.current.querySelectorAll('a').forEach(el => ro.observe(el)); }
+    document.fonts?.ready.then(place).catch(() => {});
     window.addEventListener('resize', place);
-    return () => window.removeEventListener('resize', place);
+    return () => { ro.disconnect(); window.removeEventListener('resize', place); };
   }, [active]);
+
+  // Menu fit: if the links don't fit beside the logo and buttons (wide fonts, zoom, small laptops),
+  // first hide the name under the logo, then switch to the menu button. Measured with the real fonts.
+  useEffect(() => {
+    const links = linksRef.current; if (!links) return;
+    const bar = links.parentElement; if (!bar) return;
+    const root = document.documentElement;
+    const need = { links: 0, logo: 0 };
+    const fit = () => {
+      const logo = bar.querySelector<HTMLElement>('.logo'), mk = bar.querySelector<HTMLElement>('.logo .mk'), navR = bar.querySelector<HTMLElement>('.nav-r'), menu = bar.querySelector<HTMLElement>('.menu');
+      if (!logo || !navR || !mk) return;
+      if (getComputedStyle(links).display !== 'none') need.links = links.scrollWidth;
+      const nm = bar.querySelector<HTMLElement>('.logo .nm');
+      if (nm && getComputedStyle(nm).display !== 'none') need.logo = logo.getBoundingClientRect().width;
+      if (window.innerWidth <= 1060) { root.classList.remove('nav-compact', 'nav-tight'); return; }
+      const menuW = menu && getComputedStyle(menu).display !== 'none' ? menu.getBoundingClientRect().width + 10 : 0;
+      const right = navR.getBoundingClientRect().left + menuW, left = logo.getBoundingClientRect().left;
+      const avail = (logoW: number) => right - (left + logoW) - 40;
+      const full = need.logo || logo.getBoundingClientRect().width, small = mk.getBoundingClientRect().width;
+      root.classList.toggle('nav-compact', need.links > avail(full) && need.links <= avail(small));
+      root.classList.toggle('nav-tight', need.links > avail(small));
+    };
+    fit();
+    const ro = new ResizeObserver(() => requestAnimationFrame(fit)); ro.observe(bar); ro.observe(links);
+    document.fonts?.ready.then(fit).catch(() => {});
+    window.addEventListener('resize', fit);
+    return () => { ro.disconnect(); window.removeEventListener('resize', fit); root.classList.remove('nav-compact', 'nav-tight'); };
+  }, []);
 
   // Hero: scroll turns the portrait and pops roles in one by one
   useEffect(() => {
@@ -1502,6 +1547,7 @@ export default function Home() {
           </div>
 
           <div className="roles" aria-label="Roles">
+            <button className="rec-quick" onClick={() => setRecOpen(true)}><FileText size={15} /><span><b>Hiring? See everything</b><small>30-second recruiter summary</small></span><ArrowRight size={14} /></button>
             <h4>Positions</h4>
             {roles.map((x, i) => (
               <div key={x.short} className={'role' + (i <= step ? ' on' : '') + (i === step ? ' cur' : '')}>
@@ -1524,9 +1570,9 @@ export default function Home() {
             <div><small><MapPin />Location</small><b>{baseLocation}<em>Open to relocation</em></b></div>
             <div className="clock"><small><Clock />My local time</small><b>{now ? homeTime(now, true) : '--:--'} ET<em>{now ? replyStatus(now).split(' · ')[0] : ''}</em></b></div>
             <div className="snap-act">
-              <HireButton onClick={openHire} />
-              <button className="btn call" onClick={openSchedule}><CalendarDays />Book a call</button>
-              <a className="btn ghost" href={resume}><FileText />Resume</a>
+              <a className="btn ghost" href={resume}><FileText />View resume</a>
+              <button className="btn ghost" onClick={copyEmail}>{copied ? <Check /> : <Copy />}{copied ? 'Copied' : 'Copy email'}</button>
+              <a className="btn ghost" href={linkedinUrl} target="_blank" rel="noopener noreferrer"><Brand name="linkedin" size={15} />LinkedIn</a>
             </div>
           </div>
         </div>
@@ -1535,7 +1581,7 @@ export default function Home() {
 
       <section className="band alt" id="about">
         <div className="wrap about">
-          <div className="pv-modes-wrap">
+          <div className="pv-modes-wrap reveal">
             {aboutMode === 'photo' && <ProfileVisual />}
             {aboutMode === 'badge' && <HoloBadge img={portraitFront} name={fullName} li={linkedinUrl} />}
             {aboutMode === 'particles' && <div className="pv-part"><ParticlePortrait img={portraitFront} /><span className="g3d-hint">Move your mouse over me</span></div>}
@@ -1679,7 +1725,6 @@ export default function Home() {
             <div><b>Red + Blue</b><span>Pentest &amp; SOC experience</span></div>
             <div><b>CTF</b><span>3rd place finish</span></div>
           </div>
-          <div className="reveal" style={{ marginBottom: 26 }}><TimeMachine jobs={experience} wins={achievements} projects={projects} projectYear={2025} /></div>
           <div className="xp">
             {experience.map(e => (
               <article className={'job reveal' + (e.featured ? ' feat' : '')} key={e.role}>
@@ -1755,13 +1800,14 @@ export default function Home() {
               <span className="g3d-hint">Drag the globe to spin it</span>
             </div>
           </div>
-          <div className="reveal" style={{ marginTop: 22 }}><ArCard img={portraitFront} name={fullName} /></div>
         </div>
       </section>
 
       <section className="band alt" id="rate" aria-label="Rate this portfolio">
         <div className="wrap"><Rating /></div>
       </section>
+
+      {recOpen && <RecruiterMode name={fullName} title="Security Engineer" location={baseLocation} roles={openRoles} jobs={experience} projects={projects} certs={certifications} edu="M.Eng Cybersecurity, University of Maryland, College Park · Expected Dec 2026" email={email} linkedin={linkedinUrl} onClose={() => setRecOpen(false)} onBook={openSchedule} onResume={() => setResumeOpen(true)} />}
 
       <footer>
         <div className="wrap">

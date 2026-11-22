@@ -349,7 +349,7 @@ export function HoloBadge({ img, name, li }: { img: string; name: string; li: st
     <div className="holo-wrap"><div className="holo" onPointerMove={move} onPointerLeave={leave}>
       <div className="holo-top"><span>SECURITY · ACCESS</span><span className="chip-ic" /></div>
       <img src={img} alt={name} draggable={false} />
-      <div className="holo-info"><b>{name}</b><span>Clearance · Security Engineer</span><span>Maryland, USA · Open to relocation</span><a href={li} target="_blank" rel="noopener noreferrer">linkedin.com/in/siddhum ↗</a></div>
+      <div className="holo-info"><b>{name}</b><span>Security Engineer</span><span>Maryland, USA · Open to relocation</span><a href={li} target="_blank" rel="noopener noreferrer">linkedin.com/in/siddhum ↗</a></div>
       <div className="holo-foil" aria-hidden="true" />
     </div></div>
   );

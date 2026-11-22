@@ -180,7 +180,7 @@ export function ArCard({ img, name }: { img: string; name: string }) {
 }
 
 /* ================= Recruiter mode ================= */
-type Rec = { name: string; title: string; location: string; roles: string[]; jobs: Job[]; projects: { title: string; tag: string; live?: string; repo?: string }[]; certs: { title: string; status: string }[]; edu: string; onClose: () => void; onBook: () => void; onResume: () => void; email: string; linkedin: string };
+type Rec = { name: string; title: string; location: string; roles: string[]; jobs: Job[]; projects: { title: string; tag: string; live?: string | null; repo?: string | null }[]; certs: { title: string; status: string }[]; edu: string; onClose: () => void; onBook: () => void; onResume: () => void; email: string; linkedin: string };
 export function RecruiterMode(r: Rec) {
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') r.onClose(); }; addEventListener('keydown', k); document.body.style.overflow = 'hidden'; return () => { removeEventListener('keydown', k); document.body.style.overflow = ''; }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (

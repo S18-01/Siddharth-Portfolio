@@ -17,7 +17,7 @@ const auditSpec: { key: string; label: string; why: string; test: (h: Headers) =
   { key: 'xfo', label: 'Clickjacking protection', why: 'Page cannot be framed by other sites', test: h => { const v = h.get('x-frame-options'); return [!!v, v ? `X-Frame-Options: ${v}` : 'Missing']; } },
   { key: 'xcto', label: 'MIME sniffing blocked', why: 'Browser will not guess file types', test: h => { const v = h.get('x-content-type-options'); return [v === 'nosniff', v ? `X-Content-Type-Options: ${v}` : 'Missing']; } },
   { key: 'ref', label: 'Referrer policy', why: 'Limits what URLs leak to other sites', test: h => { const v = h.get('referrer-policy'); return [!!v, v || 'Missing']; } },
-  { key: 'perm', label: 'Permissions policy', why: 'Mic, location, payment and USB are blocked', test: h => { const v = h.get('permissions-policy'); return [!!v, v ? `${v.split(',').length} browser features locked` : 'Missing']; } },
+  { key: 'perm', label: 'Permissions policy', why: 'Camera, mic and location are disabled', test: h => { const v = h.get('permissions-policy'); return [!!v, v ? `${v.split(',').length} browser features locked` : 'Missing']; } },
   { key: 'coop', label: 'Cross-origin isolation', why: 'Other windows cannot reach this page', test: h => { const v = h.get('cross-origin-opener-policy'); return [!!v, v ? `COOP: ${v}` : 'Missing']; } },
 ];
 

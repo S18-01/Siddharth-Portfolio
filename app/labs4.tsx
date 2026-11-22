@@ -99,7 +99,7 @@ export function PhishAnalyzer() {
 /* ================= Sigma rules, run live on sample logs ================= */
 type Ev = Record<string, string | number>;
 type Sel = Record<string, string | string[] | number>;
-type Rule = { title: string; id: string; level: 'high' | 'critical' | 'medium'; tags: string[]; logsource: Record<string, string>; detection: Record<string, Sel> & { condition: string }; why: string };
+type Rule = { title: string; id: string; level: 'high' | 'critical' | 'medium'; tags: string[]; logsource: Record<string, string>; detection: { condition: string; [sel: string]: Sel | string }; why: string };
 const rules: Rule[] = [
   { title: 'Encoded PowerShell Command Line', id: 'sm-0001', level: 'high', tags: ['attack.execution', 'attack.t1059.001'], logsource: { category: 'process_creation', product: 'windows' }, detection: { selection: { 'Image|endswith': '\\powershell.exe', 'CommandLine|contains': [' -enc ', ' -EncodedCommand ', ' -e '] }, condition: 'selection' }, why: 'Attackers base64-encode PowerShell to hide what it does.' },
   { title: 'Office Application Spawning a Shell', id: 'sm-0002', level: 'high', tags: ['attack.execution', 'attack.t1204.002'], logsource: { category: 'process_creation', product: 'windows' }, detection: { selection: { 'ParentImage|endswith': ['\\WINWORD.EXE', '\\EXCEL.EXE', '\\OUTLOOK.EXE'], 'Image|endswith': ['\\cmd.exe', '\\powershell.exe', '\\wscript.exe'] }, condition: 'selection' }, why: 'Word or Excel launching a shell usually means a malicious macro.' },
