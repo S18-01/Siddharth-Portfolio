@@ -1052,34 +1052,31 @@ function CountUp({ to, decimals = 0, suffix = '' }: { to: number; decimals?: num
   return <span ref={ref}>{v.toFixed(decimals)}{suffix}</span>;
 }
 
-/* ---------- About: ID-badge portrait (static; gentle tilt + light follow on mouse) ---------- */
+/* ---------- About: pop-out portrait (head breaks out of a lit glass arch; gentle mouse parallax) ---------- */
 function ProfileVisual() {
   const ref = useRef<HTMLDivElement>(null);
   const move = (e: ReactPointerEvent) => {
     const el = ref.current; if (!el || e.pointerType !== 'mouse') return;
-    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-    el.style.setProperty('--tx', ((x - 0.5) * 8).toFixed(2) + 'deg');
-    el.style.setProperty('--ty', ((y - 0.5) * -8).toFixed(2) + 'deg');
-    el.style.setProperty('--sheen', (x * 100).toFixed(1) + '%');
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty('--mx', x.toFixed(3)); el.style.setProperty('--my', y.toFixed(3));
   };
-  const leave = () => { const el = ref.current; if (!el) return; el.style.setProperty('--tx', '0deg'); el.style.setProperty('--ty', '0deg'); el.style.setProperty('--sheen', '-40%'); };
+  const leave = () => { ref.current?.style.setProperty('--mx', '0'); ref.current?.style.setProperty('--my', '0'); };
   return (
     <div className="pv reveal">
-      <div className="pv-3d" ref={ref} onPointerMove={move} onPointerLeave={leave}>
-        <div className="pv-face">
+      <div className="pv-stage2" ref={ref} onPointerMove={move} onPointerLeave={leave}>
+        <div className="pv-arch">
           <div className="pv-spot" />
           <div className="pv-grid" />
           <div className="pv-floor" />
-          <img className="pv-img" src={portraitFront} alt={fullName} draggable={false} />
-          <div className="pv-fade" />
-          <div className="pv-sheen" />
-          <i className="pv-c tl" /><i className="pv-c tr" /><i className="pv-c bl" /><i className="pv-c br" />
-          <span className="pv-lab l">SEC-ENG</span><span className="pv-lab r">MD · USA</span>
-          <span className="pv-id">SIDDHARTH MURAGUNDLA</span>
+          <span className="pv-ver">SEC · ENG</span>
         </div>
-        <div className="pv-shadow" />
+        <img className="pv-pop" src={portraitFront} alt={fullName} draggable={false} />
+        <div className="pv-base" />
       </div>
-      <div className="pv-bar"><div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div></div>
+      <div className="pv-meta">
+        <div className="pv-name"><b>Siddharth Muragundla</b><span>Security Engineer · Maryland, USA</span></div>
+        <div className="pv-status"><span className="sd" />Open to work · Relocation ✓</div>
+      </div>
     </div>
   );
 }
@@ -1107,7 +1104,8 @@ function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSc
   return (
     <div className="fit reveal">
       <div className="fit-h">
-        <div><b>Hiring for a specific role?</b><span>Pick it and see exactly how my experience matches.</span></div>
+        <div><span className="fit-k"><i />Role match</span><b>Hiring for Security, Pentest, SOC, Cloud or DevSecOps?</b><span>Pick the role and see exactly how my experience matches, then book a time to talk.</span></div>
+        <div className="fit-acts"><button className="btn light" onClick={onSchedule}><CalendarDays />Book a call</button><a className="btn ghost" href={resume}><FileText />View resume</a></div>
       </div>
       <div className="fit-tabs" role="tablist" aria-label="Role">{roleFit.map((x, k) => <button key={x.role} role="tab" aria-selected={k === i} className={k === i ? 'on' : ''} onClick={() => setI(k)}>{x.role}</button>)}</div>
       <div className="fit-body" key={r.role}>
@@ -1123,7 +1121,7 @@ function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSc
           <div className="tags">{r.tools.map(t => <span key={t}>{t}</span>)}</div>
           <small>Related work</small>
           <div className="fit-work">{r.work.map(w => <button key={w} onClick={() => onCase(w)}><Layers size={14} />{w}<ArrowRight size={14} /></button>)}</div>
-          <button className="btn light" onClick={onSchedule}><CalendarDays />Talk about this role</button>
+          <button className="fit-talk" onClick={onSchedule}><CalendarDays size={15} />Talk about the {r.role} role<ArrowRight size={14} /></button>
         </div>
       </div>
     </div>
@@ -1171,8 +1169,8 @@ export default function Home() {
   const [fading, setFading] = useState(false);
   const [videoOk, setVideoOk] = useState(false);
   const [deg, setDeg] = useState(0);
-  const [spinAuto, setSpinAuto] = useState(true);
-  const spinAutoRef = useRef(true);
+  const [spinAuto, setSpinAuto] = useState(false);
+  const spinAutoRef = useRef(false);
   useEffect(() => { spinAutoRef.current = spinAuto; }, [spinAuto]);
   const [theme, setThemeState] = useState<Theme>('dark');
   const heroRef = useRef<HTMLElement>(null);
@@ -1263,7 +1261,7 @@ export default function Home() {
   // Hero: scroll turns the portrait and pops roles in one by one
   useEffect(() => {
     // smoothed: the turn eases toward the scroll position so touch/trackpad flicks glide instead of jumping
-    let cur = -1, target = 0, raf = 0, off = 0, autoRaf = 0, last = performance.now();
+    let cur = -1, target = 0, raf = 0, autoRaf = 0, last = performance.now(), wasAuto = false;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { spinAutoRef.current = false; setSpinAuto(false); }
     const apply = (p: number) => {
@@ -1273,7 +1271,7 @@ export default function Home() {
       const seg = turnP * 2, k = Math.min(1, Math.floor(seg)), f = Math.min(1, seg - k);
       const ease = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
       const angle = 180 * (k + ease);
-      const total = angle + off;
+      const total = angle;
       const c = Math.abs(Math.cos((total * Math.PI) / 180));
       stage.style.setProperty('--ry', total.toFixed(2) + 'deg');
       stage.style.setProperty('--bl', (Math.pow(1 - c, 2) * 18).toFixed(2) + 'px');
@@ -1301,23 +1299,21 @@ export default function Home() {
       const max = hero.offsetHeight - window.innerHeight;
       target = Math.min(1, Math.max(0, window.scrollY / max));
       if (cur < 0) { cur = target; apply(cur); return; }
+      if (spinAutoRef.current) { spinAutoRef.current = false; setSpinAuto(false); } // visitor took over: hand control back to scroll
       if (!raf) raf = requestAnimationFrame(tick);
     };
-    // slow continuous 360° turn on top of the scroll turn (one revolution every 20 s)
+    // Auto-turn (off until the visitor presses it): plays the same sequence as scrolling,
+    // so the portrait turns slowly and the positions change one by one, then loops.
     const auto = (t: number) => {
       const dt = Math.min(48, t - last); last = t;
       const hero = heroRef.current;
-      const inView = hero ? window.scrollY < hero.offsetHeight : false;
+      const inView = hero ? window.scrollY < hero.offsetHeight - window.innerHeight * 0.5 : false;
       if (spinAutoRef.current && inView && !document.hidden) {
-        off = (off + dt * 0.018) % 360;
-        if (!raf) apply(cur < 0 ? target : cur);
-      } else if (!spinAutoRef.current && off !== 0) {
-        // ease back to the nearest face when auto-turn is switched off
-        const goal = Math.round(off / 180) * 180;
-        off += (goal - off) * Math.min(1, dt / 220);
-        if (Math.abs(goal - off) < 0.05) off = goal % 360;
-        if (!raf) apply(cur < 0 ? target : cur);
-      }
+        if (!wasAuto) { cancelAnimationFrame(raf); raf = 0; if (cur < 0 || cur >= 0.999) cur = 0; wasAuto = true; }
+        cur += dt / 30000; // one full turn with every position in about 30 s
+        if (cur >= 1) cur = 0;
+        apply(cur);
+      } else if (!spinAutoRef.current) wasAuto = false;
       autoRaf = requestAnimationFrame(auto);
     };
     autoRaf = requestAnimationFrame(auto);
@@ -1497,7 +1493,7 @@ export default function Home() {
           </div>
 
           <div className="cta"><HireButton onClick={openHire} big /><button className="btn call" onClick={openSchedule}><CalendarDays />Book a call</button></div>
-          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span><button className={'skipb autob' + (spinAuto ? ' on' : '')} onClick={() => setSpinAuto(a => !a)} aria-pressed={spinAuto} title={spinAuto ? 'Pause auto-turn' : 'Auto-turn 360°'}>{spinAuto ? <Pause size={12} /> : <RotateCcw size={12} />}{spinAuto ? 'Pause' : 'Auto 360°'}</button><button className="skipb" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Skip to profile">Skip ↓</button></div>
+          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span><button className={'skipb autob' + (spinAuto ? ' on' : '')} onClick={() => setSpinAuto(a => !a)} aria-pressed={spinAuto} title={spinAuto ? 'Pause auto-turn' : 'Turn the portrait automatically'}>{spinAuto ? <Pause size={12} /> : <RotateCcw size={12} />}{spinAuto ? 'Pause' : 'Auto-turn'}</button><button className="skipb" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Skip to profile">Skip ↓</button></div>
         </div>
       </section>
 
@@ -1562,10 +1558,6 @@ export default function Home() {
             ); })}
           </div>
           <RoleFit onCase={t => setCaseIdx(projects.findIndex(p => p.title === t))} onSchedule={openSchedule} />
-          <div className="why-cta reveal">
-            <div><b>Hiring for Security, Pentest, SOC, Cloud or DevSecOps?</b><span>Let&apos;s talk. Pick a time that works for you.</span></div>
-            <div className="row"><button className="btn light" onClick={openSchedule}><CalendarDays />Book a call</button><a className="btn ghost" href={resume}><FileText />View resume</a></div>
-          </div>
         </div>
       </section>
 
@@ -1698,28 +1690,33 @@ export default function Home() {
         <div className="wrap">
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
-              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="18" y2="142">
-                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 1 }} />
-                <stop offset=".45" style={{ stopColor: 'var(--h1)', stopOpacity: 0.78 }} />
-                <stop offset=".78" style={{ stopColor: 'var(--accent)', stopOpacity: 0.16 }} />
-                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="96">
+                <stop offset="0" style={{ stopColor: 'var(--h1)' }} />
+                <stop offset="1" style={{ stopColor: 'var(--h1)', stopOpacity: 0.82 }} />
               </linearGradient>
-              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="18" y2="142">
-                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".45" style={{ stopColor: 'var(--accent)', stopOpacity: 0.15 }} />
-                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
+              <linearGradient id="gnTopG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
+                <stop offset=".44" stopColor="#fff" /><stop offset=".56" stopColor="#000" />
               </linearGradient>
+              <linearGradient id="gnLowG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
+                <stop offset=".42" stopColor="#000" /><stop offset=".55" stopColor="#fff" /><stop offset=".83" stopColor="#fff" stopOpacity=".55" /><stop offset=".86" stopColor="#000" />
+              </linearGradient>
+              <mask id="gnTop" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnTopG)" /></mask>
+              <mask id="gnLow" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnLowG)" /></mask>
+              <pattern id="gnScan" patternUnits="userSpaceOnUse" width="8" height="5"><rect width="8" height="2.2" style={{ fill: 'var(--accent)' }} /></pattern>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.85 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.9 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
-              <radialGradient id="gnG" cx=".5" cy="1" r=".6"><stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.22 }} /><stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} /></radialGradient>
             </defs>
-            <rect x="0" y="40" width="1000" height="132" fill="url(#gnG)" />
-            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>SIDDHARTH</text>
-            <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.3" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties} aria-hidden="true">SIDDHARTH</text>
-            <rect x="80" y="152" width="840" height="1.2" fill="url(#gnL)" />
+            <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnTop)">SIDDHARTH</text>
+              <g mask="url(#gnLow)" aria-hidden="true">
+                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnScan)" opacity=".75">SIDDHARTH</text>
+                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" strokeWidth="1.2" style={{ stroke: 'var(--accent)' }} opacity=".55">SIDDHARTH</text>
+              </g>
+            </g>
+            <rect x="60" y="152" width="880" height="1.2" fill="url(#gnL)" />
           </svg>
           <div className="foot">
             <span>© {new Date().getFullYear()} {fullName} · {baseLocation}</span>
