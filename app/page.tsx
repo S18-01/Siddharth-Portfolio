@@ -904,7 +904,7 @@ function ResumeViewer({ open, onClose, onHire, onSchedule }: { open: boolean; on
             <div className="paper" key={src} style={{ width: `calc(min(100%, 820px) * ${zoom})` }}>
               <img src={src} alt={`Resume page ${i + 1}`} loading="eager" />
               {(resumeLinks[i] || []).map(k => (
-                <a key={k.href} className="rv-link" href={k.href} target={k.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" data-raw aria-label={k.href.replace(/^(mailto:|tel:|https?:\/\/)/, '')} title={k.href.replace(/^(mailto:|tel:)/, '')} style={{ left: k.l + '%', top: k.t + '%', width: k.w + '%', height: k.h + '%' }} />
+                <a key={k.href} className="rv-link" href={k.href} onClick={k.href.includes('siddharth-muragundla.vercel.app') ? e => { e.preventDefault(); onClose(); window.scrollTo({ top: 0, behavior: 'smooth' }); } : undefined} target={k.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" data-raw aria-label={k.href.replace(/^(mailto:|tel:|https?:\/\/)/, '')} title={k.href.replace(/^(mailto:|tel:)/, '')} style={{ left: k.l + '%', top: k.t + '%', width: k.w + '%', height: k.h + '%' }} />
               ))}
               <span className="pn">{i + 1} / {resumePages.length}</span>
             </div>
@@ -1400,7 +1400,7 @@ export default function Home() {
     <main>
 
 
-      {!booted && <Boot onDone={() => { setBooted(true); try { sessionStorage.setItem('sm-booted', '1'); } catch { /* */ } document.documentElement.dataset.seen = '1'; }} />}
+      {!booted && <Boot onDone={() => { setBooted(true); try { localStorage.setItem('sm-booted', '1'); } catch { /* */ } document.documentElement.dataset.seen = '1'; }} />}
       <a className="skip-link" href="#about">Skip to content</a>
       <Palette open={palOpen} onClose={() => setPalOpen(false)} cmds={cmds} />
       <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} />
@@ -1704,10 +1704,11 @@ export default function Home() {
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
               <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
-                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.95 }} />
-                <stop offset=".4" style={{ stopColor: 'var(--accent)', stopOpacity: 0.62 }} />
-                <stop offset=".68" style={{ stopColor: 'var(--accent)', stopOpacity: 0.22 }} />
-                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+                <stop offset="0" stopColor="#ffffff" stopOpacity=".96" />
+                <stop offset=".3" stopColor="#dbe6ff" stopOpacity=".9" />
+                <stop offset=".55" style={{ stopColor: 'var(--accent)', stopOpacity: 0.9 }} />
+                <stop offset=".8" stopColor="#0b1a3d" stopOpacity=".85" />
+                <stop offset="1" stopColor="#000000" stopOpacity="0" />
               </linearGradient>
               <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
                 <stop offset=".35" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
@@ -1726,7 +1727,7 @@ export default function Home() {
             </defs>
             <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".22" style={{ fill: 'var(--h1)' }} aria-hidden="true">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".18" style={{ fill: '#ffffff' }} aria-hidden="true">SIDDHARTH</text>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.1" aria-hidden="true">SIDDHARTH</text>
             </g>
             <rect x="120" y="156" width="760" height="1" fill="url(#gnL)" />

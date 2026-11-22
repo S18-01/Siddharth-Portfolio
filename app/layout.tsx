@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#070c17' };
 
 // Runs before first paint: restores the saved theme and skips the opening for returning visitors this session
-const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('sm-theme');d.dataset.theme=(t==='light'||t==='graphite')?t:'dark';if(sessionStorage.getItem('sm-booted'))d.dataset.seen='1'}catch(e){d.dataset.theme='dark'}})()`;
+const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('sm-theme');d.dataset.theme=(t==='light'||t==='graphite')?t:'dark';if(localStorage.getItem('sm-booted')||sessionStorage.getItem('sm-booted'))d.dataset.seen='1'}catch(e){d.dataset.theme='dark'}})()`;
 
 const personLd = {
   '@context': 'https://schema.org',
