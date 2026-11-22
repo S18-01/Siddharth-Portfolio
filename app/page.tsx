@@ -16,6 +16,7 @@ const email = 'siddharthroy1435@gmail.com';
 const resumeVersion = '2026-11-21-final';
 const resume = `/SiddharthMuragundla_Resume.pdf?v=${resumeVersion}`;
 const resumePages = [`/resume/page-1.webp?v=${resumeVersion}`, `/resume/page-2.webp?v=${resumeVersion}`]; // rendered pages for the viewer
+const resumeLinks: { href: string; l: number; t: number; w: number; h: number }[][] = [[{"href": "tel:+12403501236", "l": 28.13, "t": 6.84, "w": 12.89, "h": 2.52}, {"href": "mailto:siddharthroy1435@gmail.com", "l": 41.78, "t": 6.84, "w": 20.91, "h": 2.52}, {"href": "https://www.linkedin.com/in/siddhum", "l": 63.44, "t": 6.84, "w": 6.34, "h": 2.52}, {"href": "https://github.com/S18-01", "l": 70.53, "t": 6.84, "w": 5.42, "h": 2.52}, {"href": "https://siddharth-muragundla.vercel.app/", "l": 76.71, "t": 6.84, "w": 6.53, "h": 2.52}], [{"href": "https://github.com/S18-01/KubeShield-Enterprise", "l": 48.93, "t": 24.7, "w": 5.53, "h": 2.27}, {"href": "https://kube-shield-enterprise.vercel.app/", "l": 55.24, "t": 24.7, "w": 7.85, "h": 2.27}]]; // clickable areas from the PDF's own links
 const portrait = '/images/siddharth-portrait.png';
 const portraitFront = '/images/portrait-front.webp';
 const portraitBack = '/images/portrait-tone.webp'; // lightly muted, navy-toned to match the background
@@ -902,6 +903,9 @@ function ResumeViewer({ open, onClose, onHire, onSchedule }: { open: boolean; on
           {resumePages.map((src, i) => (
             <div className="paper" key={src} style={{ width: `calc(min(100%, 820px) * ${zoom})` }}>
               <img src={src} alt={`Resume page ${i + 1}`} loading="eager" />
+              {(resumeLinks[i] || []).map(k => (
+                <a key={k.href} className="rv-link" href={k.href} target={k.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" data-raw aria-label={k.href.replace(/^(mailto:|tel:|https?:\/\/)/, '')} title={k.href.replace(/^(mailto:|tel:)/, '')} style={{ left: k.l + '%', top: k.t + '%', width: k.w + '%', height: k.h + '%' }} />
+              ))}
               <span className="pn">{i + 1} / {resumePages.length}</span>
             </div>
           ))}
@@ -1064,7 +1068,6 @@ function ProfileVisual() {
   return (
     <div className="pv reveal">
       <div className="pv-stage2" ref={ref} onPointerMove={move} onPointerLeave={leave}>
-        <div className="pv-halo" />
         <div className="pv-arch">
           <div className="pv-spot" />
           <div className="pv-grid" />
@@ -1072,7 +1075,7 @@ function ProfileVisual() {
           <span className="pv-ver">SEC · ENG</span>
         </div>
         <img className="pv-pop" src={portraitFront} alt={fullName} draggable={false} />
-        <div className="pv-base" />
+        <div className="pv-beam" />
       </div>
       <div className="pv-meta">
         <div className="pv-name"><b>Siddharth Muragundla</b><span>Security Engineer · Maryland, USA</span></div>
