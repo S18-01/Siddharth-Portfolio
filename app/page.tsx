@@ -79,41 +79,42 @@ const projects = [
 
 const experience = [
   {
-    role: 'Security Engineer', org: 'Cognizant', mark: 'C', place: 'Hyderabad, India', date: 'Jun 2023 – Dec 2024', length: '1 yr 7 mos', kind: 'Full-time', featured: true,
-    points: [
-      <>Supported <b>security controls across enterprise systems</b>, reviewing access permissions, configurations and network exposure to <b>reduce attack surfaces</b>.</>,
-      <>Ran <b>Nmap and Nessus</b> scans and built vulnerability reports with <b>CVE details, affected assets and prioritized remediation</b>.</>,
-      <>Prioritized high-risk findings using <b>CVSS scores and exploitability</b>, coordinating remediation with technical teams.</>,
-      <>Investigated alerts in <b>Splunk and Elastic Stack (ELK)</b>, analyzing logs, traffic and IOCs and mapping findings to <b>MITRE ATT&amp;CK</b>.</>,
-      <>Analyzed firewall logs and network traffic to detect <b>intrusions, unauthorized access and abnormal communication</b>.</>,
-      <>Validated security fixes through <b>follow-up scans and configuration reviews</b>, tracking remaining risk to closure.</>,
-    ],
-    tools: ['Splunk', 'ELK', 'Nessus', 'Nmap', 'CVSS', 'MITRE ATT&CK'],
-  },
-  {
     role: 'Graduate Assistant', org: 'University of Maryland, College Park', mark: 'UMD', place: 'College Park, MD', date: 'Jan 2026 – May 2026', length: '5 mos', kind: 'Security Tools for InfoSec',
     points: [
-      <>Guided students through <b>hands-on security labs</b> with Nmap, Wireshark and Linux: traffic analysis, vulnerability identification and reconnaissance.</>,
-      <>Troubleshot <b>security tool configurations and lab environments</b> for vulnerability assessments and packet analysis.</>,
+      <>Guided students through <b>hands-on security labs</b> using Nmap, Wireshark and Linux, helping them analyze network traffic, identify potential vulnerabilities and interpret <b>network reconnaissance</b> findings.</>,
+      <>Troubleshot <b>security tool configurations and lab environments</b> while assisting with vulnerability assessments, packet analysis and practical network security exercises.</>,
     ],
     tools: ['Nmap', 'Wireshark', 'Linux'],
   },
   {
+    role: 'Security Engineer', org: 'Cognizant', mark: 'C', place: 'Hyderabad, India', date: 'Jun 2023 – Dec 2024', length: '1 yr 7 mos', kind: 'Full-time', featured: true,
+    points: [
+      <>Supported implementation and maintenance of <b>security controls across enterprise systems</b>, reviewing access permissions, configurations and network exposure to <b>reduce attack surfaces</b>.</>,
+      <>Ran <b>Nmap and Nessus</b> scans to find exposed services and vulnerable software, then built vulnerability reports with <b>CVE details, affected assets and prioritized remediation</b>.</>,
+      <>Prioritized high-risk findings using <b>CVSS scores and exploitability</b>, coordinating remediation with technical teams.</>,
+      <>Investigated security alerts in <b>Splunk and Elastic Stack (ELK)</b>, analyzing event logs, network traffic and IOCs, and mapping findings to <b>MITRE ATT&amp;CK</b>.</>,
+      <>Analyzed network traffic, firewall logs and alerts to identify <b>intrusions, unauthorized access attempts and abnormal communication</b>.</>,
+      <>Helped validate security fixes through <b>follow-up scans and configuration reviews</b>, documenting remaining risk and tracking remediation progress.</>,
+    ],
+    tools: ['Splunk', 'ELK', 'Nessus', 'Nmap', 'CVSS', 'MITRE ATT&CK'],
+  },
+  {
     role: 'Cybersecurity Engineer Intern', org: 'Nestack Technologies', mark: 'NT', place: 'Hyderabad, India', date: 'Dec 2022 – May 2023', length: '6 mos', kind: 'Cloud & Network Security',
     points: [
-      <>Reviewed <b>AWS IAM permissions, security groups and network ACLs</b> to find misconfigurations and harden cloud infrastructure.</>,
-      <>Ran <b>Nmap network assessments</b> for open ports and exposed services, documenting findings and remediation steps.</>,
-      <>Analyzed <b>TCP/IP, DNS and HTTP/HTTPS</b> traffic in Wireshark to spot suspicious activity.</>,
-      <>Supported <b>Linux system hardening</b> by reviewing permissions, running services and security configurations.</>,
+      <>Reviewed <b>AWS IAM permissions, security groups and network access controls</b> to identify misconfigurations and improve cloud infrastructure security.</>,
+      <>Ran <b>Nmap network security assessments</b> to find open ports, exposed services and potential vulnerabilities, documenting findings and remediation steps.</>,
+      <>Analyzed traffic in <b>Wireshark</b>, examining TCP/IP, DNS and HTTP/HTTPS communications to spot suspicious activity and network weaknesses.</>,
+      <>Supported <b>Linux system hardening</b> by reviewing user permissions, running services and security configurations.</>,
     ],
     tools: ['AWS IAM', 'Nmap', 'Wireshark', 'Linux'],
   },
   {
-    role: 'Cybersecurity Club Lead', org: 'Guru Nanak Institutions Technical Campus', mark: 'GN', place: 'Hyderabad, India', date: 'Dec 2020 – Oct 2022', length: '1 yr 11 mos', kind: 'Leadership',
+    role: 'Cybersecurity Club Lead', org: 'Guru Nanak Institutions Technical Campus', mark: 'GN', place: 'Hyderabad, India', date: 'Dec 2020 – Oct 2022', length: '1 yr 11 mos', kind: 'Offensive Security & CTFs',
     points: [
-      <>Led <b>hands-on workshops</b> in penetration testing, recon and web app security using Nmap, Burp Suite, Metasploit, Wireshark and Kali Linux.</>,
-      <>Organized and competed in <b>Capture the Flag (CTF)</b> competitions: exploitation, web app pentesting and security analysis.</>,
-      <>Mentored members on <b>Red Team methodology, OWASP Top 10</b> and ethical hacking; advised student and startup teams on secure development.</>,
+      <>Led <b>hands-on cybersecurity workshops</b> on penetration testing, vulnerability assessment, network reconnaissance and web app security using Nmap, Burp Suite, Metasploit, Wireshark and Kali Linux.</>,
+      <>Organized and competed in <b>Capture the Flag (CTF)</b> competitions: vulnerability exploitation, web app pentesting and security analysis in controlled labs.</>,
+      <>Mentored members on <b>Red Team methodologies, OWASP Top 10</b> and ethical hacking, guiding projects from vulnerability identification to remediation.</>,
+      <>Ran technical meetings and guided <b>student project and startup teams</b> on security testing, risk identification and secure application development.</>,
     ],
     tools: ['Burp Suite', 'Metasploit', 'Kali Linux', 'CTF'],
   },
@@ -128,18 +129,47 @@ const strengths = [
 
 const roleFit = [
   { role: 'Security Engineer', fit: [
-    'Ran vulnerability management end to end at Cognizant: Nmap and Nessus scanning, CVE-level reports mapped to affected assets, and remediation verified with follow-up scans',
+    'Ran Nmap and Nessus scans at Cognizant and built CVE-level vulnerability reports mapped to affected assets, then helped validate fixes with follow-up scans',
     'Prioritized high-risk findings by CVSS score and real-world exploitability, then coordinated fixes directly with engineering teams',
-    'Reduced attack surface across enterprise systems by reviewing access permissions, system configurations and network exposure',
-    'Investigated Splunk and ELK alerts, analyzing logs, IOCs and firewall traffic, and mapped activity to MITRE ATT&CK',
+    'Reduced attack surface across enterprise systems by reviewing access permissions, configurations, open ports and exposed services, and supported Linux hardening',
     'Hardened cloud and infrastructure: AWS IAM, security groups and network ACLs at Nestack; RBAC, NetworkPolicies and non-root containers in Kubernetes',
     'Built security into delivery with automated CI/CD scanning (Trivy, Bandit, Checkov, pip-audit), and recognized as Best Team Lead at Cognizant',
   ], tools: ['Nessus', 'Nmap', 'Burp Suite', 'Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'AWS IAM', 'Kubernetes', 'Terraform', 'Python', 'Bash', 'Linux'], work: ['KubeShield Enterprise', 'RedForge X'] },
-  { role: 'Penetration Tester', fit: ['Runs full assessments end to end: reconnaissance, attack surface analysis, controlled exploitation and a clear remediation plan', 'Led pentest and web app security workshops and competed in CTFs (3rd place)', 'Writes proof-of-concept validated findings with CVSS-based prioritization and PDF reports'], tools: ['Burp Suite', 'Metasploit', 'Nmap', 'Kali Linux', 'OWASP Top 10'], work: ['RedForge X'] },
-  { role: 'SOC Analyst', fit: ['Investigated security alerts in Splunk and Elastic Stack at Cognizant, analyzing logs, traffic and IOCs', 'Mapped findings to MITRE ATT&CK and analyzed firewall logs for intrusions and unauthorized access', 'Experienced with SOC workflows, detection tuning and escalation documented in ServiceNow and Jira'], tools: ['Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'MITRE ATT&CK', 'ServiceNow', 'Jira'], work: ['Cyber Incident Classification'] },
-  { role: 'Cloud Security', fit: ['Reviewed AWS IAM permissions, security groups and network controls at Nestack Technologies', 'Hardened a Kubernetes deployment with RBAC, NetworkPolicies and non-root containers', 'Built scanners for Kubernetes, Docker, Terraform and AWS IAM misconfigurations'], tools: ['AWS', 'AWS EKS', 'IAM', 'Kubernetes', 'Docker'], work: ['KubeShield Enterprise'] },
-  { role: 'DevSecOps Engineer', fit: ['Automated CI/CD security checks with GitHub Actions, Trivy, Bandit, Checkov and pip-audit', 'Added remediation verification and regression testing to pipelines with pytest and Docker', 'Infrastructure-as-code and container security built into the delivery process'], tools: ['GitHub Actions', 'Trivy', 'Bandit', 'Checkov', 'Terraform'], work: ['KubeShield Enterprise', 'RedForge X'] },
-  { role: 'Application Security', fit: ['Deep OWASP Top 10 knowledge, tested hands-on with Burp Suite against real vulnerable apps', 'Advised student and startup teams on secure application development', 'Automated assessment platform with PoC validation and remediation tracking'], tools: ['Burp Suite', 'OWASP Top 10', 'Python', 'Next.js', 'Flask'], work: ['RedForge X'] },
+  { role: 'Penetration Tester', fit: [
+    'Runs full assessments end to end: reconnaissance, attack surface analysis, controlled exploitation and a clear remediation plan',
+    'Exploited SQL injection, XSS, IDOR, SSTI and command injection in a Dockerized pentest lab, backed by proof-of-concept validation',
+    'Scores every finding with CVSS and delivers PDF pentest reports that engineers can act on immediately',
+    'Led hands-on workshops in penetration testing, reconnaissance and web app security with Nmap, Burp Suite, Metasploit, Wireshark and Kali Linux',
+    'Placed 3rd in a cybersecurity CTF and organized CTF competitions, mentoring students on Red Team methodology and ethical hacking',
+  ], tools: ['Burp Suite', 'Metasploit', 'Nmap', 'Kali Linux', 'Wireshark', 'OWASP Top 10', 'Python'], work: ['RedForge X'] },
+  { role: 'SOC Analyst', fit: [
+    'Monitored and triaged security alerts in Splunk and Elastic Stack (ELK) at Cognizant, separating real threats from noise',
+    'Investigated suspicious activity by correlating logs, network traffic and indicators of compromise (IOCs) to confirm scope and impact',
+    'Mapped attacker behavior to MITRE ATT&CK techniques to guide response and improve detections',
+    'Analyzed firewall logs and TCP/IP, DNS and HTTP/HTTPS traffic in Wireshark to detect intrusions, unauthorized access and abnormal communication',
+    'Built a machine learning model that classifies cybersecurity incidents to speed up triage and incident prioritization',
+  ], tools: ['Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'MITRE ATT&CK', 'ServiceNow', 'Jira', 'Python'], work: ['Cyber Incident Classification'] },
+  { role: 'Cloud Security', fit: [
+    'Reviewed AWS IAM permissions, security groups and network ACLs at Nestack Technologies to find misconfigurations and harden cloud infrastructure',
+    'Hardened a three-replica Kubernetes deployment with RBAC, NetworkPolicies, non-root containers and least-privilege controls',
+    'Independently built scanners that catch misconfigurations across Kubernetes, Docker, Terraform and AWS IAM, with security scoring and remediation reports',
+    'Shifted cloud security left by scanning Terraform and container images in CI/CD with Checkov and Trivy before anything deploys',
+    'Monitored cluster health and security posture with Prometheus and Grafana',
+  ], tools: ['AWS', 'AWS EKS', 'IAM', 'Kubernetes', 'Docker', 'Terraform', 'Prometheus', 'Grafana'], work: ['KubeShield Enterprise'] },
+  { role: 'DevSecOps Engineer', fit: [
+    'Automated CI/CD security checks with GitHub Actions, Trivy, Bandit, Checkov and pip-audit so vulnerabilities are caught before release',
+    'Added remediation verification and regression testing to pipelines with pytest and Docker, so fixed issues stay fixed',
+    'Scanned infrastructure-as-code (Terraform) and container images as part of every build',
+    'Built a Next.js security dashboard with security scoring, remediation reports and Supabase authentication',
+    'Deployed hardened Kubernetes workloads with RBAC, NetworkPolicies and non-root containers, monitored with Prometheus and Grafana',
+  ], tools: ['GitHub Actions', 'Trivy', 'Bandit', 'Checkov', 'pip-audit', 'Terraform', 'Docker', 'Kubernetes'], work: ['KubeShield Enterprise', 'RedForge X'] },
+  { role: 'Application Security', fit: [
+    'Deep OWASP Top 10 knowledge, tested hands-on with Burp Suite against real vulnerable applications',
+    'Exploited and documented SQL injection, XSS, IDOR, SSTI and command injection with proof-of-concept validation',
+    'Built an automated assessment platform with CVSS risk scoring, remediation tracking and regression tests that confirm fixes',
+    'Integrated code and dependency scanning (Bandit, pip-audit) into CI/CD pipelines',
+    'Advised student and startup teams on secure application development and mentored developers on the OWASP Top 10',
+  ], tools: ['Burp Suite', 'OWASP Top 10', 'Bandit', 'pip-audit', 'Python', 'Flask', 'Next.js'], work: ['RedForge X'] },
 ];
 
 const achievements = [
@@ -529,7 +559,7 @@ const intents: [RegExp, string][] = [
 const answers: Record<string, { text: string; chips?: Chip[]; card?: CMsg['card'] }> = {
   hiring: { text: `Great to meet you! I'm open to full-time roles as a Security Engineer, Penetration Tester, SOC Analyst, Cloud Security Engineer or DevSecOps Engineer, as well as AppSec, vulnerability management and incident response.\n\n• 4+ years in cybersecurity\n• M.Eng Cybersecurity, University of Maryland (Dec 2026)\n• Based in ${baseLocation}, open to relocation`, chips: [{ label: 'Book a call', action: 'book' }, { label: 'View resume', action: 'resume' }, { label: 'Skills', action: 'skills' }] },
   skills: { text: 'Here\'s my core toolkit:\n\n• Offense: Burp Suite, Metasploit, Nmap, Nessus, OWASP Top 10\n• Defense: Splunk, ELK, SIEM, MITRE ATT&CK, incident response\n• Cloud & DevSecOps: AWS, EKS, Kubernetes, Docker, Terraform, GitHub Actions, Trivy\n• Code & data: Python, Bash, PowerShell, Scikit-learn, Pandas', chips: [{ label: 'Experience', action: 'experience' }, { label: 'Projects', action: 'projects' }, { label: 'Book a call', action: 'book' }] },
-  experience: { text: '4+ years across security engineering, SOC and offensive work:\n\n• Security Engineer, Cognizant (Jun 2023 – Dec 2024): Nessus/Nmap assessments, Splunk & ELK investigations, MITRE ATT&CK mapping\n• Graduate Assistant, UMD (Jan – May 2026): hands-on security labs\n• Cybersecurity Engineer Intern, Nestack (Dec 2022 – May 2023): AWS IAM & network security\n• Cybersecurity Club Lead (2020 – 2022): pentest workshops and CTFs', chips: [{ label: 'Projects', action: 'projects' }, { label: 'View resume', action: 'resume' }, { label: 'Book a call', action: 'book' }] },
+  experience: { text: '4+ years across security engineering, SOC and offensive work:\n\n• Graduate Assistant, UMD (Jan – May 2026): hands-on security labs\n• Security Engineer, Cognizant (Jun 2023 – Dec 2024): Nessus/Nmap assessments, Splunk & ELK investigations, MITRE ATT&CK mapping\n• Cybersecurity Engineer Intern, Nestack (Dec 2022 – May 2023): AWS IAM & network security\n• Cybersecurity Club Lead (2020 – 2022): pentest workshops and CTFs', chips: [{ label: 'Projects', action: 'projects' }, { label: 'View resume', action: 'resume' }, { label: 'Book a call', action: 'book' }] },
   projects: { text: 'A few things I\'ve built:', card: 'projects', chips: [{ label: 'Skills', action: 'skills' }, { label: 'Book a call', action: 'book' }] },
   location: { text: `I'm based in ${baseLocation} and open to relocating for the right role.`, chips: [{ label: 'Availability', action: 'availability' }, { label: 'Book a call', action: 'book' }] },
   availability: { text: 'I\'m completing my M.Eng in Cybersecurity at UMD (expected December 2026) and I\'m open to full-time roles as a Security Engineer, Penetration Tester, SOC Analyst, Cloud Security or DevSecOps Engineer, plus AppSec, vulnerability management and incident response. Happy to talk through start dates on a call.', chips: [{ label: 'Book a call', action: 'book' }, { label: 'View resume', action: 'resume' }] },
@@ -1052,7 +1082,23 @@ function ProfileVisual() {
 /* ---------- role fit: recruiters pick a role, see the matching evidence ---------- */
 function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSchedule: () => void }) {
   const [i, setI] = useState(0);
+  const [atEnd, setAtEnd] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
   const r = roleFit[i];
+  // fit exactly the first 3 points in view; the rest are a scroll away
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const size = () => {
+      const lis = el.querySelectorAll('li');
+      if (lis.length < 4) { el.style.maxHeight = ''; setAtEnd(true); return; }
+      el.style.maxHeight = (lis[3] as HTMLElement).offsetTop - (lis[0] as HTMLElement).offsetTop + 'px';
+      el.scrollTop = 0; setAtEnd(false);
+    };
+    size();
+    const ro = new ResizeObserver(size); ro.observe(el);
+    return () => ro.disconnect();
+  }, [i]);
   return (
     <div className="fit reveal">
       <div className="fit-h">
@@ -1062,7 +1108,10 @@ function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSc
       <div className="fit-body" key={r.role}>
         <div className="fit-main">
           <div className="fit-t"><Target size={18} />Why I fit: {r.role}</div>
-          <ul>{r.fit.map(f => <li key={f}><Check size={15} />{f}</li>)}</ul>
+          <div className={'fit-scroll' + (atEnd ? ' end' : '')} ref={listRef} onScroll={e => { const el = e.currentTarget; setAtEnd(el.scrollTop + el.clientHeight >= el.scrollHeight - 6); }}>
+            <ul>{r.fit.map(f => <li key={f}><Check size={15} />{f}</li>)}</ul>
+          </div>
+          {!atEnd && <div className="fit-more">Scroll for more ↓</div>}
         </div>
         <div className="fit-side">
           <small>Tools for this role</small>
