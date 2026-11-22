@@ -13,7 +13,7 @@ const githubUrl = 'https://github.com/S18-01';
 const linkedinUrl = 'https://www.linkedin.com/in/siddhum';
 const email = 'siddharthroy1435@gmail.com';
 // Bump resumeVersion whenever you replace the resume, so browsers never show a cached old copy
-const resumeVersion = '2026-11-21';
+const resumeVersion = '2026-11-21-final';
 const resume = `/SiddharthMuragundla_Resume.pdf?v=${resumeVersion}`;
 const resumePages = [`/resume/page-1.webp?v=${resumeVersion}`, `/resume/page-2.webp?v=${resumeVersion}`]; // rendered pages for the viewer
 const portrait = '/images/siddharth-portrait.png';
@@ -91,12 +91,12 @@ const experience = [
   {
     role: 'Security Engineer', org: 'Cognizant', mark: 'C', place: 'Hyderabad, India', date: 'Jun 2023 – Dec 2024', length: '1 yr 7 mos', kind: 'Full-time', featured: true,
     points: [
-      <>Supported implementation and maintenance of <b>security controls across enterprise systems</b>, reviewing access permissions, configurations and network exposure to <b>reduce attack surfaces</b>.</>,
+      <>Strengthened enterprise <b>security posture</b> by reviewing access permissions, system configurations and network exposure, supporting <b>security controls</b> that <b>reduce attack surfaces</b>.</>,
       <>Ran <b>Nmap and Nessus</b> scans to find exposed services and vulnerable software, then built vulnerability reports with <b>CVE details, affected assets and prioritized remediation</b>.</>,
-      <>Prioritized high-risk findings using <b>CVSS scores and exploitability</b>, coordinating remediation with technical teams.</>,
+      <>Prioritized high-risk findings using <b>CVSS scores and exploitability</b> from vulnerability scans, and coordinated remediation with technical teams.</>,
       <>Investigated security alerts in <b>Splunk and Elastic Stack (ELK)</b>, analyzing event logs, network traffic and IOCs, and mapping findings to <b>MITRE ATT&amp;CK</b>.</>,
-      <>Analyzed network traffic, firewall logs and alerts to identify <b>intrusions, unauthorized access attempts and abnormal communication</b>.</>,
-      <>Helped validate security fixes through <b>follow-up scans and configuration reviews</b>, documenting remaining risk and tracking remediation progress.</>,
+      <>Detected potential <b>intrusions, unauthorized access attempts and abnormal communication</b> by analyzing network traffic, firewall logs and security alerts.</>,
+      <>Validated security fixes through <b>follow-up scans and configuration reviews</b>, documenting remaining risk and tracking remediation <b>to closure</b>.</>,
     ],
     tools: ['Splunk', 'ELK', 'Nessus', 'Nmap', 'CVSS', 'MITRE ATT&CK'],
   },
@@ -106,7 +106,7 @@ const experience = [
       <>Reviewed <b>AWS IAM permissions, security groups and network access controls</b> to identify misconfigurations and improve cloud infrastructure security.</>,
       <>Ran <b>Nmap network security assessments</b> to find open ports, exposed services and potential vulnerabilities, documenting findings and remediation steps.</>,
       <>Analyzed traffic in <b>Wireshark</b>, examining TCP/IP, DNS and HTTP/HTTPS communications to spot suspicious activity and network weaknesses.</>,
-      <>Supported <b>Linux system hardening</b> by reviewing user permissions, running services and security configurations.</>,
+      <>Strengthened <b>Linux system security</b> by reviewing user permissions, running services and security configurations, recommending corrective actions.</>,
     ],
     tools: ['AWS IAM', 'Nmap', 'Wireshark', 'Linux'],
   },
@@ -131,7 +131,7 @@ const strengths = [
 
 const roleFit = [
   { role: 'Security Engineer', fit: [
-    'Ran Nmap and Nessus scans at Cognizant and built CVE-level vulnerability reports mapped to affected assets, then helped validate fixes with follow-up scans',
+    'Ran Nmap and Nessus scans at Cognizant, built CVE-level vulnerability reports mapped to affected assets, and validated fixes with follow-up scans',
     'Prioritized high-risk findings by CVSS score and real-world exploitability, then coordinated fixes directly with engineering teams',
     'Reduced attack surface across enterprise systems by reviewing access permissions, configurations, open ports and exposed services, and supported Linux hardening',
     'Hardened cloud and infrastructure: AWS IAM, security groups and network ACLs at Nestack; RBAC, NetworkPolicies and non-root containers in Kubernetes',
@@ -803,15 +803,14 @@ function Boot({ onDone }: { onDone: () => void }) {
     };
     raf = requestAnimationFrame(tick);
     timers.current.push(setTimeout(() => setPhase(p => (p === 'load' ? 'granted' : p)), 1800));
-    timers.current.push(setTimeout(() => setPhase(p => (p === 'granted' ? 'reveal' : p)), 2250));
-    timers.current.push(setTimeout(() => finish(950), 3300));
+    timers.current.push(setTimeout(() => finish(800), 2500));
     return () => { cancelAnimationFrame(raf); timers.current.forEach(clearTimeout); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const C = 2 * Math.PI * 58;
   const granted = phase !== 'load';
   const stepAt = [0, 28, 60, 100];
   return (
-    <div className={'boot' + (granted ? ' granted' : '') + (phase === 'reveal' ? ' reveal' : '') + (phase === 'open' ? ' open' : '')} onClick={() => finish(900)} aria-hidden="true">
+    <div className={'boot' + (granted ? ' granted' : '') + (phase === 'open' ? ' open' : '')} onClick={() => finish(900)} aria-hidden="true">
       <div className="boot-grid" />
       <div className="boot-in">
         <div className="boot-load">
@@ -835,10 +834,6 @@ function Boot({ onDone }: { onDone: () => void }) {
             })}
           </ul>
         </div>
-      </div>
-      <div className="boot-name">
-        <h1>{['Siddharth', 'Muragundla'].map((w, wi) => <span className="w" key={w}>{w.split('').map((ch, i) => <span className="l" key={i} style={{ transitionDelay: `${(wi * 9 + i) * 0.035}s` }}>{ch}</span>)}</span>)}</h1>
-        <p>Security Engineer · Pentest · SOC · Cloud</p>
       </div>
       <div className="skip">Click anywhere to skip</div>
     </div>

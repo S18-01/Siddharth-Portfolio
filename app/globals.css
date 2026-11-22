@@ -736,13 +736,13 @@ html[data-theme=light] .cglow{mix-blend-mode:multiply;background:radial-gradient
 @media(max-width:760px){.cs-body{grid-template-columns:minmax(0,1fr);padding:22px}.cs-h{padding:24px 22px 20px}.cs-stats div{padding:14px}.cs-stats b{font-size:22px}.cs-f{padding:14px 22px}.cs-f .btn.ghost{flex:1;min-width:0}.cs-f .btn.ghost{overflow:hidden;text-overflow:ellipsis}.cs-f .btn.call{order:-1;width:100%}}
 
 /* ---------- opening: secure access sequence ---------- */
-.boot{position:fixed;inset:0;z-index:100;display:grid;place-items:center;color:#e6eefc;cursor:pointer;--bc:154,191,255;background:#04070e;transition:opacity .8s ease}
+.boot{position:fixed;inset:0;z-index:100;display:grid;place-items:center;color:#e6eefc;cursor:pointer;--bc:154,191,255;background:#04070e;transition:opacity .45s ease .3s}
 .boot.open{opacity:0;pointer-events:none}
 .boot-who{font:800 15px Archivo,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e6eefc;margin-top:-6px}
 html[data-seen] .boot{display:none}
 .boot.granted{--bc:74,222,128}
 .boot-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,157,211,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(124,157,211,.07) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 10%,transparent 60%);mask-image:radial-gradient(circle at 50% 50%,#000 10%,transparent 60%);transition:opacity .5s}
-.boot-in{position:relative;display:grid;justify-items:center;gap:22px;transition:opacity .45s,transform .45s}
+.boot-in{position:relative;display:grid;justify-items:center;gap:22px;transition:opacity .3s,transform .3s}
 .boot.open .boot-in,.boot.open .boot-grid{opacity:0;transform:scale(.97)}
 .core{position:relative;width:150px;height:150px;display:grid;place-items:center}
 .core svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
