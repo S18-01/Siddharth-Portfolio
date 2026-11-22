@@ -127,9 +127,16 @@ const strengths = [
 ];
 
 const roleFit = [
+  { role: 'Security Engineer', fit: [
+    'Ran vulnerability management end to end at Cognizant: Nmap and Nessus scanning, CVE-level reports mapped to affected assets, and remediation verified with follow-up scans',
+    'Prioritized high-risk findings by CVSS score and real-world exploitability, then coordinated fixes directly with engineering teams',
+    'Reduced attack surface across enterprise systems by reviewing access permissions, system configurations and network exposure',
+    'Investigated Splunk and ELK alerts, analyzing logs, IOCs and firewall traffic, and mapped activity to MITRE ATT&CK',
+    'Hardened cloud and infrastructure: AWS IAM, security groups and network ACLs at Nestack; RBAC, NetworkPolicies and non-root containers in Kubernetes',
+    'Built security into delivery with automated CI/CD scanning (Trivy, Bandit, Checkov, pip-audit), and recognized as Best Team Lead at Cognizant',
+  ], tools: ['Nessus', 'Nmap', 'Burp Suite', 'Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'AWS IAM', 'Kubernetes', 'Terraform', 'Python', 'Bash', 'Linux'], work: ['KubeShield Enterprise', 'RedForge X'] },
   { role: 'Penetration Tester', fit: ['Runs full assessments end to end: reconnaissance, attack surface analysis, controlled exploitation and a clear remediation plan', 'Led pentest and web app security workshops and competed in CTFs (3rd place)', 'Writes proof-of-concept validated findings with CVSS-based prioritization and PDF reports'], tools: ['Burp Suite', 'Metasploit', 'Nmap', 'Kali Linux', 'OWASP Top 10'], work: ['RedForge X'] },
-  { role: 'SOC Analyst', fit: ['Investigated security alerts in Splunk and Elastic Stack at Cognizant, analyzing logs, traffic and IOCs', 'Mapped findings to MITRE ATT&CK and analyzed firewall logs for intrusions and unauthorized access', 'Experienced with SOC workflows, detection tuning and escalation documented in ServiceNow and Jira'], tools: ['Splunk', 'ELK', 'SIEM', 'MITRE ATT&CK', 'ServiceNow'], work: ['Cyber Incident Classification'] },
-  { role: 'Security Engineer', fit: ['Supported enterprise security controls at Cognizant, reviewing access, configurations and exposure', 'Ran Nmap and Nessus assessments and built CVE-level vulnerability reports', 'Prioritized by CVSS and exploitability, then verified every fix with follow-up scans'], tools: ['Nessus', 'Nmap', 'CVSS', 'Wireshark', 'Linux'], work: ['KubeShield Enterprise', 'RedForge X'] },
+  { role: 'SOC Analyst', fit: ['Investigated security alerts in Splunk and Elastic Stack at Cognizant, analyzing logs, traffic and IOCs', 'Mapped findings to MITRE ATT&CK and analyzed firewall logs for intrusions and unauthorized access', 'Experienced with SOC workflows, detection tuning and escalation documented in ServiceNow and Jira'], tools: ['Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'MITRE ATT&CK', 'ServiceNow', 'Jira'], work: ['Cyber Incident Classification'] },
   { role: 'Cloud Security', fit: ['Reviewed AWS IAM permissions, security groups and network controls at Nestack Technologies', 'Hardened a Kubernetes deployment with RBAC, NetworkPolicies and non-root containers', 'Built scanners for Kubernetes, Docker, Terraform and AWS IAM misconfigurations'], tools: ['AWS', 'AWS EKS', 'IAM', 'Kubernetes', 'Docker'], work: ['KubeShield Enterprise'] },
   { role: 'DevSecOps Engineer', fit: ['Automated CI/CD security checks with GitHub Actions, Trivy, Bandit, Checkov and pip-audit', 'Added remediation verification and regression testing to pipelines with pytest and Docker', 'Infrastructure-as-code and container security built into the delivery process'], tools: ['GitHub Actions', 'Trivy', 'Bandit', 'Checkov', 'Terraform'], work: ['KubeShield Enterprise', 'RedForge X'] },
   { role: 'Application Security', fit: ['Deep OWASP Top 10 knowledge, tested hands-on with Burp Suite against real vulnerable apps', 'Advised student and startup teams on secure application development', 'Automated assessment platform with PoC validation and remediation tracking'], tools: ['Burp Suite', 'OWASP Top 10', 'Python', 'Next.js', 'Flask'], work: ['RedForge X'] },
@@ -1397,7 +1404,7 @@ export default function Home() {
           </div>
 
           <div className="cta"><HireButton onClick={openHire} big /><button className="btn call" onClick={openSchedule}><CalendarDays />Book a call</button></div>
-          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span></div>
+          <div className="scrub"><span>Scroll to turn</span><div className="bar"><i ref={barRef} /></div><span className="deg">{deg}°</span><button className="skipb" onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} aria-label="Skip to profile">Skip ↓</button></div>
         </div>
       </section>
 
