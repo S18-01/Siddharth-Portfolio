@@ -1461,3 +1461,22 @@ html.rec-open .scrim{z-index:121}html.rec-open .modal,html.rec-open .hp{z-index:
  html.nav-tight .mob.on{display:flex;flex-direction:column;padding:6px 18px 16px;border-top:1px solid var(--line)}
  html.nav-tight .mob a{min-height:46px;display:flex;align-items:center;border-bottom:1px solid var(--line);color:var(--ink)}
 }
+
+/* globe zoom controls */
+.globe-box{position:relative}
+.globe-zoom{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:6px}
+.globe-zoom button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:rgba(4,8,18,.7);color:var(--ink);font:700 17px Inter,sans-serif;cursor:pointer;backdrop-filter:blur(6px);transition:.2s}
+.globe-zoom button.us{font-size:11px;letter-spacing:.04em}
+.globe-zoom button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.globe-zoom button:disabled{opacity:.35;cursor:default}
+
+/* phones: keep the positions and recruiter button clear of the photo once all six roles are shown */
+@media(max-width:760px){
+ .roles{top:84px;gap:5px}
+ .roles h4{margin:2px 0 0;font-size:10px}
+ .role{padding:4px 9px 4px 5px;font-size:11.5px;gap:5px;border-radius:9px}
+ .role i{width:15px;height:15px;font-size:9px;border-radius:5px}
+ .rec-quick{padding:6px 11px;margin-bottom:2px;border-radius:11px;gap:8px}
+ .rec-quick b{font-size:12.5px}
+ .spin{height:46%;bottom:22%}
+}

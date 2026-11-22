@@ -1797,7 +1797,7 @@ export default function Home() {
               <h3>Based in Maryland. <em>Ready to relocate.</em></h3>
               <p>Open to on-site, hybrid or remote security roles anywhere in the US, including the Bay Area, Seattle, New York, Austin, Boston, Chicago, Atlanta and the DC area.</p>
               <div className="globe-leg"><span><i className="home" />Home base · Maryland</span><span><i />Relocation-ready hubs</span></div>
-              <span className="g3d-hint">Drag the globe to spin it</span>
+              <span className="g3d-hint">Drag to spin · pinch, double-click or use + to zoom</span>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@
  * Every scene pauses when it is off screen, follows the active theme's accent
  * colour, and stays still for visitors who prefer reduced motion.
  */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 
 type Palette = { acc: string; accRgb: string; ink: string; dim: string; line: string; danger: string; ok: string; card: string };
@@ -119,17 +119,35 @@ export const landDots: [number, number][] = (() => {
 
 export function Globe3D() {
   const ref = useRef<HTMLCanvasElement>(null);
-  const { handlers, step } = useSpin(1.42, 0.00012);
+  const HOME = 1.55, US = 1.68;
+  const st = useRef({ rot: HOME, v: 0, drag: false, lx: 0, lt: 0, last: -1e9, zoom: 1, tz: 1, pts: new Map<number, { x: number; y: number }>(), pinch: 0 });
+  const [zoomUi, setZoomUi] = useState(1);
+  const setZoom = (z: number) => { const s = st.current; s.tz = Math.max(1, Math.min(3.4, z)); s.last = performance.now(); setZoomUi(s.tz); };
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    const wheel = (e: WheelEvent) => { if (!e.ctrlKey) return; e.preventDefault(); setZoom(st.current.tz * (e.deltaY < 0 ? 1.12 : 1 / 1.12)); };
+    c.addEventListener('wheel', wheel, { passive: false });
+    return () => c.removeEventListener('wheel', wheel);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useCanvasLoop(ref, (x, w, h, dt, p) => {
-    const rot = step(dt), tilt = 0.55;
-    const R = Math.min(w, h) * 0.44, cx = w / 2, cy = h / 2;
+    const s = st.current, now = performance.now();
+    s.zoom += (s.tz - s.zoom) * Math.min(1, dt / 160);
+    const zk = Math.min(1, (s.zoom - 1) / 1.4);
+    if (!s.drag) {
+      if (now - s.last > 2600) {
+        // drift back toward the US and sway gently, so Maryland never disappears behind the globe
+        const home = HOME + (US - HOME) * zk + (reduced() ? 0 : Math.sin(now / 5200) * 0.32 * (1 - zk));
+        s.rot += (home - s.rot) * Math.min(1, dt / 900); s.v = 0;
+      } else { s.rot += s.v * dt; s.v *= Math.pow(0.994, dt); }
+    }
+    const rot = s.rot, tilt = 0.55 + 0.12 * zk;
+    const R = Math.min(w, h) * 0.44 * s.zoom, cx = w / 2, cy = h / 2;
     const P = (la: number, lo: number, r = R) => {
       const phi = (la * Math.PI) / 180, lam = (lo * Math.PI) / 180 + rot;
       const X = Math.cos(phi) * Math.sin(lam), Y = Math.sin(phi), Z = Math.cos(phi) * Math.cos(lam);
       const y2 = Y * Math.cos(tilt) - Z * Math.sin(tilt), z2 = Y * Math.sin(tilt) + Z * Math.cos(tilt);
       return [cx + X * r, cy - y2 * r, z2] as const;
     };
-    // atmosphere
     const g = x.createRadialGradient(cx, cy, R * 0.85, cx, cy, R * 1.25);
     g.addColorStop(0, `rgba(${p.accRgb},.18)`); g.addColorStop(1, `rgba(${p.accRgb},0)`);
     x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R * 1.25, 0, 7); x.fill();
@@ -137,39 +155,75 @@ export function Globe3D() {
     body.addColorStop(0, `rgba(${p.accRgb},.16)`); body.addColorStop(1, 'rgba(4,8,18,.85)');
     x.fillStyle = body; x.beginPath(); x.arc(cx, cy, R, 0, 7); x.fill();
     x.strokeStyle = `rgba(${p.accRgb},.35)`; x.lineWidth = 1; x.stroke();
-    // graticule
+    const vis = (q: readonly [number, number, number]) => q[2] > 0 && q[0] > -20 && q[0] < w + 20 && q[1] > -20 && q[1] < h + 20;
     x.lineWidth = 0.6; x.strokeStyle = `rgba(${p.accRgb},.13)`;
-    for (let la = -60; la <= 60; la += 30) { x.beginPath(); let on = false; for (let lo = -180; lo <= 180; lo += 5) { const q = P(la, lo); if (q[2] < 0) { on = false; continue; } if (on) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); on = true; } x.stroke(); }
-    for (let lo = -180; lo < 180; lo += 30) { x.beginPath(); let on = false; for (let la = -85; la <= 85; la += 5) { const q = P(la, lo); if (q[2] < 0) { on = false; continue; } if (on) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); on = true; } x.stroke(); }
-    // land dots
-    for (const [la, lo] of landDots) { const q = P(la, lo); if (q[2] < 0.02) continue; x.fillStyle = `rgba(${p.accRgb},${(0.22 + q[2] * 0.5).toFixed(2)})`; x.fillRect(q[0] - 0.9, q[1] - 0.9, 1.8, 1.8); }
-    // arcs from Maryland
-    const t = performance.now() / 1000;
-    const home = hubs[0];
+    for (let la = -60; la <= 60; la += 30) { x.beginPath(); let on = false; for (let lo = -180; lo <= 180; lo += 4) { const q = P(la, lo); if (q[2] < 0) { on = false; continue; } if (on) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); on = true; } x.stroke(); }
+    for (let lo = -180; lo < 180; lo += 30) { x.beginPath(); let on = false; for (let la = -85; la <= 85; la += 4) { const q = P(la, lo); if (q[2] < 0) { on = false; continue; } if (on) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); on = true; } x.stroke(); }
+    const ds = 1.8 * Math.min(2.2, s.zoom);
+    for (const [la, lo] of landDots) { const q = P(la, lo); if (q[2] < 0.02 || !vis(q)) continue; x.fillStyle = `rgba(${p.accRgb},${(0.22 + q[2] * 0.5).toFixed(2)})`; x.fillRect(q[0] - ds / 2, q[1] - ds / 2, ds, ds); }
+    const t = now / 1000, home = hubs[0];
     hubs.slice(1).forEach(([la, lo], i) => {
       const steps = 40; let prevVis = false; x.beginPath();
       for (let k = 0; k <= steps; k++) {
-        const f = k / steps, lift = 1 + Math.sin(f * Math.PI) * 0.12;
+        const f = k / steps, lift = 1 + Math.sin(f * Math.PI) * 0.12 / s.zoom;
         const q = P(home[0] + (la - home[0]) * f, home[1] + (lo - home[1]) * f, R * lift);
         if (q[2] < 0) { prevVis = false; continue; }
         if (prevVis) x.lineTo(q[0], q[1]); else x.moveTo(q[0], q[1]); prevVis = true;
       }
-      x.strokeStyle = `rgba(${p.accRgb},.55)`; x.lineWidth = 1.1; x.stroke();
-      const f = ((t * 0.35 + i * 0.17) % 1), lift = 1 + Math.sin(f * Math.PI) * 0.12;
+      x.strokeStyle = `rgba(${p.accRgb},.55)`; x.lineWidth = 1.1 + zk * 0.6; x.stroke();
+      const f = (t * 0.35 + i * 0.17) % 1, lift = 1 + Math.sin(f * Math.PI) * 0.12 / s.zoom;
       const q = P(home[0] + (la - home[0]) * f, home[1] + (lo - home[1]) * f, R * lift);
-      if (q[2] > 0) { x.fillStyle = p.acc; x.beginPath(); x.arc(q[0], q[1], 2, 0, 7); x.fill(); }
+      if (q[2] > 0) { x.fillStyle = p.acc; x.beginPath(); x.arc(q[0], q[1], 2 + zk, 0, 7); x.fill(); }
     });
-    // pins + labels
-    x.font = '600 11px Inter, sans-serif';
+    // pins, then labels placed so they don't overlap
+    const fs = Math.round(11.5 + zk * 3);
+    x.font = `600 ${fs}px Inter, sans-serif`;
+    const placed: [number, number, number, number][] = [];
+    const showAll = s.zoom > 1.35;
     hubs.forEach(([la, lo, name], i) => {
-      const q = P(la, lo); if (q[2] < 0.05) return;
-      const home = i === 0;
-      if (home) { const pr = 6 + ((t * 1.2) % 1) * 12; x.strokeStyle = `rgba(74,222,128,${(1 - ((t * 1.2) % 1)) * 0.7})`; x.lineWidth = 1.2; x.beginPath(); x.arc(q[0], q[1], pr, 0, 7); x.stroke(); }
-      x.fillStyle = home ? p.ok : p.acc; x.beginPath(); x.arc(q[0], q[1], home ? 4 : 2.6, 0, 7); x.fill();
-      if (home || ['Seattle', 'Bay Area', 'Austin'].includes(name)) { x.fillStyle = home ? p.ink : p.dim; x.fillText(name, q[0] + 7, q[1] - 6); }
+      const q = P(la, lo); if (q[2] < 0.05 || !vis(q)) return;
+      const isHome = i === 0;
+      if (isHome) { const pr = 6 + ((t * 1.2) % 1) * 12; x.strokeStyle = `rgba(74,222,128,${(1 - ((t * 1.2) % 1)) * 0.7})`; x.lineWidth = 1.2; x.beginPath(); x.arc(q[0], q[1], pr, 0, 7); x.stroke(); }
+      x.fillStyle = isHome ? p.ok : p.acc; x.beginPath(); x.arc(q[0], q[1], isHome ? 4.5 + zk : 2.8 + zk, 0, 7); x.fill();
+      if (!(isHome || showAll || ['Seattle', 'Bay Area', 'Austin'].includes(name))) return;
+      const tw = x.measureText(name).width, th = fs + 4;
+      const opts: [number, number][] = [[8, -6], [8, th - 2], [-tw - 8, -6], [-tw - 8, th - 2], [-tw / 2, -12], [-tw / 2, th + 6]];
+      for (const [ox, oy] of opts) {
+        const r: [number, number, number, number] = [q[0] + ox - 3, q[1] + oy - fs, tw + 6, th];
+        if (placed.some(b => r[0] < b[0] + b[2] && r[0] + r[2] > b[0] && r[1] < b[1] + b[3] && r[1] + r[3] > b[1])) continue;
+        placed.push(r);
+        x.fillStyle = 'rgba(4,8,18,.6)'; x.beginPath(); x.roundRect(r[0], r[1], r[2], r[3], 5); x.fill();
+        x.fillStyle = isHome ? p.ink : p.dim; x.fillText(name, q[0] + ox, q[1] + oy - 2);
+        return;
+      }
     });
   });
-  return <canvas ref={ref} className="g3d-canvas globe" {...handlers} aria-label="Globe showing Maryland and US tech hubs I can relocate to" role="img" />;
+  const down = (e: ReactPointerEvent<HTMLCanvasElement>) => {
+    const s = st.current; s.pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); e.currentTarget.setPointerCapture?.(e.pointerId);
+    if (s.pts.size === 2) { const [a, b] = [...s.pts.values()]; s.pinch = Math.hypot(a.x - b.x, a.y - b.y); s.drag = false; }
+    else { s.drag = true; s.lx = e.clientX; s.lt = performance.now(); s.v = 0; }
+    s.last = performance.now();
+  };
+  const move = (e: ReactPointerEvent<HTMLCanvasElement>) => {
+    const s = st.current; if (!s.pts.has(e.pointerId)) return;
+    s.pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); s.last = performance.now();
+    if (s.pts.size === 2 && s.pinch) { const [a, b] = [...s.pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); setZoom(s.tz * (d / s.pinch)); s.pinch = d; return; }
+    if (!s.drag) return;
+    const now = performance.now(), dx = e.clientX - s.lx;
+    const k = 0.008 / s.zoom; s.rot += dx * k; s.v = (dx * k) / Math.max(1, now - s.lt); s.lx = e.clientX; s.lt = now;
+  };
+  const up = (e: ReactPointerEvent<HTMLCanvasElement>) => { const s = st.current; s.pts.delete(e.pointerId); if (s.pts.size < 2) s.pinch = 0; if (!s.pts.size) s.drag = false; s.last = performance.now(); };
+  return (
+    <div className="globe-box">
+      <canvas ref={ref} className="g3d-canvas globe" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onDoubleClick={() => setZoom(st.current.tz * 1.6)}
+        aria-label="Globe showing Maryland and US tech hubs I can relocate to. Drag to spin, pinch or use the buttons to zoom." role="img" />
+      <div className="globe-zoom">
+        <button onClick={() => setZoom(st.current.tz * 1.4)} aria-label="Zoom in" disabled={zoomUi >= 3.39}>+</button>
+        <button onClick={() => setZoom(st.current.tz / 1.4)} aria-label="Zoom out" disabled={zoomUi <= 1.01}>−</button>
+        <button className="us" onClick={() => { setZoom(2.2); st.current.last = 0; }} aria-label="Zoom to the US">US</button>
+      </div>
+    </div>
+  );
 }
 
 /* ---------------- 3. Skills orbit ---------------- */
@@ -181,14 +235,18 @@ export function SkillOrbit({ tools, active }: { tools: OrbitTool[]; active: stri
   const { handlers, step } = useSpin(0, 0.00022);
   useCanvasLoop(ref, (x, w, h, dt, p) => {
     const a = step(dt), cx = w / 2, cy = h / 2, narrow = w < 640;
-    const rings = narrow ? [w * 0.22, w * 0.34, w * 0.45] : [Math.min(w * 0.2, 150), Math.min(w * 0.33, 250), Math.min(w * 0.46, 350)];
-    const squash = narrow ? 0.62 : 0.34;
-    const list = narrow ? tools.filter((_, i) => i % 2 === 0) : tools;
+    // phones: two rounder rings (4 inside, 6 outside) that stay inside the card, so pills don't overlap or get cut off
+    // phones: one round ring of 7 key tools, spaced so pills never touch or leave the card
+    const rings = narrow ? [Math.min(w / 2 - 56, h * 0.36)] : [Math.min(w * 0.2, 150), Math.min(w * 0.33, 250), Math.min(w * 0.46, 350)];
+    const squash = narrow ? 1 : 0.34;
+    const key = ['Burp Suite', 'Splunk', 'Nmap', 'AWS', 'Kubernetes', 'Python', 'MITRE ATT&CK'];
+    const list = narrow ? key.map(k => tools.find(t => t.name === k)).filter((t): t is OrbitTool => !!t) : tools;
+    const ringOf = (i: number) => (narrow ? 0 : i % 3);
     x.lineWidth = 0.8;
     rings.forEach(R => { x.strokeStyle = `rgba(${p.accRgb},.16)`; x.beginPath(); x.ellipse(cx, cy, R, R * squash, 0, 0, 7); x.stroke(); });
     const pts = list.map((t, i) => {
-      const ring = i % 3, R = rings[ring], n = list.filter((_, j) => j % 3 === ring).length, k = Math.floor(i / 3);
-      const th = a * (ring === 1 ? -1 : 1) * (1 - ring * 0.18) + (k / n) * Math.PI * 2 + ring * 0.6;
+      const ring = ringOf(i), R = rings[ring], members = list.map((_, j) => j).filter(j => ringOf(j) === ring), n = members.length, k = members.indexOf(i);
+      const th = narrow ? a + (k / n) * Math.PI * 2 : a * (ring === 1 ? -1 : 1) * (1 - ring * 0.18) + (k / n) * Math.PI * 2 + ring * 0.6;
       return { t, X: cx + Math.cos(th) * R, Y: cy + Math.sin(th) * R * squash, z: Math.sin(th) };
     }).sort((p1, p2) => p1.z - p2.z);
     const sel = activeRef.current;
@@ -196,7 +254,7 @@ export function SkillOrbit({ tools, active }: { tools: OrbitTool[]; active: stri
       const on = sel === 'All' || q.t.dom === sel;
       const g0 = glow.current[q.t.name] ?? 0, g1 = g0 + ((on && sel !== 'All' ? 1 : 0) - g0) * Math.min(1, dt / 180); glow.current[q.t.name] = g1;
       const s = 0.78 + 0.28 * (q.z + 1) / 2, alpha = on ? 0.45 + 0.55 * (q.z + 1) / 2 : 0.18;
-      x.font = `600 ${Math.round(12.5 * s)}px Inter, sans-serif`;
+      x.font = `600 ${Math.round((narrow ? 11.5 : 12.5) * s)}px Inter, sans-serif`;
       const tw = x.measureText(q.t.name).width + 18 * s, th = 24 * s;
       x.globalAlpha = alpha;
       x.fillStyle = p.card; x.strokeStyle = g1 > 0.05 ? `rgba(${p.accRgb},${0.3 + g1 * 0.7})` : p.line; x.lineWidth = 1 + g1;
@@ -208,7 +266,7 @@ export function SkillOrbit({ tools, active }: { tools: OrbitTool[]; active: stri
     };
     pts.filter(q => q.z < 0).forEach(drawPill);
     // shield core
-    const S = Math.min(46, w * 0.09);
+    const S = Math.min(46, w * (narrow ? 0.085 : 0.09));
     const cg = x.createRadialGradient(cx, cy, 0, cx, cy, S * 2.4); cg.addColorStop(0, `rgba(${p.accRgb},.35)`); cg.addColorStop(1, `rgba(${p.accRgb},0)`);
     x.fillStyle = cg; x.beginPath(); x.arc(cx, cy, S * 2.4, 0, 7); x.fill();
     x.beginPath(); x.moveTo(cx, cy - S); x.lineTo(cx + S * 0.8, cy - S * 0.62); x.lineTo(cx + S * 0.8, cy + S * 0.05);
