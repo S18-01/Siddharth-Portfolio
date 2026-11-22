@@ -1072,7 +1072,6 @@ function ProfileVisual() {
           <span className="pv-ver">SEC · ENG</span>
         </div>
         <img className="pv-pop" src={portraitFront} alt={fullName} draggable={false} />
-        <i className="pv-tick a" /><i className="pv-tick b" />
         <div className="pv-base" />
       </div>
       <div className="pv-meta">
@@ -1561,7 +1560,6 @@ export default function Home() {
           <div className="whys">
             {strengths.map((x, i) => { const Icon = x.icon; return (
               <article className={'wcard reveal' + (i === 0 ? ' lead' : '')} key={x.title}>
-                <span className="wbig" aria-hidden="true">0{i + 1}</span>
                 <div className="wtop"><div className="ico"><Icon strokeWidth={1.7} /></div><span className="wn">EDGE · 0{i + 1}</span></div>
                 <h3>{x.title}</h3>
                 <p>{x.text}</p>
@@ -1703,9 +1701,9 @@ export default function Home() {
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
               <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
-                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 0.9 }} />
-                <stop offset=".38" style={{ stopColor: 'var(--h1)', stopOpacity: 0.62 }} />
-                <stop offset=".62" style={{ stopColor: 'var(--accent)', stopOpacity: 0.3 }} />
+                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.95 }} />
+                <stop offset=".4" style={{ stopColor: 'var(--accent)', stopOpacity: 0.62 }} />
+                <stop offset=".68" style={{ stopColor: 'var(--accent)', stopOpacity: 0.22 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
               <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
@@ -1725,7 +1723,7 @@ export default function Home() {
             </defs>
             <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".55" aria-hidden="true">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".22" style={{ fill: 'var(--h1)' }} aria-hidden="true">SIDDHARTH</text>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.1" aria-hidden="true">SIDDHARTH</text>
             </g>
             <rect x="120" y="156" width="760" height="1" fill="url(#gnL)" />
