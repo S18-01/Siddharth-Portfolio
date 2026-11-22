@@ -844,12 +844,13 @@ html[data-theme=light] .pv-chip .ci{color:#fff}
 
 /* tall screens wider than a phone layout (tablets, phones in "desktop site" mode): keep the portrait proportional */
 @media (min-width:761px) and (max-aspect-ratio:4/5){
- .spin{height:auto;width:min(92vw,58vh);bottom:6%}
- .ring{top:62%}
- .hi{top:auto;bottom:calc(min(92vw,58vh) + 9%);max-width:60vw}
- .roles{top:14%}
- .cta{bottom:3.5%}
- .scrub{bottom:1.5%}
+ .roles{top:120px;right:auto;left:5vw;flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:10px;max-width:90vw}
+ .roles h4{width:100%}
+ .spin{height:auto;width:min(104vw,56vh);bottom:27%}
+ .ring{top:58%}
+ .hi{top:auto;bottom:15%;max-width:70vw}
+ .cta{bottom:6%;left:5vw;right:auto;justify-content:flex-start}
+ .scrub{bottom:2%}
 }
 
 /* shorter turn on phones so the page never feels stuck */
