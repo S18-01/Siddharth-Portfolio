@@ -12,8 +12,10 @@ const fullName = 'Siddharth Muragundla';
 const githubUrl = 'https://github.com/S18-01';
 const linkedinUrl = 'https://www.linkedin.com/in/siddhum';
 const email = 'siddharthroy1435@gmail.com';
-const resume = '/SiddharthMuragundla_Resume.pdf';
-const resumePages = ['/resume/page-1.webp', '/resume/page-2.webp']; // rendered pages for the viewer
+// Bump resumeVersion whenever you replace the resume, so browsers never show a cached old copy
+const resumeVersion = '2026-11-21';
+const resume = `/SiddharthMuragundla_Resume.pdf?v=${resumeVersion}`;
+const resumePages = [`/resume/page-1.webp?v=${resumeVersion}`, `/resume/page-2.webp?v=${resumeVersion}`]; // rendered pages for the viewer
 const portrait = '/images/siddharth-portrait.png';
 const portraitFront = '/images/portrait-front.webp';
 const portraitBack = '/images/portrait-tone.webp'; // lightly muted, navy-toned to match the background
