@@ -32,7 +32,7 @@ const notifyKey = '74cae2f4-e697-444f-b579-c57ace5ba1ac';
 // Optional: drop a short video of you turning around at public/hero/turnaround.mp4
 const turnaroundVideo = '/hero/turnaround.mp4';
 
-const navigation = ['About', 'Focus', 'Skills', 'Projects', 'Experience', 'Recognition', 'Contact'];
+const navigation = ['About', 'Edge', 'Focus', 'Skills', 'Projects', 'Experience', 'Recognition', 'Contact'];
 const marquee = ['Splunk', 'Elastic Stack', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'Wireshark', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Scikit-learn', 'Kali Linux', 'ServiceNow'];
 
 const roles = [
@@ -1064,6 +1064,7 @@ function ProfileVisual() {
   return (
     <div className="pv reveal">
       <div className="pv-stage2" ref={ref} onPointerMove={move} onPointerLeave={leave}>
+        <div className="pv-halo" />
         <div className="pv-arch">
           <div className="pv-spot" />
           <div className="pv-grid" />
@@ -1071,6 +1072,7 @@ function ProfileVisual() {
           <span className="pv-ver">SEC · ENG</span>
         </div>
         <img className="pv-pop" src={portraitFront} alt={fullName} draggable={false} />
+        <i className="pv-tick a" /><i className="pv-tick b" />
         <div className="pv-base" />
       </div>
       <div className="pv-meta">
@@ -1237,7 +1239,7 @@ export default function Home() {
 
   // Scrollspy + page progress
   useEffect(() => {
-    const ids = ['home', 'why', ...navigation.map(n => n.toLowerCase())];
+    const ids = ['home', ...navigation.map(n => n.toLowerCase())];
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(e.target.id); }), { rootMargin: '-45% 0px -50% 0px' });
     ids.forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
     const onScroll = () => {
@@ -1261,21 +1263,23 @@ export default function Home() {
   // Hero: scroll turns the portrait and pops roles in one by one
   useEffect(() => {
     // smoothed: the turn eases toward the scroll position so touch/trackpad flicks glide instead of jumping
-    let cur = -1, target = 0, raf = 0, autoRaf = 0, last = performance.now(), wasAuto = false;
+    let cur = -1, target = 0, raf = 0, autoRaf = 0, last = performance.now(), wasAuto = false, phase = 0;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { spinAutoRef.current = false; setSpinAuto(false); }
     const apply = (p: number) => {
-      const stage = stageRef.current;
-      if (!stage) return;
       const turnP = Math.min(1, Math.max(0, (p - 0.04) / 0.9));
       const seg = turnP * 2, k = Math.min(1, Math.floor(seg)), f = Math.min(1, seg - k);
       const ease = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
-      const angle = 180 * (k + ease);
+      render(180 * (k + ease), turnP, p);
+    };
+    const render = (angle: number, turnP: number, p: number, soft = false) => {
+      const stage = stageRef.current;
+      if (!stage) return;
       const total = angle;
       const c = Math.abs(Math.cos((total * Math.PI) / 180));
       stage.style.setProperty('--ry', total.toFixed(2) + 'deg');
-      stage.style.setProperty('--bl', (Math.pow(1 - c, 2) * 18).toFixed(2) + 'px');
-      stage.style.setProperty('--op', (0.12 + 0.88 * Math.pow(c, 0.7)).toFixed(3));
+      stage.style.setProperty('--bl', (Math.pow(1 - c, 2) * (soft ? 7 : 18)).toFixed(2) + 'px');
+      stage.style.setProperty('--op', ((soft ? 0.4 : 0.12) + (soft ? 0.6 : 0.88) * Math.pow(c, 0.7)).toFixed(3));
       stage.style.setProperty('--bb', (1 + (1 - c) * 0.7).toFixed(3));
       stage.style.setProperty('--bu', Math.pow(1 - c, 2.2).toFixed(3));
       stage.style.setProperty('--sc', (0.94 + 0.06 * c).toFixed(3));
@@ -1309,10 +1313,11 @@ export default function Home() {
       const hero = heroRef.current;
       const inView = hero ? window.scrollY < hero.offsetHeight - window.innerHeight * 0.5 : false;
       if (spinAutoRef.current && inView && !document.hidden) {
-        if (!wasAuto) { cancelAnimationFrame(raf); raf = 0; if (cur < 0 || cur >= 0.999) cur = 0; wasAuto = true; }
-        cur += dt / 30000; // one full turn with every position in about 30 s
-        if (cur >= 1) cur = 0;
-        apply(cur);
+        if (!wasAuto) { cancelAnimationFrame(raf); raf = 0; phase = Math.max(0, Math.min(0.999, (cur - 0.04) / 0.9)); wasAuto = true; }
+        // steady, continuous turn: one full 360° every 15 s, positions change at the same pace (2.5 s each)
+        phase = (phase + dt / 15000) % 1;
+        cur = 0.04 + phase * 0.9;
+        render(phase * 360, phase, phase, true);
       } else if (!spinAutoRef.current) wasAuto = false;
       autoRaf = requestAnimationFrame(auto);
     };
@@ -1377,7 +1382,7 @@ export default function Home() {
     { group: 'Actions', label: 'Copy email address', hint: email, icon: <Copy size={16} />, run: copyEmail },
     { group: 'Actions', label: 'Save contact card', hint: '.vcf', icon: <User size={16} />, run: () => { saveContact(); toast('Contact card downloaded'); } },
     { group: 'Actions', label: 'Share this portfolio', icon: <Send size={16} />, run: () => sharePortfolio(toast) },
-    ...['Home', 'About', 'Why hire me', ...navigation.slice(1)].map(n => ({ group: 'Go to', label: n, icon: <ChevronRight size={16} />, run: () => jump(n === 'Why hire me' ? 'why' : n.toLowerCase()) })),
+    ...['Home', ...navigation].map(n => ({ group: 'Go to', label: n, icon: <ChevronRight size={16} />, run: () => jump(n.toLowerCase()) })),
     { group: 'Actions', label: 'Open music player', hint: 'Spotify', icon: <Music size={16} />, run: () => { setChatOpen(false); setMusicOpen(true); } },
     { group: 'Theme', label: 'Midnight (dark)', icon: <Moon size={16} />, run: () => setTheme('dark') },
     { group: 'Theme', label: 'Light', icon: <Sun size={16} />, run: () => setTheme('light') },
@@ -1399,7 +1404,7 @@ export default function Home() {
       <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} />
       <CursorGlow />
       <nav className="dots" aria-label="Section progress">
-        {[['home', 'Intro'], ['about', 'About'], ['why', 'Why hire me'], ['focus', 'Focus'], ['skills', 'Skills'], ['projects', 'Projects'], ['experience', 'Experience'], ['recognition', 'Recognition'], ['contact', 'Contact']].map(([id, label]) => (
+        {[['home', 'Intro'], ['about', 'About'], ['edge', 'My edge'], ['focus', 'Focus'], ['skills', 'Skills'], ['projects', 'Projects'], ['experience', 'Experience'], ['recognition', 'Recognition'], ['contact', 'Contact']].map(([id, label]) => (
           <a key={id} href={'#' + id} className={active === id ? 'on' : ''} aria-label={label}><span>{label}</span></a>
         ))}
       </nav>
@@ -1544,13 +1549,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="band why" id="why">
+      <section className="band why" id="edge">
         <div className="wrap">
-          <SectionHead n="02" label="Why hire me" sub="What I bring to a security team from day one.">Built for <em>real-world security</em></SectionHead>
+          <SectionHead n="02" label="My edge" sub="Four reasons I add value to a security team from the first week.">What sets me <em>apart</em></SectionHead>
+          <div className="edge-strip reveal">
+            <div><b>4+ yrs</b><span>Security engineering, SOC &amp; offensive work</span></div>
+            <div><b>Enterprise</b><span>Security Engineer at Cognizant · 1 yr 7 mos</span></div>
+            <div><b>M.Eng</b><span>Cybersecurity · University of Maryland</span></div>
+            <div><b>6 roles</b><span>Security · Pentest · SOC · Cloud · DevSecOps · AppSec</span></div>
+          </div>
           <div className="whys">
             {strengths.map((x, i) => { const Icon = x.icon; return (
-              <article className="wcard reveal" key={x.title}>
-                <div className="wtop"><div className="ico"><Icon strokeWidth={1.7} /></div><span className="wn">0{i + 1}</span></div>
+              <article className={'wcard reveal' + (i === 0 ? ' lead' : '')} key={x.title}>
+                <span className="wbig" aria-hidden="true">0{i + 1}</span>
+                <div className="wtop"><div className="ico"><Icon strokeWidth={1.7} /></div><span className="wn">EDGE · 0{i + 1}</span></div>
                 <h3>{x.title}</h3>
                 <p>{x.text}</p>
                 <div className="proof"><Check size={14} />{x.proof}</div>
@@ -1690,33 +1702,33 @@ export default function Home() {
         <div className="wrap">
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
-              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="96">
-                <stop offset="0" style={{ stopColor: 'var(--h1)' }} />
-                <stop offset="1" style={{ stopColor: 'var(--h1)', stopOpacity: 0.82 }} />
+              <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
+                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 0.9 }} />
+                <stop offset=".38" style={{ stopColor: 'var(--h1)', stopOpacity: 0.62 }} />
+                <stop offset=".62" style={{ stopColor: 'var(--accent)', stopOpacity: 0.3 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
-              <linearGradient id="gnTopG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
-                <stop offset=".44" stopColor="#fff" /><stop offset=".56" stopColor="#000" />
+              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="20" y2="146">
+                <stop offset=".35" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+                <stop offset=".7" style={{ stopColor: 'var(--accent)', stopOpacity: 0.45 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
-              <linearGradient id="gnLowG" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="0" y2="172">
-                <stop offset=".42" stopColor="#000" /><stop offset=".55" stopColor="#fff" /><stop offset=".83" stopColor="#fff" stopOpacity=".55" /><stop offset=".86" stopColor="#000" />
-              </linearGradient>
-              <mask id="gnTop" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnTopG)" /></mask>
-              <mask id="gnLow" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnLowG)" /></mask>
-              <pattern id="gnScan" patternUnits="userSpaceOnUse" width="8" height="5"><rect width="8" height="2.2" style={{ fill: 'var(--accent)' }} /></pattern>
+              <radialGradient id="gnH" gradientUnits="userSpaceOnUse" cx="500" cy="40" r="430">
+                <stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#000" />
+              </radialGradient>
+              <mask id="gnHM" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnH)" /></mask>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
-                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.9 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.8 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
             </defs>
             <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnTop)">SIDDHARTH</text>
-              <g mask="url(#gnLow)" aria-hidden="true">
-                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnScan)" opacity=".75">SIDDHARTH</text>
-                <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" strokeWidth="1.2" style={{ stroke: 'var(--accent)' }} opacity=".55">SIDDHARTH</text>
-              </g>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)" mask="url(#gnHM)" opacity=".55" aria-hidden="true">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.1" aria-hidden="true">SIDDHARTH</text>
             </g>
-            <rect x="60" y="152" width="880" height="1.2" fill="url(#gnL)" />
+            <rect x="120" y="156" width="760" height="1" fill="url(#gnL)" />
           </svg>
           <div className="foot">
             <span>© {new Date().getFullYear()} {fullName} · {baseLocation}</span>
