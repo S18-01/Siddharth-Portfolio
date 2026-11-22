@@ -811,7 +811,7 @@ function Boot({ onDone }: { onDone: () => void }) {
   const granted = phase !== 'load';
   const stepAt = [0, 28, 60, 100];
   return (
-    <div className={'boot' + (granted ? ' granted' : '') + (phase === 'open' ? ' open' : '')} onClick={() => finish(900)} aria-hidden="true">
+    <div className={'boot' + (granted ? ' granted' : '') + (phase === 'open' ? ' boot-exit' : '')} onClick={() => finish(900)} aria-hidden="true">
       <div className="boot-grid" />
       <div className="boot-in">
         <div className="boot-load">
@@ -1270,9 +1270,7 @@ export default function Home() {
     if (reduce) { spinAutoRef.current = false; setSpinAuto(false); }
     const apply = (p: number) => {
       const turnP = Math.min(1, Math.max(0, (p - 0.04) / 0.9));
-      const seg = turnP * 2, k = Math.min(1, Math.floor(seg)), f = Math.min(1, seg - k);
-      const ease = f < 0.5 ? 4 * f * f * f : 1 - Math.pow(-2 * f + 2, 3) / 2;
-      render(180 * (k + ease), turnP, p);
+      render(360 * turnP, turnP, p); // steady speed, same feel as Auto-turn
     };
     const render = (angle: number, turnP: number, p: number, soft = false) => {
       const stage = stageRef.current;
@@ -1295,7 +1293,7 @@ export default function Home() {
     };
     const tick = () => {
       const d = target - cur;
-      cur = Math.abs(d) < 0.0004 ? target : cur + d * 0.14;
+      cur = Math.abs(d) < 0.0004 ? target : cur + d * 0.055; // glides behind the scroll for a slow, steady turn
       apply(cur);
       raf = cur === target ? 0 : requestAnimationFrame(tick);
     };
@@ -1704,25 +1702,26 @@ export default function Home() {
           <svg className="giant" viewBox="0 0 1000 172" role="img" aria-label="Siddharth">
             <defs>
               <linearGradient id="gnF" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
-                <stop offset="0" stopColor="#dfe8ff" stopOpacity=".92" />
-                <stop offset=".38" style={{ stopColor: 'var(--accent)', stopOpacity: 0.78 }} />
-                <stop offset=".72" stopColor="#13285c" stopOpacity=".55" />
-                <stop offset="1" stopColor="#050a18" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
-                <stop offset="0" stopColor="#ffffff" stopOpacity=".55" />
-                <stop offset=".45" style={{ stopColor: 'var(--accent)', stopOpacity: 0.35 }} />
+                <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0.42 }} />
+                <stop offset=".55" style={{ stopColor: 'var(--accent)', stopOpacity: 0.1 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
+              <linearGradient id="gnS" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1="22" y2="142">
+                <stop offset="0" style={{ stopColor: 'var(--h1)', stopOpacity: 0.9 }} />
+                <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
+                <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
+              </linearGradient>
+              <radialGradient id="gnH" gradientUnits="userSpaceOnUse" cx="500" cy="20" r="760"><stop offset="0" stopColor="#fff" /><stop offset=".7" stopColor="#bbb" /><stop offset="1" stopColor="#333" /></radialGradient>
+              <mask id="gnHM" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="172"><rect width="1000" height="172" fill="url(#gnH)" /></mask>
               <linearGradient id="gnL" x1="0" x2="1" y1="0" y2="0">
                 <stop offset="0" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
                 <stop offset=".5" style={{ stopColor: 'var(--accent)', stopOpacity: 0.7 }} />
                 <stop offset="1" style={{ stopColor: 'var(--accent)', stopOpacity: 0 }} />
               </linearGradient>
             </defs>
-            <g style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
+            <g mask="url(#gnHM)" style={{ font: '900 168px Archivo, Arial Black, sans-serif', letterSpacing: '-4px' } as CSSProperties}>
               <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="url(#gnF)">SIDDHARTH</text>
-              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.2" aria-hidden="true">SIDDHARTH</text>
+              <text x="500" y="140" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="none" stroke="url(#gnS)" strokeWidth="1.6" aria-hidden="true">SIDDHARTH</text>
             </g>
             <rect x="160" y="158" width="680" height="1" fill="url(#gnL)" />
           </svg>
