@@ -1017,9 +1017,31 @@ function KeyHint() {
   return <kbd>{mac ? '⌘K' : 'Ctrl K'}</kbd>;
 }
 
+/* ---------- RedForge X Threat Twin, shown inside the portfolio ---------- */
+function TwinOverlay({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // Esc closes only this layer, so an open case study underneath stays open
+    const key = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopImmediatePropagation(); onClose(); } };
+    const msg = (e: MessageEvent) => { if (e.origin === location.origin && e.data && e.data.source === 'redforge-threat-twin-v3' && e.data.close) onClose(); };
+    window.addEventListener('keydown', key, true);
+    window.addEventListener('message', msg);
+    return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', key, true); window.removeEventListener('message', msg); };
+  }, [onClose]);
+  return (
+    <div className="twin-wrap" role="dialog" aria-modal="true" aria-label="RedForge X Threat Twin" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="twin-box">
+        <div className="twin-bar"><span><Layers size={15} />RedForge X · Threat Twin<em>Simulation · sample data</em></span><button className="hp-x" onClick={onClose} aria-label="Close Threat Twin"><X size={18} /></button></div>
+        <iframe src="/threat-twin.html" title="RedForge X Threat Twin, interactive simulation with sample data" />
+      </div>
+    </div>
+  );
+}
+
 /* ---------- project case study ---------- */
 type Project = (typeof projects)[number];
-function CaseStudy({ idx, onClose, onNav, onSchedule }: { idx: number | null; onClose: () => void; onNav: (i: number) => void; onSchedule: () => void }) {
+function CaseStudy({ idx, onClose, onNav, onSchedule, onTwin }: { idx: number | null; onClose: () => void; onNav: (i: number) => void; onSchedule: () => void; onTwin: () => void }) {
   const open = idx !== null;
   const p: Project = projects[idx ?? 0];
   useEffect(() => { document.body.style.overflow = open ? 'hidden' : ''; return () => { document.body.style.overflow = ''; }; }, [open]);
@@ -1034,7 +1056,7 @@ function CaseStudy({ idx, onClose, onNav, onSchedule }: { idx: number | null; on
           <div className="cs-links">
             {p.live && <a className="btn light" href={p.live} target="_blank" rel="noopener noreferrer"><ExternalLink />Live project</a>}
             {p.repo && <a className="btn ghost" href={p.repo} target="_blank" rel="noopener noreferrer"><Brand name="github" size={16} />Source code</a>}
-            {'demo' in p && p.demo && <a className="btn call" href={p.demo} target="_blank" rel="noopener noreferrer"><Layers size={16} />Open the interactive Threat Twin ↗</a>}
+            {'demo' in p && p.demo && <a className="btn call" href={p.demo} onClick={e => { e.preventDefault(); onTwin(); }}><Layers size={16} />Open the interactive Threat Twin</a>}
             {!p.live && !p.repo && !('demo' in p && p.demo) && <span className="chip">More details on request</span>}
           </div>
         </header>
@@ -1125,16 +1147,11 @@ function RoleFit({ onCase, onSchedule }: { onCase: (title: string) => void; onSc
   const [atEnd, setAtEnd] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const r = roleFit[i];
-  // fit exactly the first 3 points in view; the rest are a scroll away
+  // show every point; no inner scroll box, so the page always scrolls freely
   useEffect(() => {
     const el = listRef.current;
     if (!el) return;
-    const size = () => {
-      const lis = el.querySelectorAll('li');
-      if (lis.length < 4) { el.style.maxHeight = ''; setAtEnd(true); return; }
-      el.style.maxHeight = (lis[3] as HTMLElement).offsetTop - (lis[0] as HTMLElement).offsetTop + 'px';
-      el.scrollTop = 0; setAtEnd(false);
-    };
+    const size = () => { el.style.maxHeight = ''; setAtEnd(true); };
     size();
     const ro = new ResizeObserver(size); ro.observe(el);
     return () => ro.disconnect();
@@ -1210,6 +1227,7 @@ export default function Home() {
   const toastT = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toast = (m: string) => { setToastMsg(m); if (toastT.current) clearTimeout(toastT.current); toastT.current = setTimeout(() => setToastMsg(''), 2200); };
   const [showTop, setShowTop] = useState(false);
+  const [twinOpen, setTwinOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [shown, setShown] = useState(0);
   const [fading, setFading] = useState(false);
@@ -1482,7 +1500,8 @@ export default function Home() {
       {!booted && <Boot onDone={() => { setBooted(true); try { sessionStorage.setItem('sm-booted', '1'); } catch { /* */ } document.documentElement.dataset.seen = '1'; }} />}
       <a className="skip-link" href="#about">Skip to content</a>
       <Palette open={palOpen} onClose={() => setPalOpen(false)} cmds={cmds} />
-      <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} />
+      <CaseStudy idx={caseIdx} onClose={() => setCaseIdx(null)} onNav={setCaseIdx} onSchedule={openSchedule} onTwin={() => setTwinOpen(true)} />
+      {twinOpen && <TwinOverlay onClose={() => setTwinOpen(false)} />}
       <CursorGlow />
       <nav className="dots" aria-label="Section progress">
         {[['home', 'Intro'], ['about', 'About'], ['edge', 'My edge'], ['focus', 'Focus'], ['skills', 'Skills'], ['projects', 'Projects'], ['lab', 'Proof lab'], ['honeypot', 'Threat feed'], ['experience', 'Experience'], ['recognition', 'Recognition'], ['contact', 'Contact']].map(([id, label]) => (
@@ -1541,7 +1560,7 @@ export default function Home() {
 
       <Schedule open={schedOpen} onClose={() => setSchedOpen(false)} />
       <Chat open={chatOpen} setOpen={o => { setChatOpen(o); setTeaser(false); }} onSchedule={openSchedule} />
-      {teaser && !chatOpen && (
+      {teaser && !chatOpen && showTop && (
         <div className="teaser" onClick={() => { setTeaser(false); setChatOpen(true); }} role="button" tabIndex={0}>
           <button onClick={e => { e.stopPropagation(); setTeaser(false); }} aria-label="Dismiss"><X size={14} /></button>
           <b>Hi, I&apos;m Siddharth 👋</b>
@@ -1715,7 +1734,7 @@ export default function Home() {
                   <button className="csbtn" onClick={() => setCaseIdx(projects.indexOf(p))}>Read case study<ArrowRight size={15} /></button>
                   {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
                   {p.repo && <a href={p.repo} target="_blank" rel="noopener noreferrer"><Brand name="github" size={14} />Code</a>}
-                  {'demo' in p && p.demo && <a href={p.demo} target="_blank" rel="noopener noreferrer">Interactive demo ↗</a>}
+                  {'demo' in p && p.demo && <a href={p.demo} onClick={e => { e.preventDefault(); setTwinOpen(true); }}>Interactive demo</a>}
                 </div>
               </article>
             ))}

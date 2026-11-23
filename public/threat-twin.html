@@ -131,4 +131,7 @@ new ResizeObserver(sizeReport).observe(document.body);window.addEventListener('l
 
 // Back button: close this tab to return to the open portfolio tab; otherwise go home without replaying the opening
 document.querySelector('.tt-back')?.addEventListener('click',e=>{try{sessionStorage.setItem('sm-booted','1');sessionStorage.setItem('sm-greeted','1')}catch(_){}if(window.history.length<=1){window.close();setTimeout(()=>{location.href='/#projects'},250);e.preventDefault();}});
+
+// Inside the portfolio: the portfolio's own close button replaces Back, and Esc closes the layer
+if(window.top!==window.self){document.querySelector('.tt-back')?.remove();addEventListener('keydown',e=>{if(e.key==='Escape')parent.postMessage({source:'redforge-threat-twin-v3',close:true},location.origin)});}
 </script></body></html>

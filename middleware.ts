@@ -22,7 +22,7 @@ export function middleware(request: NextRequest) {
     "img-src 'self' data: blob:",
     "media-src 'self'",
     `connect-src 'self' https://api.web3forms.com${feedOrigin}`,
-    "frame-src https://open.spotify.com",
+    "frame-src 'self' https://open.spotify.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self' mailto:",

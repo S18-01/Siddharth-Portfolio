@@ -354,27 +354,32 @@ export function HoloBadge({ img, name, li }: { img: string; name: string; li: st
     </div></div>
   );
 }
+// light theme: deepen mid-tones so the face keeps its detail on a white background
+const deep = (v: number, k = 1.35) => Math.round(255 * Math.pow(v / 255, k) * 0.86);
+type Pt = { x: number; y: number; ox: number; oy: number; vx: number; vy: number; c: string; cl: string; dark: boolean };
+// same particles on both themes; on the light theme they use deeper colours so they read on white
 export function ParticlePortrait({ img }: { img: string }) {
-  const pts = useRef<{ x: number; y: number; ox: number; oy: number; vx: number; vy: number; c: string }[]>([]);
+  const pts = useRef<Pt[]>([]);
   const mouse = useRef({ x: -999, y: -999 });
   const wh = useRef({ w: 0, h: 0 });
   useEffect(() => {
-    const im = new Image(); im.src = img;
+    const load = (src: string, into: { current: Pt[] }) => { const im = new Image(); im.src = src;
     im.onload = () => {
       const S = 240, c = document.createElement('canvas'); c.width = S; c.height = S; const x = c.getContext('2d'); if (!x) return;
       x.drawImage(im, 0, 0, S, S); const d = x.getImageData(0, 0, S, S).data; const out: typeof pts.current = [];
-      for (let y = 0; y < S; y += 2) for (let X = 0; X < S; X += 2) { const k = (y * S + X) * 4; if (d[k + 3] < 200) continue; const l = Math.max(d[k], d[k + 1], d[k + 2]); if (l < 46) continue; out.push({ x: Math.random(), y: Math.random(), ox: X / S, oy: y / S, vx: 0, vy: 0, c: `rgba(${Math.min(255, d[k] * 1.5 + 40)},${Math.min(255, d[k + 1] * 1.5 + 60)},${Math.min(255, d[k + 2] * 1.5 + 100)},.95)` }); }
-      pts.current = out;
-    };
+      for (let y = 0; y < S; y += 2) for (let X = 0; X < S; X += 2) { const k = (y * S + X) * 4; if (d[k + 3] < 200) continue; const l = Math.max(d[k], d[k + 1], d[k + 2]); out.push({ x: Math.random(), y: Math.random(), ox: X / S, oy: y / S, vx: 0, vy: 0, dark: l < 46, c: `rgba(${Math.min(255, d[k] * 1.5 + 40)},${Math.min(255, d[k + 1] * 1.5 + 60)},${Math.min(255, d[k + 2] * 1.5 + 100)},.95)`, cl: `rgb(${deep(d[k])},${deep(d[k + 1])},${deep(d[k + 2], 1.25)})` }); }
+      into.current = out;
+    }; };
+    load(img, pts);
   }, [img]);
   const ref = useCanvas((x, w, h) => {
-    wh.current = { w, h }; const S = Math.min(w, h), ox = (w - S) / 2, oy = (h - S) / 2, m = mouse.current, still = reduced();
+    wh.current = { w, h }; const S = Math.min(w, h), ox = (w - S) / 2, light = document.documentElement.dataset.theme === 'light', oy = (h - S) / 2 + S * 0.1, m = mouse.current, still = reduced();
     pts.current.forEach(p => {
       const tx = p.ox, ty = p.oy; const px = ox + p.x * S, py = oy + p.y * S;
       const dx = px - m.x, dy = py - m.y, d2 = dx * dx + dy * dy;
       if (d2 < 3600 && !still) { const f = (3600 - d2) / 3600; p.vx += (dx / S) * f * 0.06; p.vy += (dy / S) * f * 0.06; }
       p.vx += (tx - p.x) * 0.045; p.vy += (ty - p.y) * 0.045; p.vx *= 0.84; p.vy *= 0.84; p.x += p.vx; p.y += p.vy;
-      x.fillStyle = p.c; x.fillRect(ox + p.x * S, oy + p.y * S, 2.1, 2.1);
+      if (p.dark) return; x.fillStyle = light ? p.cl : p.c; x.fillRect(ox + p.x * S, oy + p.y * S, 2.1, 2.1);
     });
   }, []);
   return <canvas ref={ref} className="particles" onPointerMove={e => { const r = e.currentTarget.getBoundingClientRect(); mouse.current = { x: e.clientX - r.left, y: e.clientY - r.top }; }} onPointerLeave={() => { mouse.current = { x: -999, y: -999 }; }} role="img" aria-label="Portrait made of particles; move the mouse to scatter them" />;

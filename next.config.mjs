@@ -24,7 +24,7 @@ const nextConfig = {
     return [
       { source: '/:path*', headers: securityHeaders },
       // RedForge X Threat Twin: a standalone page whose one script is allowed by its exact hash
-      { source: '/threat-twin.html', headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'sha256-NI5RX5MSe90OQKG+wejuiZsSnqqNZjzFna5wa2wkUFw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests" }] },
+      { source: '/threat-twin.html', headers: [{ key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'sha256-xBpLzPCSBSVksj6xBc/EFdCbC0UusmJ8pB+W0s+eF8M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; upgrade-insecure-requests" }, { key: 'X-Frame-Options', value: 'SAMEORIGIN' }] },
       // lets the official MITRE ATT&CK Navigator load my coverage layer
       { source: '/attack-layer.json', headers: [{ key: 'Access-Control-Allow-Origin', value: '*' }, { key: 'Cache-Control', value: 'public, max-age=3600' }] },
     ];
