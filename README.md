@@ -1,36 +1,38 @@
-# Siddharth Muragundla , Portfolio
+# Siddharth Muragundla · Security Engineer portfolio
 
-Next.js 15 / React 19 / Tailwind CSS.
+[![Security](https://github.com/S18-01/Siddharth-Portfolio/actions/workflows/security.yml/badge.svg)](https://github.com/S18-01/Siddharth-Portfolio/actions/workflows/security.yml)
+[![CodeQL](https://img.shields.io/badge/CodeQL-security--extended-2ea44f?logo=github)](https://github.com/S18-01/Siddharth-Portfolio/security/code-scanning)
+[![Secrets](https://img.shields.io/badge/secrets-gitleaks-2ea44f)](https://github.com/S18-01/Siddharth-Portfolio/actions/workflows/security.yml)
+[![Dependabot](https://img.shields.io/badge/dependabot-enabled-2ea44f?logo=dependabot)](https://github.com/S18-01/Siddharth-Portfolio/network/updates)
+[![Mozilla Observatory](https://img.shields.io/badge/Mozilla%20Observatory-scan-blue?logo=mozilla)](https://developer.mozilla.org/en-US/observatory/analyze?host=siddharth-muragundla.vercel.app)
+[![Security headers](https://img.shields.io/badge/securityheaders.com-scan-blue)](https://securityheaders.com/?q=siddharth-muragundla.vercel.app&followRedirects=on)
+[![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-coverage%20layer-red)](https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fsiddharth-muragundla.vercel.app%2Fattack-layer.json)
 
-Cinematic redesign: sticky scroll-scrub hero (portrait turns under a spotlight while the headline cycles Security Engineer → Cloud Security → Threat Detection), profile card, focus areas, stack pills, projects, experience timeline, recognition, terminal contact and giant-name footer. All content lives in the arrays at the top of `app/page.tsx`; all styles in `app/globals.css`.
+Live: **https://siddharth-muragundla.vercel.app**
 
-## Start
+Next.js 15 · React 19 · deployed on Vercel. Security engineer, Maryland, USA, open to relocation.
+
+## What's inside
+
+- **Proof lab**: 10 hands-on demos (site scan, SOC triage, Kubernetes hardening, attack chain, breach simulation, phishing analyzer, Sigma rules and more)
+- **Live threat feed**: real attacks on my SSH honeypot (`honeypot/`, `docs/HONEYPOT_SETUP.md`)
+- **ATT&CK coverage**: `public/attack-layer.json`, opens in the official MITRE ATT&CK Navigator
+- **Hardened by default**: see [SECURITY.md](SECURITY.md)
+
+## Run it
 
 ```powershell
 npm.cmd install
 npm.cmd run dev
 ```
 
-Open the **exact URL** displayed by the terminal. Stop older development servers to avoid loading the previous portfolio.
+Production check (this is where the strict CSP is active):
 
-## Before publishing
+```powershell
+npm.cmd run build
+npm.cmd start
+```
 
-1. Set `NEXT_PUBLIC_GITHUB_URL` to your **real** GitHub profile URL (see `.env.example`). Until configured, GitHub links open GitHub.com rather than claiming an unverified profile.
-2. Add your verified project repository URLs and technical write-ups. Project cards intentionally do not claim repo links that are not provided.
-3. Add a real resume PDF and resume button after verifying the file.
-4. Verify your LinkedIn link and all project descriptions.
+## Contact
 
-The hero uses the user-selected portrait at `public/images/siddharth-portrait.png`.
-
-Contact email: siddharthroy1435@gmail.com
-GitHub: https://github.com/S18-01
-Resume: intentionally omitted until the revised version is ready.
-
-
-## Deploy (Vercel)
-
-1. Push this folder to a GitHub repository.
-2. On vercel.com, sign in with GitHub, click **Add New → Project**, import the repo and click **Deploy** (defaults are correct for Next.js).
-3. Every `git push` redeploys automatically.
-
-Security headers (CSP, HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy) are set in `next.config.mjs`. Check them at securityheaders.com after deploying.
+siddharthroy1435@gmail.com · [LinkedIn](https://www.linkedin.com/in/siddhum) · [GitHub](https://github.com/S18-01)

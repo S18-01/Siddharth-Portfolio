@@ -1,0 +1,229 @@
+{
+ "name": "Siddharth Muragundla - detection coverage",
+ "versions": {
+  "attack": "17",
+  "navigator": "5.1.0",
+  "layer": "4.5"
+ },
+ "domain": "enterprise-attack",
+ "description": "Techniques I detect with my own rules (blue), have seen on my honeypot (red) and train on in my SOC triage challenge (amber). https://siddharth-muragundla.vercel.app",
+ "filters": {
+  "platforms": [
+   "Windows",
+   "Linux",
+   "macOS",
+   "Network",
+   "IaaS",
+   "Containers",
+   "SaaS",
+   "Office Suite",
+   "Identity Provider"
+  ]
+ },
+ "sorting": 3,
+ "layout": {
+  "layout": "side",
+  "aggregateFunction": "max",
+  "showID": true,
+  "showName": true,
+  "showAggregateScores": false,
+  "countUnscored": false,
+  "expandedSubtechniques": "annotated"
+ },
+ "hideDisabled": false,
+ "techniques": [
+  {
+   "techniqueID": "T1059.001",
+   "score": 3,
+   "color": "#38bdf8",
+   "comment": "Detection rule: encoded / download-cradle PowerShell (Sigma lab).",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1204.002",
+   "score": 3,
+   "color": "#38bdf8",
+   "comment": "Detection rule: Office app spawning a script host (Sigma lab).",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1003.001",
+   "score": 3,
+   "color": "#38bdf8",
+   "comment": "Detection rule: LSASS memory access (Sigma lab).",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1110",
+   "score": 3,
+   "color": "#38bdf8",
+   "comment": "Detection rule: brute-force burst of failed logons (Sigma lab).",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1105",
+   "score": 3,
+   "color": "#38bdf8",
+   "comment": "Detection rule: certutil / curl tool transfer (Sigma lab).",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1110.001",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: password guessing.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1496",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: crypto-miner drop attempts.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1098.004",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: attacker adds their SSH key.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1053.003",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: cron persistence.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1070",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: history / log wiping.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1082",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: system discovery (uname, nproc).",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1059.004",
+   "score": 2,
+   "color": "#f87171",
+   "comment": "Observed on my SSH honeypot: Unix shell commands.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1078",
+   "score": 1,
+   "color": "#fbbf24",
+   "comment": "SOC triage challenge: valid-account abuse / impossible travel.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1071",
+   "score": 1,
+   "color": "#fbbf24",
+   "comment": "SOC triage challenge: C2 beaconing over web protocols.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1566.002",
+   "score": 1,
+   "color": "#fbbf24",
+   "comment": "SOC triage challenge: spearphishing link.",
+   "enabled": true,
+   "showSubtechniques": false
+  },
+  {
+   "techniqueID": "T1059",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1204",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1003",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1098",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1053",
+   "enabled": true,
+   "showSubtechniques": true
+  },
+  {
+   "techniqueID": "T1566",
+   "enabled": true,
+   "showSubtechniques": true
+  }
+ ],
+ "gradient": {
+  "colors": [
+   "#ffffff00",
+   "#38bdf8"
+  ],
+  "minValue": 0,
+  "maxValue": 3
+ },
+ "legendItems": [
+  {
+   "label": "My detection rule",
+   "color": "#38bdf8"
+  },
+  {
+   "label": "Seen on my honeypot",
+   "color": "#f87171"
+  },
+  {
+   "label": "Trained in triage challenge",
+   "color": "#fbbf24"
+  }
+ ],
+ "metadata": [
+  {
+   "name": "author",
+   "value": "Siddharth Muragundla"
+  },
+  {
+   "name": "site",
+   "value": "https://siddharth-muragundla.vercel.app"
+  }
+ ],
+ "links": [
+  {
+   "label": "Portfolio",
+   "url": "https://siddharth-muragundla.vercel.app"
+  }
+ ],
+ "showTacticRowBackground": true,
+ "tacticRowBackground": "#0b1220",
+ "selectTechniquesAcrossTactics": true,
+ "selectSubtechniquesWithParent": false,
+ "selectVisibleTechniques": false
+}

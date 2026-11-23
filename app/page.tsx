@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, isValidElement, useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import { Globe3D, NetMap, SkillOrbit } from './three';
 import { FirewallMessage, KubeHarden, SiteAudit, TriageChallenge } from './labs';
@@ -8,6 +8,7 @@ import { AttackChain, BreachSim, BrowserKnows, HoloBadge, ParticlePortrait, Pass
 import { HackSandbox, RecruiterMode } from './labs3';
 import { PhishAnalyzer, SigmaLab } from './labs4';
 import { LiveHoneypot } from './honeypot';
+import { ArchFlow } from './arch';
 import {
   Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
   ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
@@ -76,7 +77,7 @@ const projects = [
     overview: 'An end-to-end Kubernetes security platform: a hardened workload running in the cluster, plus a dashboard that scans infrastructure and code for risk and tells you exactly what to fix.',
     highlights: [['3', 'replica hardened deployment'], ['5', 'security scanners'], ['5', 'CI security checks']],
     security: ['RBAC & least privilege', 'NetworkPolicies', 'Non-root containers', 'Security scoring', 'Remediation reports', 'Prometheus + Grafana'] },
-  { number: '02', tag: 'Pen testing / Vuln assessment', title: 'RedForge X', points: ['Built a Dockerized pentest lab (Python, Flask, Kali Linux, Nmap, Burp Suite) for attack surface analysis and controlled exploitation of SQLi, XSS, IDOR, SSTI and command injection.', 'Created an automated assessment platform with CVSS risk scoring, PoC validation, security dashboards and PDF pentest reports.', 'Added remediation verification and regression testing with pytest, Docker and GitHub Actions.'], stack: ['Python', 'Flask', 'Next.js', 'TypeScript', 'Kali Linux', 'Burp Suite', 'CVSS'], live: null, repo: null,
+  { number: '02', tag: 'Pen testing / Vuln assessment', title: 'RedForge X', points: ['Built a Dockerized pentest lab (Python, Flask, Kali Linux, Nmap, Burp Suite) for attack surface analysis and controlled exploitation of SQLi, XSS, IDOR, SSTI and command injection.', 'Created an automated assessment platform with CVSS risk scoring, PoC validation, security dashboards and PDF pentest reports.', 'Added remediation verification and regression testing with pytest, Docker and GitHub Actions.'], stack: ['Python', 'Flask', 'Next.js', 'TypeScript', 'Kali Linux', 'Burp Suite', 'CVSS'], live: null, repo: null, demo: '/threat-twin.html',
     overview: 'A penetration testing lab and an assessment platform in one: attack a deliberately vulnerable app in a safe, Dockerized environment, then score, report and verify the fixes.',
     highlights: [['5', 'OWASP vuln classes exploited'], ['CVSS', 'risk scoring'], ['PDF', 'pentest reports']],
     security: ['SQL injection', 'XSS', 'IDOR', 'SSTI', 'Command injection', 'PoC validation', 'Regression testing'] },
@@ -305,11 +306,18 @@ function HireButton({ onClick, big }: { onClick: () => void; big?: boolean }) {
   );
 }
 
+function splitWords(node: ReactNode, c: { i: number }): ReactNode {
+  if (typeof node === 'string') return node.split(/(\s+)/).map((w, k) => (!w || /^\s+$/.test(w)) ? w : <span className="w" style={{ ['--i' as string]: c.i++ }} key={k}>{w}</span>);
+  if (Array.isArray(node)) return node.map((x, k) => <Fragment key={k}>{splitWords(x, c)}</Fragment>);
+  if (isValidElement(node)) return <span className="w" style={{ ['--i' as string]: c.i++ }}>{node}</span>;
+  return node;
+}
+
 function SectionHead({ n, label, children, sub }: { n: string; label: string; children: ReactNode; sub?: string }) {
   return (
     <div className="sh reveal">
       <div className="sh-tag"><span className="sh-n">{n}</span>{label}</div>
-      <h2>{children}</h2>
+      <h2>{splitWords(children, { i: 0 })}</h2>
       {sub && <p>{sub}</p>}
       <div className="sh-rule" />
     </div>
@@ -1003,6 +1011,12 @@ function MusicPlayer({ open, onClose }: { open: boolean; onClose: () => void }) 
   );
 }
 
+function KeyHint() {
+  const [mac, setMac] = useState(true);
+  useEffect(() => { setMac(/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)); }, []);
+  return <kbd>{mac ? '⌘K' : 'Ctrl K'}</kbd>;
+}
+
 /* ---------- project case study ---------- */
 type Project = (typeof projects)[number];
 function CaseStudy({ idx, onClose, onNav, onSchedule }: { idx: number | null; onClose: () => void; onNav: (i: number) => void; onSchedule: () => void }) {
@@ -1020,10 +1034,12 @@ function CaseStudy({ idx, onClose, onNav, onSchedule }: { idx: number | null; on
           <div className="cs-links">
             {p.live && <a className="btn light" href={p.live} target="_blank" rel="noopener noreferrer"><ExternalLink />Live project</a>}
             {p.repo && <a className="btn ghost" href={p.repo} target="_blank" rel="noopener noreferrer"><Brand name="github" size={16} />Source code</a>}
-            {!p.live && !p.repo && <span className="chip">More details on request</span>}
+            {'demo' in p && p.demo && <a className="btn call" href={p.demo} target="_blank" rel="noopener noreferrer"><Layers size={16} />Open the interactive Threat Twin ↗</a>}
+            {!p.live && !p.repo && !('demo' in p && p.demo) && <span className="chip">More details on request</span>}
           </div>
         </header>
         <div className="cs-stats">{p.highlights.map(([n, l]) => <div key={l}><b>{n}</b><span>{l}</span></div>)}</div>
+        <ArchFlow title={p.title} />
         <div className="cs-body">
           <section><h4>What I built</h4><ul>{p.points.map((x, i) => <li key={i}>{x}</li>)}</ul></section>
           <section><h4>Security coverage</h4><div className="tags">{p.security.map(x => <span key={x}>{x}</span>)}</div>
@@ -1221,7 +1237,7 @@ export default function Home() {
     return () => { document.removeEventListener('keydown', onKey); window.removeEventListener('scroll', onScroll); };
   }, []);
 
-  // After the opening, greet visitors once per session: chat opens on desktop, a bubble on phones
+  // After the opening, greet visitors once per session with a small bubble (never covers the hero)
   // Returning visitors this session skip the opening (marked before paint by the layout script, so nothing flashes)
   useEffect(() => { if (document.documentElement.dataset.seen) setBooted(true); }, []);
 
@@ -1229,8 +1245,7 @@ export default function Home() {
     if (!booted) return;
     const t = setTimeout(() => {
       try { if (sessionStorage.getItem('sm-greeted')) return; sessionStorage.setItem('sm-greeted', '1'); } catch { /* storage unavailable */ }
-      if (window.innerWidth >= 760) { setChatOpen(true); return; }
-      // phones: wait until the visitor scrolls past the hero so the bubble never covers the buttons
+      // wait until the visitor scrolls past the hero, so the hero and its buttons stay fully visible
       const onScroll = () => {
         const hero = heroRef.current;
         if (hero && window.scrollY > hero.offsetHeight - window.innerHeight * 0.6) { setTeaser(true); window.removeEventListener('scroll', onScroll); }
@@ -1406,18 +1421,26 @@ export default function Home() {
   useEffect(() => {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-    const boxes = Array.from(document.querySelectorAll<HTMLElement>('.box'));
+    const boxes = Array.from(document.querySelectorAll<HTMLElement>('.box, .whys>.wcard'));
+    const tilt = window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (tilt) document.documentElement.classList.add('tilt-on');
     const move = (e: PointerEvent) => {
       const c = e.currentTarget as HTMLElement, r = c.getBoundingClientRect();
-      c.style.setProperty('--mx', e.clientX - r.left + 'px');
-      c.style.setProperty('--my', e.clientY - r.top + 'px');
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      c.style.setProperty('--mx', x + 'px');
+      c.style.setProperty('--my', y + 'px');
+      if (tilt && c.matches('.g3>.box, .whys>.wcard')) {
+        c.style.setProperty('--ry', ((x / r.width - 0.5) * 6).toFixed(2) + 'deg');
+        c.style.setProperty('--rx', ((0.5 - y / r.height) * 5).toFixed(2) + 'deg');
+      }
     };
-    boxes.forEach(b => b.addEventListener('pointermove', move));
-    return () => { io.disconnect(); boxes.forEach(b => b.removeEventListener('pointermove', move)); };
+    const leave = (e: PointerEvent) => { const c = e.currentTarget as HTMLElement; c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); };
+    boxes.forEach(b => { b.addEventListener('pointermove', move); b.addEventListener('pointerleave', leave); });
+    return () => { io.disconnect(); boxes.forEach(b => { b.removeEventListener('pointermove', move); b.removeEventListener('pointerleave', leave); }); };
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setHireOpen(false); setSchedOpen(false); setChatOpen(false); setResumeOpen(false); setMusicOpen(false); } };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setHireOpen(false); setSchedOpen(false); setChatOpen(false); setResumeOpen(false); setMusicOpen(false); setCaseIdx(null); } };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
@@ -1478,7 +1501,7 @@ export default function Home() {
             {navLinks()}
           </nav>
           <div className="nav-r">
-            <button className="kbtn" onClick={() => setPalOpen(true)} aria-label="Quick actions (Ctrl K)" title="Quick actions (Ctrl K)"><Search size={15} /><kbd>⌘K</kbd></button>
+            <button className="kbtn" onClick={() => setPalOpen(true)} aria-label="Quick actions (Ctrl K)" title="Quick actions (Ctrl K)"><Search size={15} /><KeyHint /></button>
             <button className={'kbtn mus' + (musicOpen ? ' on' : '')} onClick={() => { setChatOpen(false); setMusicOpen(o => !o); }} aria-label="Music player" aria-expanded={musicOpen} title="Music"><Music size={15} /></button>
             <ThemeSwitch theme={theme} setTheme={setTheme} />
             <HireButton onClick={openHire} />
@@ -1679,6 +1702,7 @@ export default function Home() {
                   <button className="csbtn" onClick={() => setCaseIdx(projects.indexOf(p))}>Read case study<ArrowRight size={15} /></button>
                   {p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live ↗</a>}
                   {p.repo && <a href={p.repo} target="_blank" rel="noopener noreferrer"><Brand name="github" size={14} />Code</a>}
+                  {'demo' in p && p.demo && <a href={p.demo} target="_blank" rel="noopener noreferrer">Interactive demo ↗</a>}
                 </div>
               </article>
             ))}
@@ -1706,6 +1730,20 @@ export default function Home() {
             {labTab === 8 && <PhishAnalyzer />}
             {labTab === 9 && <SigmaLab />}
           </div>
+          <div className="verify reveal">
+            <div className="verify-l"><b>Verify my security yourself</b><span>Independent graders, run live against this site. Nothing here is self-reported.</span></div>
+            <div className="verify-r">
+              {[
+                ['Mozilla Observatory', 'HTTP security headers', 'https://developer.mozilla.org/en-US/observatory/analyze?host=siddharth-muragundla.vercel.app'],
+                ['securityheaders.com', 'Header grade', 'https://securityheaders.com/?q=siddharth-muragundla.vercel.app&followRedirects=on'],
+                ['SSL Labs', 'TLS configuration', 'https://www.ssllabs.com/ssltest/analyze.html?d=siddharth-muragundla.vercel.app'],
+                ['Security pipeline', 'CodeQL · gitleaks · npm audit', `${githubUrl}/Siddharth-Portfolio/actions/workflows/security.yml`],
+                ['MITRE ATT&CK', 'My detection coverage', 'https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fsiddharth-muragundla.vercel.app%2Fattack-layer.json'],
+              ].map(([n, d, h]) => (
+                <a key={n} className="verify-a" href={h} target="_blank" rel="noopener noreferrer"><b>{n}</b><span>{d}</span><i>Run ↗</i></a>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1713,6 +1751,7 @@ export default function Home() {
         <div className="wrap">
           <SectionHead n="07" label="Live threat feed" sub="A decoy server I run to study real attackers. Every arc is a login attempt; every command is what they tried next.">This is happening <em>right now.</em></SectionHead>
           <div className="reveal"><LiveHoneypot /></div>
+          <a className="attack-link reveal" href="https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fsiddharth-muragundla.vercel.app%2Fattack-layer.json" target="_blank" rel="noopener noreferrer"><span>Every technique above, plus the ones my detection rules catch, mapped on the official MITRE ATT&amp;CK matrix.</span><b>Open my coverage in ATT&amp;CK Navigator ↗</b></a>
         </div>
       </section>
 

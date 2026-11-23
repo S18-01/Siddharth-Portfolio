@@ -1,0 +1,7 @@
+# Default gitleaks rules, plus one known-public value.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Web3Forms access keys are public by design: they can only send mail to the owner's inbox"
+regexes = ['''74cae2f4-e697-444f-b579-c57ace5ba1ac''']
