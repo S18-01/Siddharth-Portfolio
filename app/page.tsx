@@ -1570,7 +1570,20 @@ export default function Home() {
           </div>
 
           <div className="roles" aria-label="Roles">
-            <button className="rec-quick" onClick={() => setRecOpen(true)}><FileText size={15} /><span><b>Hiring? See everything</b><small>30-second recruiter summary</small></span><ArrowRight size={14} /></button>
+            <div className="rq-wrap">
+              <button className="rec-quick" onClick={() => setRecOpen(true)} aria-label="Hiring? Open the 30-second recruiter summary"><span className="rq-ic"><FileText size={16} /><i className="rq-dot" /></span><span className="rq-t"><b>Hiring? See everything</b><small>Resume · skills · availability</small></span><span className="rq-go"><ArrowRight size={14} /></span></button>
+              <div className="rq-peek" aria-hidden="true">
+                <div className="rq-ph"><i />Open to work<span>Graduating Dec 2026</span></div>
+                <dl>
+                  <div><dt>Roles</dt><dd>Security Eng · Pentest · SOC · Cloud · DevSecOps</dd></div>
+                  <div><dt>Experience</dt><dd>4+ years · Security Engineer at Cognizant</dd></div>
+                  <div><dt>Education</dt><dd>M.Eng Cybersecurity, UMD</dd></div>
+                  <div><dt>Certs</dt><dd>eCPPT · Google Cybersecurity · Security+ (in progress)</dd></div>
+                  <div><dt>Location</dt><dd>Maryland, USA · open to relocation</dd></div>
+                </dl>
+                <div className="rq-pf">Click for the full summary, resume and booking</div>
+              </div>
+            </div>
             <h4>Positions</h4>
             {roles.map((x, i) => (
               <div key={x.short} className={'role' + (i <= step ? ' on' : '') + (i === step ? ' cur' : '')}>
