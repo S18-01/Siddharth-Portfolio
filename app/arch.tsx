@@ -19,6 +19,13 @@ const flows: Record<string, Stage[]> = {
     { t: 'Risk scoring', d: 'CVSS · dashboards' },
     { t: 'Report & retest', d: 'PDF report · pytest regression' },
   ],
+  'AWS Cloud Security & Infrastructure': [
+    { t: 'Security logs', d: 'EC2 workloads' },
+    { t: 'Ingest & queue', d: 'S3 · SQS' },
+    { t: 'Threat detection', d: 'AWS Lambda' },
+    { t: 'Findings', d: 'DynamoDB' },
+    { t: 'Hardened deploys', d: 'EKS · ECS · Fargate · CodeDeploy blue-green' },
+  ],
   'Cyber Incident Classification': [
     { t: 'Incident data', d: 'Cybersecurity incident datasets' },
     { t: 'Preprocessing', d: 'Cleaning · EDA' },

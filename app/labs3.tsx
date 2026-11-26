@@ -180,7 +180,7 @@ export function ArCard({ img, name }: { img: string; name: string }) {
 }
 
 /* ================= Recruiter mode ================= */
-type Rec = { name: string; title: string; location: string; roles: string[]; jobs: Job[]; projects: { title: string; tag: string; live?: string | null; repo?: string | null }[]; certs: { title: string; status: string }[]; edu: string; onClose: () => void; onBook: () => void; onResume: () => void; email: string; linkedin: string };
+type Rec = { name: string; title: string; location: string; roles: string[]; jobs: (Job & { length?: string })[]; projects: { title: string; tag: string; overview?: string; live?: string | null; repo?: string | null }[]; certs: { title: string; status: string }[]; edu: string[]; stats?: [string, string][]; skills?: string[]; onClose: () => void; onBook: () => void; onResume: () => void; email: string; linkedin: string };
 export function RecruiterMode(r: Rec) {
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') r.onClose(); }; addEventListener('keydown', k); document.body.style.overflow = 'hidden'; return () => { removeEventListener('keydown', k); document.body.style.overflow = ''; }; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
@@ -191,10 +191,12 @@ export function RecruiterMode(r: Rec) {
           <button className="btn ghost" onClick={r.onClose}>Exit recruiter mode</button>
         </header>
         <div className="rm-cta"><button className="btn light" onClick={r.onBook}>Book a call</button><button className="btn ghost" onClick={r.onResume}>View resume</button><a className="btn ghost" href={`mailto:${r.email}`}>Email</a><a className="btn ghost" href={r.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
+        {r.stats && <div className="rm-stats">{r.stats.map(([n, l]) => <div key={l}><b>{n}</b><span>{l}</span></div>)}</div>}
         <section><h3>Target roles</h3><div className="rm-tags">{r.roles.map(x => <span key={x}>{x}</span>)}</div></section>
-        <section><h3>Experience</h3>{r.jobs.map(j => <div key={j.role + j.org} className="rm-job"><div><b>{j.role}</b> · {j.org}</div><small>{j.date}</small><p>{textOf(j.points[0])}</p></div>)}</section>
-        <section><h3>Top projects</h3>{r.projects.map(p => <div key={p.title} className="rm-job"><div><b>{p.title}</b> · {p.tag}</div>{(p.live || p.repo) && <small>{p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live</a>}{p.live && p.repo && ' · '}{p.repo && <a href={p.repo} target="_blank" rel="noopener noreferrer">Code</a>}</small>}</div>)}</section>
-        <section className="rm-two"><div><h3>Certifications</h3><ul>{r.certs.map(c => <li key={c.title}>{c.title} <small>({c.status})</small></li>)}</ul></div><div><h3>Education</h3><p>{r.edu}</p></div></section>
+        <section><h3>Experience</h3>{r.jobs.map(j => <div key={j.role + j.org} className="rm-job"><div><b>{j.role}</b> · {j.org}</div><small>{j.date}{j.length ? ` · ${j.length}` : ''}</small><p>{textOf(j.points.find(pt => /\d/.test(textOf(pt))) ?? j.points[0])}</p></div>)}</section>
+        {r.skills && <section><h3>Key skills</h3><div className="rm-tags">{r.skills.map(x => <span key={x}>{x}</span>)}</div></section>}
+        <section><h3>Top projects</h3>{r.projects.map(p => <div key={p.title} className="rm-job"><div><b>{p.title}</b> · {p.tag}</div>{p.overview && <p>{p.overview}</p>}{(p.live || p.repo) && <small>{p.live && <a href={p.live} target="_blank" rel="noopener noreferrer">Live</a>}{p.live && p.repo && ' · '}{p.repo && <a href={p.repo} target="_blank" rel="noopener noreferrer">Code</a>}</small>}</div>)}</section>
+        <section className="rm-two"><div><h3>Certifications</h3><ul>{r.certs.map(c => <li key={c.title}>{c.title} <small>({c.status})</small></li>)}</ul></div><div><h3>Education</h3>{r.edu.map(e => <p key={e}>{e}</p>)}</div></section>
         <p className="rm-foot">30-second view. Exit to see the full interactive portfolio.</p>
       </div>
     </div>

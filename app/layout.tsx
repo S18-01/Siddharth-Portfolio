@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import './globals.css';
 
 const title = 'Siddharth Muragundla | Security Engineer · Pentest · SOC · Cloud';
-const description = 'Security and penetration testing engineer with 4+ years in cybersecurity. Pentesting, SOC operations, cloud security, DevSecOps and ML for security. Based in Maryland, USA and open to relocation.';
+const description = 'Security engineer with 2 years of full-time experience at Cognizant. Vulnerability management, pentesting, SOC operations, cloud security and DevSecOps. M.Eng Cybersecurity, University of Maryland. Based in Maryland, USA and open to relocation.';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://siddharth-muragundla.vercel.app'),
@@ -29,7 +29,7 @@ const personLd = {
   address: { '@type': 'PostalAddress', addressRegion: 'Maryland', addressCountry: 'US' },
   alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Maryland, College Park' },
   sameAs: ['https://www.linkedin.com/in/siddhum', 'https://github.com/S18-01'],
-  knowsAbout: ['Penetration Testing', 'Security Operations', 'Cloud Security', 'DevSecOps', 'Machine Learning for Security'],
+  knowsAbout: ['Penetration Testing', 'Security Operations', 'Cloud Security', 'DevSecOps', 'Vulnerability Management'],
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

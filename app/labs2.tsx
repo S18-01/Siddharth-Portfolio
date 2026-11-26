@@ -204,17 +204,17 @@ export function BrowserKnows() {
 /* ================= SOC dashboard + MITRE coverage ================= */
 const mitre: { t: string; lv: number; src: string }[] = [
   { t: 'Reconnaissance', lv: 3, src: 'Nmap and Nessus scans at Cognizant; RedForge X recon' },
-  { t: 'Initial Access', lv: 2, src: 'Phishing triage in SOC workflows; web exploitation labs' },
+  { t: 'Initial Access', lv: 2, src: 'Web exploitation in RedForge X; alert triage at Cognizant' },
   { t: 'Execution', lv: 2, src: 'Command injection and SSTI in RedForge X' },
   { t: 'Persistence', lv: 1, src: 'Coursework labs at UMD' },
   { t: 'Privilege Escalation', lv: 2, src: 'Linux privilege escalation in CTFs' },
   { t: 'Defense Evasion', lv: 1, src: 'CTF challenges' },
-  { t: 'Credential Access', lv: 2, src: 'Brute-force and credential alert triage at Cognizant' },
-  { t: 'Discovery', lv: 3, src: 'Network reconnaissance labs taught as Graduate Assistant' },
+  { t: 'Credential Access', lv: 2, src: 'Authentication weakness research; alert triage at Cognizant' },
+  { t: 'Discovery', lv: 3, src: 'Network reconnaissance at Nestack and in research labs' },
   { t: 'Lateral Movement', lv: 1, src: 'Lab environments' },
   { t: 'Collection', lv: 1, src: 'Forensics coursework' },
-  { t: 'Command and Control', lv: 2, src: 'IOC analysis and firewall log investigations' },
-  { t: 'Impact', lv: 2, src: 'Incident prioritization with the ML classification project' },
+  { t: 'Command and Control', lv: 2, src: 'IOC analysis and network traffic correlation at Cognizant' },
+  { t: 'Impact', lv: 2, src: 'Prioritizing by CVSS and business impact at Cognizant' },
 ];
 function Glass({ children, title, k, onClick }: { children: ReactNode; title: string; k: string; onClick?: () => void }) {
   const move = (e: ReactPointerEvent<HTMLElement>) => {
@@ -264,8 +264,8 @@ const cmds: Record<string, { out: string[]; cards?: string[] }> = {
   help: { out: ['Commands: whoami · skills · projects · experience · hire · resume · clear'] },
   whoami: { out: ['Siddharth Muragundla · Security Engineer', 'M.Eng Cybersecurity, University of Maryland · open to relocation'], cards: ['Security Engineer', 'Maryland, USA', 'Open to relocation'] },
   skills: { out: ['offense: burp metasploit nmap nessus', 'defense: splunk elk mitre-att&ck ir', 'cloud: aws eks kubernetes terraform'], cards: ['Burp Suite', 'Splunk', 'Kubernetes', 'AWS', 'Python'] },
-  projects: { out: ['KubeShield Enterprise · RedForge X · Cyber Incident Classification'], cards: ['KubeShield', 'RedForge X', 'ML Incidents'] },
-  experience: { out: ['Graduate Assistant · UMD', 'Security Engineer · Cognizant', 'Cybersecurity Intern · Nestack', 'Club Lead · CTFs'], cards: ['UMD', 'Cognizant', 'Nestack'] },
+  projects: { out: ['KubeShield Enterprise · RedForge X · AWS Cloud Security & Infrastructure · Cyber Incident Classification'], cards: ['KubeShield', 'RedForge X', 'AWS Security', 'ML Incidents'] },
+  experience: { out: ['Security Engineer · Cognizant · 2 yrs', 'Cybersecurity Intern · Nestack', 'Research Assistant · GNITC'], cards: ['Cognizant', 'Nestack', 'Research'] },
 };
 export function TermInput({ onHire, onResume }: { onHire: () => void; onResume: () => void }) {
   const [lines, setLines] = useState<string[]>(['Type help and press Enter.']);

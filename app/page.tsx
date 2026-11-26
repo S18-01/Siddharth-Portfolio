@@ -10,8 +10,8 @@ import { PhishAnalyzer, SigmaLab } from './labs4';
 import { LiveHoneypot } from './honeypot';
 import { ArchFlow } from './arch';
 import {
-  Award, BrainCircuit, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
-  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, User, Video, X, ZoomIn, ZoomOut,
+  Award, Bug, CalendarDays, Check, Clock, Cloud, Contrast, Copy, Download, ExternalLink, FileText, GitBranch,
+  ArrowUp, ArrowRight, ChevronLeft, Layers, Music, ChevronRight, CornerDownLeft, Globe, Search, GraduationCap, MapPin, Menu, MessageCircle, Moon, Pause, Phone, Plane, Radar, RotateCcw, ScanSearch, Send, ShieldCheck, Star, Sun, Target, Terminal as TerminalIcon, User, Video, X, ZoomIn, ZoomOut,
 } from 'lucide-react';
 
 /* ================= your details ================= */
@@ -20,10 +20,10 @@ const githubUrl = 'https://github.com/S18-01';
 const linkedinUrl = 'https://www.linkedin.com/in/siddhum';
 const email = 'siddharthroy1435@gmail.com';
 // Bump resumeVersion whenever you replace the resume, so browsers never show a cached old copy
-const resumeVersion = '2026-11-22-hd';
+const resumeVersion = '2026-11-26';
 const resume = `/SiddharthMuragundla_Resume.pdf?v=${resumeVersion}`;
-const resumePages = [`/resume/page-1.webp?v=${resumeVersion}`, `/resume/page-2.webp?v=${resumeVersion}`]; // rendered pages for the viewer
-const resumeLinks: { href: string; l: number; t: number; w: number; h: number }[][] = [[{"href": "tel:+12403501236", "l": 28.13, "t": 6.84, "w": 12.89, "h": 2.52}, {"href": "mailto:siddharthroy1435@gmail.com", "l": 41.78, "t": 6.84, "w": 20.91, "h": 2.52}, {"href": "https://www.linkedin.com/in/siddhum", "l": 63.44, "t": 6.84, "w": 6.34, "h": 2.52}, {"href": "https://github.com/S18-01", "l": 70.53, "t": 6.84, "w": 5.42, "h": 2.52}, {"href": "https://siddharth-muragundla.vercel.app/", "l": 76.71, "t": 6.84, "w": 6.53, "h": 2.52}], [{"href": "https://github.com/S18-01/KubeShield-Enterprise", "l": 48.93, "t": 24.7, "w": 5.53, "h": 2.27}, {"href": "https://kube-shield-enterprise.vercel.app/", "l": 55.24, "t": 24.7, "w": 7.85, "h": 2.27}]]; // clickable areas from the PDF's own links
+const resumePages = [`/resume/page-1.svg?v=${resumeVersion}`, `/resume/page-2.svg?v=${resumeVersion}`]; // vector pages straight from the PDF, so every line renders exactly as in the resume
+const resumeLinks: { href: string; l: number; t: number; w: number; h: number }[][] = [[{"href": "tel:+12403501236", "l": 27.68, "t": 6.7, "w": 12.89, "h": 2.4}, {"href": "mailto:" + email, "l": 41.32, "t": 6.7, "w": 21.3, "h": 2.4}, {"href": "https://www.linkedin.com/in/siddhum", "l": 63.41, "t": 6.7, "w": 6.5, "h": 2.4}, {"href": "https://github.com/S18-01", "l": 70.68, "t": 6.7, "w": 5.53, "h": 2.4}, {"href": "https://siddharth-muragundla.vercel.app/", "l": 76.99, "t": 6.7, "w": 6.71, "h": 2.4}], [{"href": "https://github.com/S18-01/KubeShield-Enterprise", "l": 48.95, "t": 17.9, "w": 5.53, "h": 2.4}, {"href": "https://kube-shield-enterprise.vercel.app/", "l": 55.26, "t": 17.9, "w": 7.85, "h": 2.4}, {"href": "https://github.com/S18-01/RedForge-X", "l": 50.98, "t": 28.55, "w": 5.53, "h": 2.4}, {"href": "https://github.com/S18-01/AWS-Cloud-Security-Infrastructure", "l": 51.19, "t": 39.2, "w": 5.53, "h": 2.4}]]; // clickable areas from the PDF's own links
 const portrait = '/images/siddharth-portrait.png';
 const portraitFront = '/images/portrait-front.webp';
 const portraitBack = '/images/portrait-tone.webp'; // lightly muted, navy-toned to match the background
@@ -41,7 +41,7 @@ const notifyKey = '74cae2f4-e697-444f-b579-c57ace5ba1ac';
 const turnaroundVideo = '/hero/turnaround.mp4';
 
 const navigation = ['About', 'Edge', 'Focus', 'Skills', 'Projects', 'Lab', 'Experience', 'Recognition', 'Contact'];
-const marquee = ['Splunk', 'Elastic Stack', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'Wireshark', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Scikit-learn', 'Kali Linux', 'ServiceNow'];
+const marquee = ['Splunk', 'Elastic Stack', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'Wireshark', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'PowerShell', 'Kali Linux', 'AWS Lambda'];
 
 const roles = [
   { a: 'Security', b: 'Engineer', short: 'Security Engineer', p: 'Hardening enterprise systems, reviewing security controls and shrinking attack surfaces.' },
@@ -49,7 +49,7 @@ const roles = [
   { a: 'SOC', b: 'Analyst', short: 'SOC Analyst', p: 'Splunk and ELK alert triage, log correlation, IOC analysis and MITRE ATT&CK mapping.' },
   { a: 'Cloud', b: 'Security', short: 'Cloud Security', p: 'AWS IAM, EKS, Kubernetes and Docker locked down with least privilege.' },
   { a: 'DevSecOps', b: 'Engineer', short: 'DevSecOps', p: 'Security built into CI/CD with Trivy, Bandit, Checkov and GitHub Actions.' },
-  { a: 'ML-Driven', b: 'Security', short: 'ML & Data Science', p: 'Machine learning and data science on incident data to classify threats and prioritize response.' },
+  { a: 'Vulnerability', b: 'Management', short: 'Vuln Management', p: 'Assessments across 80+ enterprise assets, CVSS-based prioritization and verified remediation.' },
 ];
 
 const focus = [
@@ -58,18 +58,17 @@ const focus = [
   { icon: Radar, title: 'Security Operations (SOC)', description: 'SIEM monitoring, alert triage, log correlation and IOC analysis, with findings mapped to MITRE ATT&CK and escalated cleanly.', tags: ['Splunk', 'Elastic Stack (ELK)', 'SIEM', 'MITRE ATT&CK', 'Threat Intelligence'] },
   { icon: Cloud, title: 'Cloud Security', description: 'Reviewing AWS IAM, security groups and network controls; hardening Kubernetes workloads with RBAC, NetworkPolicies and non-root containers.', tags: ['AWS', 'AWS EKS', 'IAM', 'Kubernetes', 'RBAC'] },
   { icon: GitBranch, title: 'DevSecOps & Automation', description: 'Shifting security left with automated scanning in CI/CD pipelines, infrastructure-as-code checks and container security.', tags: ['GitHub Actions', 'Trivy', 'Bandit', 'Checkov', 'Terraform', 'Docker'] },
-  { icon: BrainCircuit, title: 'ML & Data Science for Security', description: 'Applying data mining, feature engineering and classification models to cybersecurity incident data to surface threat patterns and prioritize response.', tags: ['Python', 'Scikit-learn', 'Pandas', 'Data Mining', 'EDA', 'Classification'] },
+  { icon: TerminalIcon, title: 'Security Automation', description: 'Python and PowerShell scripts that automate vulnerability assessments, log analysis and security reporting, cutting manual effort.', tags: ['Python', 'PowerShell', 'Bash', 'Security Automation', 'Reporting'] },
 ];
 
 const skillTabs = ['All', 'Offense', 'Defense', 'Cloud & DevSecOps', 'Data & Code', 'Tools'];
 const skills = [
-  { name: 'Security Operations', dom: 'Defense', items: ['Splunk', 'Elastic Stack (ELK)', 'SIEM', 'SOC Monitoring', 'Incident Response', 'Alert Triage', 'Log Analysis', 'Log Correlation', 'IOC Analysis', 'Threat Intelligence', 'MITRE ATT&CK', 'Detection Tuning'] },
-  { name: 'Security Testing', dom: 'Offense', items: ['Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Vulnerability Assessment', 'Penetration Testing', 'Network Security'] },
-  { name: 'Cloud & Infrastructure', dom: 'Cloud & DevSecOps', items: ['AWS', 'AWS EKS', 'Kubernetes', 'Docker', 'Linux (Ubuntu/Kali)', 'Git', 'TCP/IP', 'DNS', 'HTTP/HTTPS', 'IAM', 'RBAC', 'Cloud Security'] },
-  { name: 'DevSecOps & Automation', dom: 'Cloud & DevSecOps', items: ['GitHub Actions', 'CI/CD Security', 'Trivy', 'Bandit', 'Checkov', 'pip-audit', 'Security Automation', 'Container Security', 'Terraform'] },
-  { name: 'Data Science & ML for Security', dom: 'Data & Code', items: ['Machine Learning', 'Data Mining', 'Scikit-learn', 'Pandas', 'Feature Engineering', 'Exploratory Data Analysis', 'Classification Models', 'Threat Pattern Analysis', 'Risk Assessment', 'Incident Prioritization'] },
+  { name: 'Security Operations', dom: 'Defense', items: ['Splunk', 'Elastic Stack (ELK)', 'SIEM', 'SOC Monitoring', 'Incident Response', 'Alert Triage', 'Log Analysis', 'Log Correlation', 'IOC Analysis', 'Threat Intelligence', 'MITRE ATT&CK', 'Detection Tuning', 'Vulnerability Management', 'Security Monitoring'] },
+  { name: 'Security Testing', dom: 'Offense', items: ['Application Security', 'Network Security', 'Access Control', 'Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Vulnerability Assessment', 'Penetration Testing', 'CVE', 'CVSS', 'Risk Assessment', 'Security Remediation'] },
+  { name: 'Cloud & Infrastructure', dom: 'Cloud & DevSecOps', items: ['AWS', 'EC2', 'Lambda', 'S3', 'SQS', 'DynamoDB', 'IAM', 'EKS', 'ECS', 'Fargate', 'CloudWatch', 'CodeDeploy', 'Kubernetes', 'Docker', 'Linux (Ubuntu/Kali)', 'Git', 'AWS CLI', 'TCP/IP', 'DNS', 'HTTP/HTTPS', 'RBAC', 'Cloud Security', 'VPC', 'Least Privilege'] },
+  { name: 'DevSecOps & Automation', dom: 'Cloud & DevSecOps', items: ['GitHub Actions', 'CI/CD Security', 'Trivy', 'Bandit', 'Checkov', 'pip-audit', 'Security Automation', 'Container Security', 'Terraform', 'Infrastructure as Code (IaC)', 'Security Hardening'] },
   { name: 'Programming & Scripting', dom: 'Data & Code', items: ['Python', 'Bash', 'PowerShell', 'Java', 'C'] },
-  { name: 'Platforms & Tools', dom: 'Tools', items: ['ServiceNow', 'Jira', 'Prometheus', 'Grafana', 'Next.js', 'TypeScript', 'Flask', 'Supabase', 'pytest'] },
+  { name: 'Platforms & Tools', dom: 'Tools', items: ['Prometheus', 'Grafana', 'Next.js', 'TypeScript', 'Flask', 'Supabase', 'pytest'] },
 ];
 
 const projects = [
@@ -77,11 +76,15 @@ const projects = [
     overview: 'An end-to-end Kubernetes security platform: a hardened workload running in the cluster, plus a dashboard that scans infrastructure and code for risk and tells you exactly what to fix.',
     highlights: [['3', 'replica hardened deployment'], ['5', 'security scanners'], ['5', 'CI security checks']],
     security: ['RBAC & least privilege', 'NetworkPolicies', 'Non-root containers', 'Security scoring', 'Remediation reports', 'Prometheus + Grafana'] },
-  { number: '02', tag: 'Pen testing / Vuln assessment', title: 'RedForge X', points: ['Built a Dockerized pentest lab (Python, Flask, Kali Linux, Nmap, Burp Suite) for attack surface analysis and controlled exploitation of SQLi, XSS, IDOR, SSTI and command injection.', 'Created an automated assessment platform with CVSS risk scoring, PoC validation, security dashboards and PDF pentest reports.', 'Added remediation verification and regression testing with pytest, Docker and GitHub Actions.'], stack: ['Python', 'Flask', 'Next.js', 'TypeScript', 'Kali Linux', 'Burp Suite', 'CVSS'], live: null, repo: null, demo: '/threat-twin.html',
+  { number: '02', tag: 'Pen testing / Vuln assessment', title: 'RedForge X', points: ['Built a Dockerized pentest lab (Python, Flask, Kali Linux, Nmap, Burp Suite) for attack surface analysis and controlled exploitation of SQLi, XSS, IDOR, SSTI and command injection.', 'Created an automated assessment platform with CVSS risk scoring, PoC validation, security dashboards and PDF pentest reports.', 'Added remediation verification and regression testing with pytest, Docker and GitHub Actions.'], stack: ['Python', 'Flask', 'Next.js', 'TypeScript', 'Kali Linux', 'Burp Suite', 'CVSS'], live: null, repo: 'https://github.com/S18-01/RedForge-X', demo: '/threat-twin.html',
     overview: 'A penetration testing lab and an assessment platform in one: attack a deliberately vulnerable app in a safe, Dockerized environment, then score, report and verify the fixes.',
-    highlights: [['5', 'OWASP vuln classes exploited'], ['CVSS', 'risk scoring'], ['PDF', 'pentest reports']],
+    highlights: [['5', 'vulnerability classes exploited'], ['CVSS', 'risk scoring'], ['PDF', 'pentest reports']],
     security: ['SQL injection', 'XSS', 'IDOR', 'SSTI', 'Command injection', 'PoC validation', 'Regression testing'] },
-  { number: '03', tag: 'Machine learning / Cybersecurity', title: 'Cyber Incident Classification', points: ['Developed an ML classification model that analyzes cybersecurity incident datasets and identifies emerging threat patterns.', 'Applied preprocessing, feature engineering and EDA to support threat classification, risk assessment and incident prioritization.'], stack: ['Python', 'Scikit-learn', 'Pandas', 'Machine Learning', 'EDA'], live: null, repo: null,
+  { number: '03', tag: 'Cloud security / AWS · UMD', title: 'AWS Cloud Security & Infrastructure', points: ['Engineered an event-driven security monitoring pipeline with AWS EC2, Lambda, S3, SQS and DynamoDB that automates security log ingestion, threat detection and findings management.', 'Implemented cloud security controls and containerized deployments on EKS, ECS and Fargate with least-privilege IAM, CloudWatch monitoring and blue-green deployments through CodeDeploy and ALB.'], stack: ['AWS Lambda', 'EC2', 'S3', 'SQS', 'DynamoDB', 'EKS', 'ECS / Fargate', 'CloudWatch', 'CodeDeploy'], live: null, repo: 'https://github.com/S18-01/AWS-Cloud-Security-Infrastructure',
+    overview: 'Security monitoring built the cloud-native way: logs flow in automatically, threats are detected and findings are tracked, while workloads run on hardened EKS, ECS and Fargate with least-privilege IAM.',
+    highlights: [['5', 'AWS services in the event pipeline'], ['3', 'container platforms: EKS, ECS, Fargate'], ['Blue-green', 'deployments via CodeDeploy']],
+    security: ['Least-privilege IAM', 'Security log ingestion', 'Threat detection', 'Findings management', 'CloudWatch monitoring', 'Blue-green deploys'] },
+  { number: '04', tag: 'Machine learning / Cybersecurity', title: 'Cyber Incident Classification', points: ['Developed an ML classification model that analyzes cybersecurity incident datasets and identifies emerging threat patterns.', 'Applied preprocessing, feature engineering and EDA to support threat classification, risk assessment and incident prioritization.'], stack: ['Python', 'Scikit-learn', 'Pandas', 'Machine Learning', 'EDA'], live: null, repo: null,
     overview: 'Machine learning applied to security operations: a model that learns from historical incident data to classify new incidents and surface emerging threat patterns.',
     highlights: [['ML', 'classification model'], ['EDA', 'on incident datasets'], ['Risk', 'prioritization support']],
     security: ['Data preprocessing', 'Feature engineering', 'Threat classification', 'Risk assessment', 'Incident prioritization'] },
@@ -89,83 +92,75 @@ const projects = [
 
 const experience = [
   {
-    role: 'Graduate Assistant', org: 'University of Maryland, College Park', mark: 'UMD', place: 'College Park, MD', date: 'Jan 2026 – May 2026', length: '5 mos', kind: 'Security Tools for InfoSec',
-    points: [
-      <>Guided students through <b>hands-on security labs</b> using Nmap, Wireshark and Linux, helping them analyze network traffic, identify potential vulnerabilities and interpret <b>network reconnaissance</b> findings.</>,
-      <>Troubleshot <b>security tool configurations and lab environments</b> while assisting with vulnerability assessments, packet analysis and practical network security exercises.</>,
-    ],
-    tools: ['Nmap', 'Wireshark', 'Linux'],
-  },
-  {
-    role: 'Security Engineer', org: 'Cognizant', mark: 'C', place: 'Hyderabad, India', date: 'Jun 2023 – Dec 2024', length: '1 yr 7 mos', kind: 'Full-time', featured: true,
+    role: 'Security Engineer', org: 'Cognizant', mark: 'C', place: 'Hyderabad, India', date: 'Jan 2023 – Dec 2024', length: '2 yrs', kind: 'Full-time', featured: true,
     points: [
       <>Strengthened enterprise <b>security posture</b> by reviewing access permissions, system configurations and network exposure, supporting <b>security controls</b> that <b>reduce attack surfaces</b>.</>,
-      <>Ran <b>Nmap and Nessus</b> scans to find exposed services and vulnerable software, then built vulnerability reports with <b>CVE details, affected assets and prioritized remediation</b>.</>,
-      <>Prioritized high-risk findings using <b>CVSS scores and exploitability</b> from vulnerability scans, and coordinated remediation with technical teams.</>,
-      <>Investigated security alerts in <b>Splunk and Elastic Stack (ELK)</b>, analyzing event logs, network traffic and IOCs, and mapping findings to <b>MITRE ATT&amp;CK</b>.</>,
-      <>Detected potential <b>intrusions, unauthorized access attempts and abnormal communication</b> by analyzing network traffic, firewall logs and security alerts.</>,
-      <>Validated security fixes through <b>follow-up scans and configuration reviews</b>, documenting remaining risk and tracking remediation <b>to closure</b>.</>,
+      <>Ran vulnerability assessments across <b>80+ enterprise assets</b> with <b>Nmap and Nessus</b>, finding exposed services, vulnerable software and misconfigurations, and reporting <b>CVE details</b>.</>,
+      <>Prioritized critical and high-risk vulnerabilities by <b>CVSS score, exploitability and business impact</b>, coordinating remediation with cross-functional teams.</>,
+      <>Investigated security alerts in <b>Splunk and Elastic Stack (ELK)</b>, correlating event logs, network traffic and IOCs with <b>MITRE ATT&amp;CK</b> techniques to support threat detection and incident response.</>,
+      <>Validated security fixes through <b>targeted rescans and configuration reviews</b>, tracking remediation <b>to closure</b> and documenting residual risk.</>,
+      <>Engineered <b>Python and PowerShell scripts</b> that automate vulnerability assessments, log analysis and security reporting, <b>reducing manual effort</b>.</>,
     ],
-    tools: ['Splunk', 'ELK', 'Nessus', 'Nmap', 'CVSS', 'MITRE ATT&CK'],
+    tools: ['Splunk', 'ELK', 'Nessus', 'Nmap', 'CVSS', 'MITRE ATT&CK', 'Python', 'PowerShell'],
   },
   {
-    role: 'Cybersecurity Engineer Intern', org: 'Nestack Technologies', mark: 'NT', place: 'Hyderabad, India', date: 'Dec 2022 – May 2023', length: '6 mos', kind: 'Cloud & Network Security',
+    role: 'Cybersecurity Intern', org: 'Nestack Technologies', mark: 'NT', place: 'Hyderabad, India', date: 'May 2022 – Nov 2022', length: '7 mos', kind: 'Cloud & Network Security',
     points: [
-      <>Reviewed <b>AWS IAM permissions, security groups and network access controls</b> to identify misconfigurations and improve cloud infrastructure security.</>,
-      <>Ran <b>Nmap network security assessments</b> to find open ports, exposed services and potential vulnerabilities, documenting findings and remediation steps.</>,
-      <>Analyzed traffic in <b>Wireshark</b>, examining TCP/IP, DNS and HTTP/HTTPS communications to spot suspicious activity and network weaknesses.</>,
-      <>Strengthened <b>Linux system security</b> by reviewing user permissions, running services and security configurations, recommending corrective actions.</>,
+      <>Reviewed <b>AWS IAM permissions, security groups and network access controls</b>, identifying <b>10+ security misconfigurations</b> and supporting least-privilege access.</>,
+      <>Ran <b>Nmap network reconnaissance</b> to find exposed ports, unauthorized services and infrastructure weaknesses, supporting attack surface reduction.</>,
+      <>Analyzed traffic in <b>Wireshark</b>, examining TCP/IP, DNS and HTTP/HTTPS communications to detect suspicious activity and network weaknesses.</>,
+      <>Assessed <b>EC2 instances, S3 bucket permissions and VPC configurations</b> against cloud security best practices, flagging excessive privileges and public exposure.</>,
     ],
-    tools: ['AWS IAM', 'Nmap', 'Wireshark', 'Linux'],
+    tools: ['AWS IAM', 'EC2', 'S3', 'VPC', 'Nmap', 'Wireshark'],
   },
   {
-    role: 'Cybersecurity Club Lead', org: 'Guru Nanak Institutions Technical Campus', mark: 'GN', place: 'Hyderabad, India', date: 'Dec 2020 – Oct 2022', length: '1 yr 11 mos', kind: 'Offensive Security & CTFs',
+    role: 'Cybersecurity Research Assistant', org: 'Guru Nanak Institutions Technical Campus', mark: 'GN', place: 'Hyderabad, India', date: 'Jun 2020 – Mar 2022', length: '1 yr 10 mos', kind: 'Security Research',
     points: [
-      <>Led <b>hands-on cybersecurity workshops</b> on penetration testing, vulnerability assessment, network reconnaissance and web app security using Nmap, Burp Suite, Metasploit, Wireshark and Kali Linux.</>,
-      <>Organized and competed in <b>Capture the Flag (CTF)</b> competitions: vulnerability exploitation, web app pentesting and security analysis in controlled labs.</>,
-      <>Mentored members on <b>Red Team methodologies, OWASP Top 10</b> and ethical hacking, guiding projects from vulnerability identification to remediation.</>,
-      <>Ran technical meetings and guided <b>student project and startup teams</b> on security testing, risk identification and secure application development.</>,
+      <>Examined <b>web application vulnerabilities and network security weaknesses</b> with Burp Suite, Nessus, Nmap and Wireshark in controlled research environments.</>,
+      <>Ran security experiments on <b>OWASP Top 10</b> vulnerabilities, authentication weaknesses, insecure configurations and <b>access control</b> mechanisms.</>,
+      <>Automated vulnerability scanning, network reconnaissance and security testing with <b>Python and Bash</b> scripts.</>,
+      <>Documented research findings, vulnerability assessments, <b>risk classifications and recommended mitigations</b> in technical reports.</>,
     ],
-    tools: ['Burp Suite', 'Metasploit', 'Kali Linux', 'CTF'],
+    tools: ['Burp Suite', 'Nessus', 'Nmap', 'Wireshark', 'Python', 'Bash'],
   },
 ];
 
 const strengths = [
   { icon: ShieldCheck, title: 'Offense and defense', text: 'I test like an attacker and respond like a defender: OWASP Top 10 exploitation with Burp Suite and Metasploit on one side, Splunk and ELK investigations mapped to MITRE ATT&CK on the other.', proof: 'Pentest labs · SOC alert triage' },
-  { icon: Award, title: 'Enterprise-proven', text: 'At Cognizant I secured enterprise systems end to end: scanning with Nmap and Nessus, prioritizing by CVSS, coordinating remediation with engineering teams and verifying every fix.', proof: 'Security Engineer · 1 yr 7 mos' },
-  { icon: Cloud, title: 'Cloud and automation first', text: 'I harden Kubernetes and AWS with least privilege, and I build security into CI/CD so problems are caught before they ship.', proof: 'KubeShield Enterprise · RedForge X' },
-  { icon: MessageCircle, title: 'Clear communicator', text: 'I write assessment reports engineers can act on, and I\'ve taught security hands-on: leading workshops, running CTFs and guiding graduate labs at UMD.', proof: 'Club Lead · Graduate Assistant' },
+  { icon: Award, title: 'Enterprise-proven', text: 'At Cognizant I secured enterprise systems end to end: assessing 80+ assets with Nmap and Nessus, prioritizing by CVSS and business impact, coordinating remediation and verifying every fix.', proof: 'Security Engineer · 2 yrs full-time' },
+  { icon: Cloud, title: 'Cloud and automation first', text: 'I harden Kubernetes and AWS with least privilege, build security into CI/CD so problems are caught before they ship, and script the repetitive work in Python and PowerShell.', proof: 'KubeShield Enterprise · AWS Cloud Security' },
+  { icon: MessageCircle, title: 'Clear communicator', text: 'I write assessment reports engineers can act on, and as a research assistant I documented findings, risk classifications and mitigations in technical reports.', proof: 'Assessment reports · Research reports' },
 ];
 
 const roleFit = [
   { role: 'Security Engineer', fit: [
-    'Ran Nmap and Nessus scans at Cognizant, built CVE-level vulnerability reports mapped to affected assets, and validated fixes with follow-up scans',
-    'Prioritized high-risk findings by CVSS score and real-world exploitability, then coordinated fixes directly with engineering teams',
-    'Reduced attack surface across enterprise systems by reviewing access permissions, configurations, open ports and exposed services, and supported Linux hardening',
-    'Hardened cloud and infrastructure: AWS IAM, security groups and network ACLs at Nestack; RBAC, NetworkPolicies and non-root containers in Kubernetes',
+    'Assessed 80+ enterprise assets with Nmap and Nessus at Cognizant, reported CVE details and validated fixes with targeted rescans',
+    'Prioritized critical and high-risk findings by CVSS score, exploitability and business impact, then coordinated fixes with cross-functional teams',
+    'Reduced attack surface across enterprise systems by reviewing access permissions, system configurations and network exposure',
+    'Hardened cloud and infrastructure: found 10+ AWS IAM and network misconfigurations at Nestack; RBAC, NetworkPolicies and non-root containers in Kubernetes',
     'Built security into delivery with automated CI/CD scanning (Trivy, Bandit, Checkov, pip-audit), and recognized as Best Team Lead at Cognizant',
   ], tools: ['Nessus', 'Nmap', 'Burp Suite', 'Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'AWS IAM', 'Kubernetes', 'Terraform', 'Python', 'Bash', 'Linux'], work: ['KubeShield Enterprise', 'RedForge X'] },
   { role: 'Penetration Tester', fit: [
     'Runs full assessments end to end: reconnaissance, attack surface analysis, controlled exploitation and a clear remediation plan',
     'Exploited SQL injection, XSS, IDOR, SSTI and command injection in a Dockerized pentest lab, backed by proof-of-concept validation',
     'Scores every finding with CVSS and delivers PDF pentest reports that engineers can act on immediately',
-    'Led hands-on workshops in penetration testing, reconnaissance and web app security with Nmap, Burp Suite, Metasploit, Wireshark and Kali Linux',
-    'Placed 3rd in a cybersecurity CTF and organized CTF competitions, mentoring students on Red Team methodology and ethical hacking',
+    'Researched OWASP Top 10, authentication and access control weaknesses with Burp Suite, Nessus, Nmap and Wireshark as a research assistant',
+    'Placed 3rd in a cybersecurity Capture the Flag (CTF) competition and hold the eCPPT penetration testing certification',
   ], tools: ['Burp Suite', 'Metasploit', 'Nmap', 'Kali Linux', 'Wireshark', 'OWASP Top 10', 'Python'], work: ['RedForge X'] },
   { role: 'SOC Analyst', fit: [
     'Monitored and triaged security alerts in Splunk and Elastic Stack (ELK) at Cognizant, separating real threats from noise',
     'Investigated suspicious activity by correlating logs, network traffic and indicators of compromise (IOCs) to confirm scope and impact',
     'Mapped attacker behavior to MITRE ATT&CK techniques to guide response and improve detections',
-    'Analyzed firewall logs and TCP/IP, DNS and HTTP/HTTPS traffic in Wireshark to detect intrusions, unauthorized access and abnormal communication',
-    'Built a machine learning model that classifies cybersecurity incidents to speed up triage and incident prioritization',
-  ], tools: ['Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'MITRE ATT&CK', 'ServiceNow', 'Jira', 'Python'], work: ['Cyber Incident Classification'] },
+    'Analyzed TCP/IP, DNS and HTTP/HTTPS traffic in Wireshark to detect suspicious activity and network weaknesses',
+    'Built an event-driven AWS pipeline that automates security log ingestion, threat detection and findings management, and scripted log analysis in Python and PowerShell',
+  ], tools: ['Splunk', 'Elastic Stack (ELK)', 'Wireshark', 'MITRE ATT&CK', 'Python', 'PowerShell', 'AWS Lambda'], work: ['AWS Cloud Security & Infrastructure'] },
   { role: 'Cloud Security', fit: [
-    'Reviewed AWS IAM permissions, security groups and network ACLs at Nestack Technologies to find misconfigurations and harden cloud infrastructure',
+    'Found 10+ misconfigurations in AWS IAM permissions, security groups and network controls at Nestack, and assessed EC2, S3 and VPC setups',
     'Hardened a three-replica Kubernetes deployment with RBAC, NetworkPolicies, non-root containers and least-privilege controls',
-    'Independently built scanners that catch misconfigurations across Kubernetes, Docker, Terraform and AWS IAM, with security scoring and remediation reports',
+    'Built scanners that catch misconfigurations across Kubernetes, Docker, Terraform and AWS IAM, with security scoring and remediation reports',
     'Shifted cloud security left by scanning Terraform and container images in CI/CD with Checkov and Trivy before anything deploys',
-    'Monitored cluster health and security posture with Prometheus and Grafana',
-  ], tools: ['AWS', 'AWS EKS', 'IAM', 'Kubernetes', 'Docker', 'Terraform', 'Prometheus', 'Grafana'], work: ['KubeShield Enterprise'] },
+    'Built an event-driven AWS security monitoring pipeline (EC2, Lambda, S3, SQS, DynamoDB) and least-privilege deployments on EKS, ECS and Fargate',
+  ], tools: ['AWS', 'Lambda', 'IAM', 'EKS', 'ECS', 'Fargate', 'CloudWatch', 'Kubernetes', 'Terraform'], work: ['KubeShield Enterprise', 'AWS Cloud Security & Infrastructure'] },
   { role: 'DevSecOps Engineer', fit: [
     'Automated CI/CD security checks with GitHub Actions, Trivy, Bandit, Checkov and pip-audit so vulnerabilities are caught before release',
     'Added remediation verification and regression testing to pipelines with pytest and Docker, so fixed issues stay fixed',
@@ -178,13 +173,13 @@ const roleFit = [
     'Exploited and documented SQL injection, XSS, IDOR, SSTI and command injection with proof-of-concept validation',
     'Built an automated assessment platform with CVSS risk scoring, remediation tracking and regression tests that confirm fixes',
     'Integrated code and dependency scanning (Bandit, pip-audit) into CI/CD pipelines',
-    'Advised student and startup teams on secure application development and mentored developers on the OWASP Top 10',
+    'Researched authentication weaknesses, insecure configurations and access control flaws, documenting risk and mitigations in technical reports',
   ], tools: ['Burp Suite', 'OWASP Top 10', 'Bandit', 'pip-audit', 'Python', 'Flask', 'Next.js'], work: ['RedForge X'] },
 ];
 
 const achievements = [
-  { title: '3rd Place · Cybersecurity CTF', detail: 'Applied penetration testing and vulnerability exploitation skills.', date: 'April 2023' },
-  { title: '1st Place · Best Academic Project', detail: 'Recognized for technical innovation and project implementation.', date: 'December 2023' },
+  { title: '3rd Place · Cybersecurity CTF', detail: 'Applied penetration testing and vulnerability exploitation skills.', date: 'April 2022' },
+  { title: '1st Place · Best Academic Project', detail: 'Recognized for technical innovation and project implementation.', date: 'December 2022' },
   { title: 'Best Team Lead · Cognizant', detail: 'Recognized for coordinating security operations and team performance.', date: 'Recognition' },
 ];
 
@@ -192,6 +187,7 @@ const certifications = [
   { title: 'Certified Professional Penetration Tester (eCPPT)', status: 'Certification' },
   { title: 'Google Cybersecurity Professional Certificate', status: 'Coursera' },
   { title: 'CompTIA Security+', status: 'In progress' },
+  { title: 'AWS Certified Security – Specialty', status: 'In progress' },
 ];
 
 const termLines: [string, string][] = [
@@ -201,7 +197,7 @@ const termLines: [string, string][] = [
   ['> penetration testing · vulnerability management', ''],
   ['> soc operations · threat detection', ''],
   ['> cloud security · devsecops', ''],
-  ['> ml & data science for threat detection', ''],
+  ['> security automation · python & powershell', ''],
   ['$ location --relocate', ''],
   ['maryland, usa · open to relocation', 'b'],
   ['$ status --availability', ''],
@@ -574,13 +570,13 @@ const intents: [RegExp, string][] = [
   [/^(hi|hey|hello|yo|hola|good (morning|afternoon|evening))\b/i, 'greet'],
 ];
 const answers: Record<string, { text: string; chips?: Chip[]; card?: CMsg['card'] }> = {
-  hiring: { text: `Great to meet you! I'm open to full-time roles as a Security Engineer, Penetration Tester, SOC Analyst, Cloud Security Engineer or DevSecOps Engineer, as well as AppSec, vulnerability management and incident response.\n\n• 4+ years in cybersecurity\n• M.Eng Cybersecurity, University of Maryland (Dec 2026)\n• Based in ${baseLocation}, open to relocation`, chips: [{ label: 'Book a call', action: 'book' }, { label: 'View resume', action: 'resume' }, { label: 'Skills', action: 'skills' }] },
-  skills: { text: 'Here\'s my core toolkit:\n\n• Offense: Burp Suite, Metasploit, Nmap, Nessus, OWASP Top 10\n• Defense: Splunk, ELK, SIEM, MITRE ATT&CK, incident response\n• Cloud & DevSecOps: AWS, EKS, Kubernetes, Docker, Terraform, GitHub Actions, Trivy\n• Code & data: Python, Bash, PowerShell, Scikit-learn, Pandas', chips: [{ label: 'Experience', action: 'experience' }, { label: 'Projects', action: 'projects' }, { label: 'Book a call', action: 'book' }] },
-  experience: { text: '4+ years across security engineering, SOC and offensive work:\n\n• Graduate Assistant, UMD (Jan – May 2026): hands-on security labs\n• Security Engineer, Cognizant (Jun 2023 – Dec 2024): Nessus/Nmap assessments, Splunk & ELK investigations, MITRE ATT&CK mapping\n• Cybersecurity Engineer Intern, Nestack (Dec 2022 – May 2023): AWS IAM & network security\n• Cybersecurity Club Lead (2020 – 2022): pentest workshops and CTFs', chips: [{ label: 'Projects', action: 'projects' }, { label: 'View resume', action: 'resume' }, { label: 'Book a call', action: 'book' }] },
+  hiring: { text: `Great to meet you! I'm open to full-time roles as a Security Engineer, Penetration Tester, SOC Analyst, Cloud Security Engineer or DevSecOps Engineer, as well as AppSec, vulnerability management and incident response.\n\n• 2 years full-time security engineering at Cognizant\n• M.Eng Cybersecurity, University of Maryland (Dec 2026)\n• Based in ${baseLocation}, open to relocation`, chips: [{ label: 'Book a call', action: 'book' }, { label: 'View resume', action: 'resume' }, { label: 'Skills', action: 'skills' }] },
+  skills: { text: 'Here\'s my core toolkit:\n\n• Offense: Burp Suite, Metasploit, Nmap, Nessus, OWASP Top 10\n• Defense: Splunk, ELK, SIEM, MITRE ATT&CK, incident response\n• Cloud & DevSecOps: AWS, EKS, Kubernetes, Docker, Terraform, GitHub Actions, Trivy\n• Code & automation: Python, Bash, PowerShell, Java, C', chips: [{ label: 'Experience', action: 'experience' }, { label: 'Projects', action: 'projects' }, { label: 'Book a call', action: 'book' }] },
+  experience: { text: '2 years of full-time security engineering, plus an internship and research:\n\n• Security Engineer, Cognizant (Jan 2023 – Dec 2024): assessed 80+ enterprise assets with Nessus/Nmap, Splunk & ELK investigations, MITRE ATT&CK mapping, Python & PowerShell automation\n• Cybersecurity Intern, Nestack (May – Nov 2022): found 10+ AWS IAM & network misconfigurations\n• Cybersecurity Research Assistant, GNITC (2020 – 2022): web app and network security research', chips: [{ label: 'Projects', action: 'projects' }, { label: 'View resume', action: 'resume' }, { label: 'Book a call', action: 'book' }] },
   projects: { text: 'A few things I\'ve built:', card: 'projects', chips: [{ label: 'Skills', action: 'skills' }, { label: 'Book a call', action: 'book' }] },
   location: { text: `I'm based in ${baseLocation} and open to relocating for the right role.`, chips: [{ label: 'Availability', action: 'availability' }, { label: 'Book a call', action: 'book' }] },
   availability: { text: 'I\'m completing my M.Eng in Cybersecurity at UMD (expected December 2026) and I\'m open to full-time roles as a Security Engineer, Penetration Tester, SOC Analyst, Cloud Security or DevSecOps Engineer, plus AppSec, vulnerability management and incident response. Happy to talk through start dates on a call.', chips: [{ label: 'Book a call', action: 'book' }, { label: 'View resume', action: 'resume' }] },
-  certs: { text: '• Certified Professional Penetration Tester (eCPPT)\n• Google Cybersecurity Professional Certificate\n• CompTIA Security+ (in progress)', chips: [{ label: 'Skills', action: 'skills' }, { label: 'View resume', action: 'resume' }] },
+  certs: { text: '• Certified Professional Penetration Tester (eCPPT)\n• Google Cybersecurity Professional Certificate\n• CompTIA Security+ (in progress)\n• AWS Certified Security – Specialty (in progress)', chips: [{ label: 'Skills', action: 'skills' }, { label: 'View resume', action: 'resume' }] },
   salary: { text: 'I\'d love to discuss compensation on a quick call so we can talk about the full role.', chips: [{ label: 'Book a call', action: 'book' }, { label: 'Email me', action: 'email' }] },
   auth: { text: 'Happy to go over work authorization details directly. A quick call or email is the fastest way.', chips: [{ label: 'Book a call', action: 'book' }, { label: 'Email me', action: 'email' }] },
   resume: { text: 'Here\'s my resume:', card: 'resume', chips: [{ label: 'Book a call', action: 'book' }, { label: 'Experience', action: 'experience' }] },
@@ -910,15 +906,14 @@ function ResumeViewer({ open, onClose, onHire, onSchedule }: { open: boolean; on
           <div className="roles-mini">{openRoles.map(r => <span key={r}>{r}</span>)}</div>
           <div>
             <h4>At a glance</h4>
-            <div className="rv-fact"><Award /><div><small>Experience</small><b>4+ years in cybersecurity</b></div></div>
-            <div className="rv-fact"><GraduationCap /><div><small>Education</small><b>M.Eng Cybersecurity, UMD · Dec 2026</b></div></div>
-            <div className="rv-fact"><MapPin /><div><small>Location</small><b>{baseLocation}</b></div></div>
-            <div className="rv-fact"><Plane /><div><small>Relocation</small><b>Open to relocation</b></div></div>
-            <div className="rv-fact"><ShieldCheck /><div><small>Certifications</small><b>eCPPT · Google Cybersecurity · Security+ (in progress)</b></div></div>
+            <div className="rv-fact"><Award /><div><small>Experience</small><b>2 years full-time · Security Engineer</b></div></div>
+            <div className="rv-fact"><GraduationCap /><div><small>Education</small><b>M.Eng Cybersecurity, UMD · Dec 2026</b><em className="rv-sub">B.Tech CS (Cybersecurity) · 2023</em></div></div>
+            <div className="rv-fact"><MapPin /><div><small>Location</small><b>{baseLocation} · open to relocation</b></div></div>
+            <div className="rv-fact"><ShieldCheck /><div><small>Certifications</small><b>eCPPT · Google Cybersecurity</b><em className="rv-sub">In progress: Security+ · AWS Security – Specialty</em></div></div>
           </div>
           <div>
             <h4>Core skills</h4>
-            <div className="tags">{['Splunk', 'ELK', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Terraform', 'Python', 'Scikit-learn'].map(t => <span key={t}>{t}</span>)}</div>
+            <div className="tags">{['Splunk', 'ELK', 'Burp Suite', 'Metasploit', 'Nessus', 'Nmap', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Terraform', 'Python', 'PowerShell'].map(t => <span key={t}>{t}</span>)}</div>
           </div>
           <div className="btns">
             <HireButton onClick={() => { onClose(); onHire(); }} />
@@ -1219,7 +1214,7 @@ export default function Home() {
   useEffect(() => { document.documentElement.classList.toggle('rec-open', recOpen); }, [recOpen]);
   const [aboutMode, setAboutMode] = useState<'photo' | 'badge' | 'particles'>('photo');
   const orbitTools = useMemo(() => {
-    const pick = ['Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Splunk', 'Elastic Stack (ELK)', 'MITRE ATT&CK', 'Incident Response', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Bash', 'Scikit-learn', 'Pandas', 'Grafana', 'Jira'];
+    const pick = ['Burp Suite', 'Metasploit', 'Nmap', 'Nessus', 'Wireshark', 'OWASP Top 10', 'Splunk', 'Elastic Stack (ELK)', 'MITRE ATT&CK', 'Incident Response', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Trivy', 'Python', 'Bash', 'PowerShell', 'Lambda', 'CloudWatch', 'Grafana'];
     return pick.map(n => ({ name: n, dom: skills.find(g => g.items.includes(n))?.dom ?? 'Tools' }));
   }, []);
   const [toastMsg, setToastMsg] = useState('');
@@ -1595,9 +1590,9 @@ export default function Home() {
                 <div className="rq-ph"><i />Open to work<span>Graduating Dec 2026</span></div>
                 <dl>
                   <div><dt>Roles</dt><dd>Security Eng · Pentest · SOC · Cloud · DevSecOps</dd></div>
-                  <div><dt>Experience</dt><dd>4+ years · Security Engineer at Cognizant</dd></div>
+                  <div><dt>Experience</dt><dd>2 yrs full-time · Security Engineer at Cognizant</dd></div>
                   <div><dt>Education</dt><dd>M.Eng Cybersecurity, UMD</dd></div>
-                  <div><dt>Certs</dt><dd>eCPPT · Google Cybersecurity · Security+ (in progress)</dd></div>
+                  <div><dt>Certs</dt><dd>eCPPT · Google Cybersecurity · Security+ &amp; AWS Security (in progress)</dd></div>
                   <div><dt>Location</dt><dd>Maryland, USA · open to relocation</dd></div>
                 </dl>
                 <div className="rq-pf">Click for the full summary, resume and booking</div>
@@ -1620,7 +1615,7 @@ export default function Home() {
         <div className="wrap">
           <div className="snap-in reveal">
             <div><small><ShieldCheck />Target roles</small><b>Security Eng · Pentest · SOC · Cloud · DevSecOps</b></div>
-            <div><small><Award />Experience</small><b>4+ years in cybersecurity</b></div>
+            <div><small><Award />Experience</small><b>2 years full-time security engineering</b></div>
             <div><small><FileText />Education</small><b>M.Eng Cybersecurity, UMD<em>Graduating Dec 2026</em></b></div>
             <div><small><MapPin />Location</small><b>{baseLocation}<em>Open to relocation</em></b></div>
             <div className="clock"><small><Clock />My local time</small><b>{now ? homeTime(now, true) : '--:--'} ET<em>{now ? replyStatus(now).split(' · ')[0] : ''}</em></b></div>
@@ -1645,10 +1640,10 @@ export default function Home() {
           <div className="reveal">
             <div className="sh-tag"><span className="sh-n">01</span>About me</div>
             <h2>Hello, I&apos;m<br /><em>{fullName}</em></h2>
-            <div className="now-line"><span className="pd" />Currently completing my M.Eng in Cybersecurity at UMD and working toward CompTIA Security+</div>
+            <div className="now-line"><span className="pd" />Currently completing my M.Eng in Cybersecurity at UMD and working toward CompTIA Security+ and AWS Certified Security – Specialty</div>
             <p className="big">A security and penetration testing engineer who breaks systems to make them stronger.</p>
-            <p>I started on the offensive side: <b>vulnerability assessments, network reconnaissance and OWASP Top 10 testing</b> with Nmap, Nessus, Burp Suite and Metasploit. At Cognizant I added the defensive side, <b>investigating Splunk and ELK alerts in SOC workflows</b>, analyzing IOCs and network traffic, and mapping activity to MITRE ATT&amp;CK.</p>
-            <p>Today I bring that together with <b>cloud security</b> across AWS, EKS and Kubernetes, <b>DevSecOps automation</b> in CI/CD, and <b>machine learning and data science</b> applied to cybersecurity, classifying incidents and surfacing threat patterns from data. I&apos;m based in <b>{baseLocation}</b> and <b>open to relocation</b>.</p>
+            <p>I started on the offensive side as a research assistant: <b>web application and network security research, OWASP Top 10 testing and reconnaissance</b> with Burp Suite, Nessus, Nmap and Wireshark. At Cognizant I added the defensive side, <b>investigating Splunk and ELK alerts in SOC workflows</b>, analyzing IOCs and network traffic, and mapping activity to MITRE ATT&amp;CK.</p>
+            <p>Today I bring that together with <b>cloud security</b> across AWS, EKS and Kubernetes, <b>DevSecOps automation</b> in CI/CD, and <b>security automation</b> in Python and PowerShell, including an event-driven security monitoring pipeline on AWS. I&apos;m based in <b>{baseLocation}</b> and <b>open to relocation</b>.</p>
             <div className="facts">
               <div className="fact"><div className="ico"><MapPin /></div><div><small>Location</small><b>{baseLocation}</b></div></div>
               <div className="fact"><div className="ico"><Plane /></div><div><small>Relocation</small><b>Open to relocating across the US</b></div></div>
@@ -1656,9 +1651,9 @@ export default function Home() {
               <div className="fact"><div className="ico"><Target /></div><div><small>Target roles</small><b>Security Eng · Pentest · SOC · Cloud · DevSecOps · AppSec</b></div></div>
             </div>
             <div className="stats">
-              <div className="stat"><div className="ico"><Award /></div><div><b><CountUp to={4} suffix="+ yrs" /></b><span>Security experience</span></div></div>
+              <div className="stat"><div className="ico"><Award /></div><div><b><CountUp to={2} suffix=" yrs" /></b><span>Full-time at Cognizant</span></div></div>
               <div className="stat"><div className="ico"><ShieldCheck /></div><div><b>Red + Blue</b><span>Pentest &amp; SOC</span></div></div>
-              <div className="stat"><div className="ico"><BrainCircuit /></div><div><b>ML</b><span>For threat detection</span></div></div>
+              <div className="stat"><div className="ico"><ScanSearch /></div><div><b><CountUp to={80} suffix="+" /></b><span>Enterprise assets assessed</span></div></div>
             </div>
             <div className="about-cta">
               <a className="btn light" href={resume}><FileText />View resume</a>
@@ -1673,8 +1668,8 @@ export default function Home() {
         <div className="wrap">
           <SectionHead n="02" label="My edge" sub="Four reasons I add value to a security team from the first week.">What sets me <em>apart</em></SectionHead>
           <div className="edge-strip reveal">
-            <div><b>4+ yrs</b><span>Security engineering, SOC &amp; offensive work</span></div>
-            <div><b>Enterprise</b><span>Security Engineer at Cognizant · 1 yr 7 mos</span></div>
+            <div><b>2 yrs</b><span>Full-time security engineering at Cognizant</span></div>
+            <div><b>80+</b><span>Enterprise assets assessed for vulnerabilities</span></div>
             <div><b>M.Eng</b><span>Cybersecurity · University of Maryland</span></div>
             <div><b>6 roles</b><span>Security · Pentest · SOC · Cloud · DevSecOps · AppSec</span></div>
           </div>
@@ -1694,7 +1689,7 @@ export default function Home() {
 
       <section className="band alt" id="focus">
         <div className="wrap">
-          <SectionHead n="03" label="Core focus" sub="Offense, defense, automation and data: one security-first approach.">Areas of <em>focus</em></SectionHead>
+          <SectionHead n="03" label="Core focus" sub="Offense, defense, cloud and automation: one security-first approach.">Areas of <em>focus</em></SectionHead>
           <div className="g3">
             {focus.map((f, i) => { const Icon = f.icon; return (
               <article className="box reveal" key={f.title}>
@@ -1722,7 +1717,7 @@ export default function Home() {
 
       <section className="band alt" id="projects">
         <div className="wrap">
-          <SectionHead n="05" label="Selected work" sub="Hands-on security, DevSecOps and machine learning projects.">Built. Tested. <em>Verified.</em></SectionHead>
+          <SectionHead n="05" label="Selected work" sub="Hands-on security, DevSecOps, cloud security and machine learning projects.">Built. Tested. <em>Verified.</em></SectionHead>
           <div className="g3">
             {projects.map(p => (
               <article className="box reveal" key={p.title}>
@@ -1789,10 +1784,10 @@ export default function Home() {
 
       <section className="band" id="experience">
         <div className="wrap">
-          <SectionHead n="08" label="Professional experience" sub="Enterprise security engineering, SOC investigations and hands-on offensive work.">Experience in <em>practice</em></SectionHead>
+          <SectionHead n="08" label="Professional experience" sub="Enterprise security engineering, cloud and network security, and security research.">Experience in <em>practice</em></SectionHead>
           <div className="xsum reveal">
-            <div><b><CountUp to={4} suffix="+ yrs" /></b><span>In cybersecurity</span></div>
-            <div><b><CountUp to={1.5} decimals={1} suffix=" yrs" /></b><span>Enterprise security at Cognizant</span></div>
+            <div><b><CountUp to={2} suffix=" yrs" /></b><span>Full-time at Cognizant</span></div>
+            <div><b><CountUp to={80} suffix="+" /></b><span>Enterprise assets assessed</span></div>
             <div><b>Red + Blue</b><span>Pentest &amp; SOC experience</span></div>
             <div><b>CTF</b><span>3rd place finish</span></div>
           </div>
@@ -1834,6 +1829,10 @@ export default function Home() {
           <div className="edu reveal" id="education">
             <div><h3>University of Maryland, College Park</h3><p>Master of Engineering · Cybersecurity</p><span>Coursework and projects in penetration testing, Linux administration, cloud infrastructure and digital forensics.</span></div>
             <div className="d">Expected December 2026</div>
+          </div>
+          <div className="edu reveal">
+            <div><h3>Guru Nanak Institutions Technical Campus</h3><p>Bachelor of Technology · Computer Science (Cybersecurity)</p><span>Hyderabad, India</span></div>
+            <div className="d">May 2023</div>
           </div>
         </div>
       </section>
@@ -1878,7 +1877,7 @@ export default function Home() {
         <div className="wrap"><Rating /></div>
       </section>
 
-      {recOpen && <RecruiterMode name={fullName} title="Security Engineer" location={baseLocation} roles={openRoles} jobs={experience} projects={projects} certs={certifications} edu="M.Eng Cybersecurity, University of Maryland, College Park · Expected Dec 2026" email={email} linkedin={linkedinUrl} onClose={() => setRecOpen(false)} onBook={openSchedule} onResume={() => setResumeOpen(true)} />}
+      {recOpen && <RecruiterMode name={fullName} title="Security Engineer" location={baseLocation} roles={openRoles} jobs={experience} projects={projects} certs={certifications} edu={['M.Eng Cybersecurity · University of Maryland, College Park · Expected Dec 2026', 'B.Tech Computer Science (Cybersecurity) · Guru Nanak Institutions Technical Campus · May 2023']} skills={['Splunk', 'Elastic Stack (ELK)', 'Nessus', 'Nmap', 'Burp Suite', 'Metasploit', 'MITRE ATT&CK', 'AWS', 'Kubernetes', 'Docker', 'Terraform', 'GitHub Actions', 'Python', 'PowerShell']} email={email} linkedin={linkedinUrl} onClose={() => setRecOpen(false)} onBook={openSchedule} onResume={() => setResumeOpen(true)} />}
 
       <footer>
         <div className="wrap">

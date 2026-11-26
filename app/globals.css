@@ -1625,3 +1625,42 @@ html.tilt-on .g3>.reveal:not(.in),html.tilt-on .whys>.reveal:not(.in){transform:
 @keyframes fadeIn{from{opacity:0}}
 @media(max-width:600px){.twin-wrap{padding:0}.twin-box{height:100%;border-radius:0}.twin-bar em{display:none}}
 
+/* animated numbers inside the stat headings keep the heading size */
+.xsum b span,.stat b span{display:inline;font:inherit;color:inherit;margin:0;letter-spacing:inherit}
+/* four projects sit in a 2 x 2 grid instead of leaving one card alone on a row */
+@media(min-width:901px){.g3:has(>:nth-child(4):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* resume viewer side panel: everything fits without scrolling inside it */
+.rv-side{gap:14px;padding:16px 18px}
+.rv-side .roles-mini{gap:5px;margin:0}
+.rv-side .roles-mini span{font-size:11px;padding:3px 8px}
+.rv-side h4{margin-bottom:4px}
+.rv-fact{padding:7px 0}
+.rv-fact b{font-size:13px;line-height:1.35}
+.rv-sub{display:block;margin-top:2px;font:500 11.5px/1.35 Inter,sans-serif;font-style:normal;color:var(--dim)}
+.rv-side .tags span{font-size:10.5px;padding:3px 7px}
+.rv-side{gap:12px}
+.rv-side .btns .btn,.rv-side .btns .hire .in{min-height:42px;height:42px}
+@media(max-height:860px){.rv-side .roles-mini{display:none}}
+@media(max-height:680px){.rv-side .tags,.rv-side h4:not(:first-child){display:none}}
+.rv-side{padding:14px 18px}
+
+/* recruiter mode: headline numbers */
+.rm-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 6px}
+.rm-stats div{padding:12px 14px;border-radius:14px;border:1px solid var(--line2);background:linear-gradient(160deg,rgba(var(--acc-rgb),.12),rgba(var(--acc-rgb),.03))}
+.rm-stats b{display:block;font:900 22px Archivo,sans-serif;color:var(--h1)}
+.rm-stats span{font-size:12px;line-height:1.35;color:var(--dim)}
+.rm-two p+p{margin-top:8px}
+@media(max-width:640px){.rm-stats{grid-template-columns:1fr 1fr}.rm-two{grid-template-columns:1fr}}
+/* about stats and facts: wrap instead of spilling out of their boxes at any width */
+.facts{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stat{flex-direction:column;align-items:flex-start;gap:10px}
+@media(max-width:400px){.stats{grid-template-columns:minmax(0,1fr)}.stat{flex-direction:row;align-items:center}}
+.fact>div,.stat>div{min-width:0;overflow-wrap:break-word}
+.fact,.stat{min-width:0}
+@media(min-width:761px) and (max-width:900px){.stats{grid-template-columns:minmax(0,1fr);gap:8px}.stat{flex-direction:row;align-items:center}}
+.arch-node b,.arch-d{overflow-wrap:anywhere}
+/* never let decorative glows make the page scroll sideways on small phones */
+html,body{overflow-x:clip}
+.verify-a b{overflow-wrap:anywhere}
+@media(max-width:400px){.verify-r{grid-template-columns:1fr}}
